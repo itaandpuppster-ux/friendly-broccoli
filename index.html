@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dream Machine — AI Image Generator</title>
+<meta name="description" content="Type anything, get an AI-generated image. Free, no sign-up.">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0b0b14;
+    --panel: #14142222;
+    --card: #181828;
+    --border: rgba(255,255,255,0.10);
+    --text: #f2f2fa;
+    --muted: #9a9ab0;
+    --accent1: #8b5cf6;
+    --accent2: #ec4899;
+    --accent3: #f59e0b;
+  }
+  html, body { min-height: 100%; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+  /* animated background blobs */
+  .blob {
+    position: fixed; border-radius: 50%; filter: blur(90px);
+    opacity: 0.35; z-index: 0; pointer-events: none;
+    animation: drift 18s ease-in-out infinite alternate;
+  }
+  .blob.one { width: 45vw; height: 45vw; background: var(--accent1); top: -12vw; left: -10vw; }
+  .blob.two { width: 40vw; height: 40vw; background: var(--accent2); bottom: -10vw; right: -8vw; animation-delay: -6s; }
+  .blob.three { width: 25vw; height: 25vw; background: var(--accent3); top: 40%; left: 55%; opacity: 0.18; animation-delay: -12s; }
+  @keyframes drift {
+    from { transform: translate(0, 0) scale(1); }
+    to { transform: translate(6vw, 4vh) scale(1.15); }
+  }
+
+  .wrap {
+    position: relative; z-index: 1;
+    max-width: 980px; margin: 0 auto;
+    padding: clamp(24px, 6vh, 64px) 20px 80px;
+  }
+
+  header { text-align: center; margin-bottom: clamp(24px, 5vh, 48px); }
+  h1 {
+    font-size: clamp(2.4rem, 7vw, 4.2rem);
+    font-weight: 800; letter-spacing: -0.03em; line-height: 1.05;
+    background: linear-gradient(92deg, #c4b5fd, #f9a8d4 55%, #fcd34d);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .subtitle { margin-top: 12px; color: var(--muted); font-size: clamp(0.95rem, 2.5vw, 1.15rem); }
+
+  .prompt-box {
+    display: flex; gap: 10px; flex-wrap: wrap;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px; padding: 12px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+  }
+  #prompt {
+    flex: 1 1 260px; min-height: 52px; max-height: 160px;
+    resize: none; border: none; outline: none;
+    background: transparent; color: var(--text);
+    font: inherit; font-size: 1.05rem; line-height: 1.4;
+    padding: 12px 8px;
+  }
+  #prompt::placeholder { color: #6a6a85; }
+  .actions { display: flex; gap: 10px; align-items: flex-end; }
+  button { font-family: inherit; cursor: pointer; }
+  #generate {
+    border: none; border-radius: 14px;
+    padding: 14px 26px; font-size: 1.05rem; font-weight: 700; color: #fff;
+    background: linear-gradient(92deg, var(--accent1), var(--accent2));
+    transition: transform 0.12s ease, filter 0.12s ease;
+  }
+  #generate:hover { filter: brightness(1.12); transform: translateY(-1px); }
+  #generate:disabled { opacity: 0.55; cursor: wait; transform: none; }
+  #surprise {
+    border: 1px solid var(--border); border-radius: 14px;
+    padding: 14px 18px; font-size: 1.3rem; line-height: 1;
+    background: rgba(255,255,255,0.06); color: var(--text);
+    transition: background 0.12s ease, transform 0.12s ease;
+  }
+  #surprise:hover { background: rgba(255,255,255,0.12); transform: translateY(-1px) rotate(8deg); }
+
+  .options {
+    display: flex; gap: 18px; flex-wrap: wrap; align-items: center;
+    margin-top: 16px; justify-content: center;
+  }
+  .opt-group { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .opt-label { color: var(--muted); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+  .chip {
+    border: 1px solid var(--border); border-radius: 999px;
+    padding: 7px 15px; font-size: 0.9rem; font-weight: 600;
+    background: rgba(255,255,255,0.05); color: var(--muted);
+    transition: all 0.12s ease;
+  }
+  .chip:hover { color: var(--text); background: rgba(255,255,255,0.1); }
+  .chip.active {
+    color: #fff; border-color: transparent;
+    background: linear-gradient(92deg, var(--accent1), var(--accent2));
+  }
+
+  .stage {
+    margin-top: clamp(24px, 4vh, 40px);
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 24px; overflow: hidden;
+    min-height: 320px;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .stage img {
+    display: block; width: 100%; height: auto; max-height: 78vh; object-fit: contain;
+    animation: fadein 0.5s ease;
+  }
+  @keyframes fadein { from { opacity: 0; transform: scale(0.985); } to { opacity: 1; transform: scale(1); } }
+
+  .placeholder { text-align: center; padding: 48px 24px; color: var(--muted); }
+  .placeholder .big { font-size: 3rem; margin-bottom: 12px; }
+
+  .loading { text-align: center; padding: 48px 24px; }
+  .spinner {
+    width: 54px; height: 54px; margin: 0 auto 18px;
+    border-radius: 50%;
+    border: 4px solid rgba(255,255,255,0.12);
+    border-top-color: var(--accent2);
+    animation: spin 0.9s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading p { color: var(--muted); }
+  .loading .tip { margin-top: 6px; font-size: 0.85rem; opacity: 0.7; }
+
+  .stage-bar {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    display: flex; gap: 10px; justify-content: flex-end; align-items: center;
+    padding: 14px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.65));
+    opacity: 0; transition: opacity 0.2s ease;
+  }
+  .stage:hover .stage-bar, .stage:focus-within .stage-bar { opacity: 1; }
+  .stage-bar .caption {
+    margin-right: auto; font-size: 0.85rem; color: rgba(255,255,255,0.85);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .mini-btn {
+    border: none; border-radius: 10px; padding: 9px 14px;
+    font-size: 0.9rem; font-weight: 700; color: #fff;
+    background: rgba(255,255,255,0.18); backdrop-filter: blur(6px);
+    transition: background 0.12s ease;
+    text-decoration: none; display: inline-block;
+  }
+  .mini-btn:hover { background: rgba(255,255,255,0.3); }
+
+  .error {
+    text-align: center; padding: 40px 24px; color: #fda4af;
+  }
+  .error button { margin-top: 14px; }
+
+  .gallery-head {
+    margin-top: clamp(32px, 6vh, 56px); margin-bottom: 14px;
+    display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+  }
+  .gallery-head[hidden] { display: none; }
+  .gallery-head h2 { font-size: 1.15rem; font-weight: 700; }
+  #clear-gallery {
+    border: none; background: none; color: var(--muted);
+    font-size: 0.85rem; text-decoration: underline;
+  }
+  #clear-gallery:hover { color: var(--text); }
+  .gallery {
+    display: grid; gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+  .gallery figure {
+    position: relative; border-radius: 14px; overflow: hidden; cursor: pointer;
+    border: 1px solid var(--border); background: var(--card);
+    aspect-ratio: 1; transition: transform 0.15s ease;
+  }
+  .gallery figure:hover { transform: translateY(-3px); }
+  .gallery img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .gallery figcaption {
+    position: absolute; inset: auto 0 0 0;
+    padding: 20px 10px 8px; font-size: 0.72rem; color: #fff;
+    background: linear-gradient(transparent, rgba(0,0,0,0.75));
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    opacity: 0; transition: opacity 0.15s ease;
+  }
+  .gallery figure:hover figcaption { opacity: 1; }
+
+  footer { margin-top: 56px; text-align: center; color: var(--muted); font-size: 0.85rem; }
+  footer a { color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="blob one"></div>
+<div class="blob two"></div>
+<div class="blob three"></div>
+
+<div class="wrap">
+  <header>
+    <h1>Dream Machine</h1>
+    <p class="subtitle">Type anything. Get an AI-generated image in seconds — free, no sign-up.</p>
+  </header>
+
+  <div class="prompt-box">
+    <textarea id="prompt" rows="1" placeholder="A cozy cabin on a floating island at sunset, studio ghibli style…"></textarea>
+    <div class="actions">
+      <button id="surprise" title="Surprise me with a random prompt">🎲</button>
+      <button id="generate">Generate ✨</button>
+    </div>
+  </div>
+
+  <div class="options">
+    <div class="opt-group" id="styles">
+      <span class="opt-label">Style</span>
+      <button class="chip active" data-style="">None</button>
+      <button class="chip" data-style="photorealistic, 8k, highly detailed photography">Photo</button>
+      <button class="chip" data-style="anime style, vibrant colors, detailed illustration">Anime</button>
+      <button class="chip" data-style="oil painting, impressionist, textured brushstrokes">Painting</button>
+      <button class="chip" data-style="3d render, pixar style, soft lighting, cute">3D</button>
+      <button class="chip" data-style="pixel art, 16-bit, retro video game">Pixel</button>
+      <button class="chip" data-style="cyberpunk, neon lights, futuristic, cinematic">Neon</button>
+    </div>
+    <div class="opt-group" id="sizes">
+      <span class="opt-label">Size</span>
+      <button class="chip active" data-w="1024" data-h="1024">Square</button>
+      <button class="chip" data-w="1280" data-h="720">Wide</button>
+      <button class="chip" data-w="768" data-h="1344">Tall</button>
+    </div>
+  </div>
+
+  <div class="stage" id="stage">
+    <div class="placeholder">
+      <div class="big">🎨</div>
+      <p>Your image will appear here.</p>
+    </div>
+  </div>
+
+  <div class="gallery-head" id="gallery-head" hidden>
+    <h2>Your creations</h2>
+    <button id="clear-gallery">clear all</button>
+  </div>
+  <div class="gallery" id="gallery"></div>
+
+  <footer>
+    <p>Images generated by open AI models via <a href="https://pollinations.ai" target="_blank" rel="noopener">pollinations.ai</a> · Made with 💜</p>
+  </footer>
+</div>
+
+<script>
+(function () {
+  const stage = document.getElementById('stage');
+  const promptEl = document.getElementById('prompt');
+  const generateBtn = document.getElementById('generate');
+  const surpriseBtn = document.getElementById('surprise');
+  const galleryEl = document.getElementById('gallery');
+  const galleryHead = document.getElementById('gallery-head');
+  const clearBtn = document.getElementById('clear-gallery');
+
+  const SURPRISES = [
+    'A capybara wearing a tiny crown, royal portrait, oil painting',
+    'A neon-lit ramen shop on a rainy night in Tokyo, cinematic',
+    'An astronaut planting a flower on the moon, watercolor',
+    'A treehouse city built inside a giant sequoia, golden hour',
+    'A dragon made entirely of cherry blossoms',
+    'A retro-futuristic diner on Mars, 1950s poster style',
+    'A library where the books fly like birds, magical realism',
+    'A tiny robot watering a bonsai tree, soft morning light',
+    'An underwater castle with jellyfish lanterns',
+    'A fox wizard casting spells in an autumn forest',
+    'A hot air balloon shaped like a jellyfish over the desert',
+    'A cat astronaut floating inside a space station, digital art',
+  ];
+
+  const LOADING_TIPS = [
+    'Mixing the digital paint…',
+    'Teaching pixels to dream…',
+    'Consulting the art spirits…',
+    'Rendering imagination…',
+    'Almost there — great art takes a moment…',
+  ];
+
+  let style = '';
+  let width = 1024, height = 1024;
+  let generating = false;
+
+  // chip groups
+  function wireChips(containerId, onPick) {
+    const box = document.getElementById(containerId);
+    box.addEventListener('click', (e) => {
+      const chip = e.target.closest('.chip');
+      if (!chip) return;
+      box.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      onPick(chip);
+    });
+  }
+  wireChips('styles', chip => { style = chip.dataset.style; });
+  wireChips('sizes', chip => { width = +chip.dataset.w; height = +chip.dataset.h; });
+
+  // auto-grow textarea
+  promptEl.addEventListener('input', () => {
+    promptEl.style.height = 'auto';
+    promptEl.style.height = Math.min(promptEl.scrollHeight, 160) + 'px';
+  });
+  promptEl.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); generate(); }
+  });
+
+  surpriseBtn.addEventListener('click', () => {
+    promptEl.value = SURPRISES[Math.floor(Math.random() * SURPRISES.length)];
+    promptEl.dispatchEvent(new Event('input'));
+    promptEl.focus();
+  });
+
+  generateBtn.addEventListener('click', generate);
+
+  function buildUrl(fullPrompt, seed) {
+    return 'https://image.pollinations.ai/prompt/' + encodeURIComponent(fullPrompt) +
+      '?width=' + width + '&height=' + height + '&seed=' + seed + '&nologo=true';
+  }
+
+  function generate() {
+    const prompt = promptEl.value.trim();
+    if (!prompt || generating) { promptEl.focus(); return; }
+
+    const fullPrompt = style ? prompt + ', ' + style : prompt;
+    const seed = Math.floor(Math.random() * 1e9);
+    const url = buildUrl(fullPrompt, seed);
+
+    generating = true;
+    generateBtn.disabled = true;
+    generateBtn.textContent = 'Dreaming…';
+    stage.innerHTML =
+      '<div class="loading"><div class="spinner"></div>' +
+      '<p>Generating “' + escapeHtml(truncate(prompt, 60)) + '”</p>' +
+      '<p class="tip">' + LOADING_TIPS[Math.floor(Math.random() * LOADING_TIPS.length)] + '</p></div>';
+
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      showImage(img, prompt, url);
+      addToGallery({ url, prompt });
+      done();
+    };
+    img.onerror = () => {
+      stage.innerHTML =
+        '<div class="error"><p>😕 Something went wrong generating that image.</p>' +
+        '<button class="mini-btn" id="retry">Try again</button></div>';
+      document.getElementById('retry').addEventListener('click', generate);
+      done();
+    };
+    img.src = url;
+
+    function done() {
+      generating = false;
+      generateBtn.disabled = false;
+      generateBtn.textContent = 'Generate ✨';
+    }
+  }
+
+  function showImage(img, prompt, url) {
+    stage.innerHTML = '';
+    img.alt = prompt;
+    stage.appendChild(img);
+    const bar = document.createElement('div');
+    bar.className = 'stage-bar';
+    bar.innerHTML =
+      '<span class="caption">' + escapeHtml(prompt) + '</span>' +
+      '<button class="mini-btn" data-act="copy">Copy prompt</button>' +
+      '<a class="mini-btn" data-act="download" href="' + url + '" target="_blank" rel="noopener">Open full size</a>';
+    bar.querySelector('[data-act="copy"]').addEventListener('click', (e) => {
+      navigator.clipboard.writeText(prompt).then(() => {
+        e.target.textContent = 'Copied!';
+        setTimeout(() => { e.target.textContent = 'Copy prompt'; }, 1200);
+      });
+    });
+    stage.appendChild(bar);
+    stage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  // ---- gallery (persisted in localStorage) ----
+  const STORE_KEY = 'dream-machine-gallery';
+  let gallery = [];
+  try { gallery = JSON.parse(localStorage.getItem(STORE_KEY)) || []; } catch (e) {}
+
+  function addToGallery(item) {
+    gallery.unshift(item);
+    gallery = gallery.slice(0, 24);
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(gallery)); } catch (e) {}
+    renderGallery();
+  }
+
+  function renderGallery() {
+    galleryHead.hidden = gallery.length === 0;
+    galleryEl.innerHTML = '';
+    gallery.forEach((item) => {
+      const fig = document.createElement('figure');
+      const img = document.createElement('img');
+      img.src = item.url;
+      img.alt = item.prompt;
+      img.loading = 'lazy';
+      const cap = document.createElement('figcaption');
+      cap.textContent = item.prompt;
+      fig.appendChild(img);
+      fig.appendChild(cap);
+      fig.addEventListener('click', () => {
+        promptEl.value = item.prompt;
+        promptEl.dispatchEvent(new Event('input'));
+        const big = new Image();
+        big.alt = item.prompt;
+        big.onload = () => showImage(big, item.prompt, item.url);
+        big.src = item.url;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+      galleryEl.appendChild(fig);
+    });
+  }
+
+  clearBtn.addEventListener('click', () => {
+    gallery = [];
+    try { localStorage.removeItem(STORE_KEY); } catch (e) {}
+    renderGallery();
+  });
+
+  function truncate(s, n) { return s.length > n ? s.slice(0, n - 1) + '…' : s; }
+  function escapeHtml(s) {
+    return s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  renderGallery();
+})();
+</script>
+</body>
+</html>
