@@ -4,7 +4,7 @@ An interactive 3D website playground. Everything is a single HTML file — no bu
 
 ## Pages
 
-- **`index.html` — "her walk"**: a 3D girl who walks when you scroll and stops when you stop. She strides down a path through six scenes — a flower meadow, a butterfly garden, a rainbow with balloons, golden-hour floating lanterns, a neon city at night, and a confetti finale — while the sky melts from day to sunset to night. Trendy reel-style captions pop in as each scene arrives. Move your mouse (or tilt your phone) to move the camera. Automatically switches to a lighter "phone mode" on small touch devices.
+- **`index.html` — "her walk: neon dreams"**: a 3D girl who walks when you scroll and stops when you stop, rendered with a cinematic pipeline — ACES filmic tone mapping and real bloom, so every neon light actually glows. She strides through a neon city with flickering signs, into a synthwave sunset over an endless grid, through a glowing crystal forest, under aurora ribbons among the stars, and finally through a pulsing portal with confetti. Jointed knees and elbows, glowing sneakers, ponytail physics, blinking eyes. Trendy reel-style captions pop in per scene. Move your mouse (or tilt your phone) to move the camera. Automatically switches to a lighter "phone mode" on small touch devices.
 - **`ride.html` — "the scroll"**: a scroll-driven 3D space ride. The camera flies through floating crystals, a neon ring tunnel, a color-shifting morphing blob, a 30,000-particle spiral galaxy, and a ringed planet with moons.
 - **`3d-playground.html` — "Shape Playground"**: a 3D toy. Drag to spin the world, tap shapes to pop them, tap empty space to spawn new ones. Make-it-rain and party-mode buttons included.
 

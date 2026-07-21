@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>her walk — a 3D scroll story</title>
+<title>her walk — neon dreams</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    background: #ffd9ec;
+    background: #0b0518;
     color: #fff;
     overflow-x: hidden;
   }
@@ -53,33 +53,35 @@
   .reel-text.yellow { background: #ffe14d; color: #1a1200; }
   .reel-text.mint   { background: #7dffb2; color: #00331a; }
   .reel-text.purple { background: #a78bfa; color: #170a33; }
+  .reel-text.cyan   { background: #6ee7ff; color: #002733; }
   .reel-text.white  { background: rgba(255,255,255,0.94); color: #14082e; }
 
   .sub {
     display: block; margin-top: 14px;
     font-size: clamp(0.85rem, 3.2vw, 1.05rem); font-weight: 700;
-    color: #fff; text-shadow: 0 2px 14px rgba(0,0,0,0.55);
+    color: #fff; text-shadow: 0 2px 14px rgba(0,0,0,0.7);
   }
 
   .hero { text-align: center; }
   .hero h1 {
     font-size: clamp(2.6rem, 10vw, 6rem);
     font-weight: 900; letter-spacing: -0.03em; line-height: 1.02;
-    background: linear-gradient(115deg, #ff2d95 0%, #ffb830 40%, #a78bfa 100%);
+    background: linear-gradient(115deg, #ff2d95 0%, #ffb830 30%, #6ee7ff 65%, #a78bfa 100%);
     -webkit-background-clip: text; background-clip: text; color: transparent;
-    filter: drop-shadow(0 4px 22px rgba(255, 45, 149, 0.45));
+    filter: drop-shadow(0 0 26px rgba(255, 45, 149, 0.55));
   }
   .scroll-hint {
     margin-top: 30px;
     display: inline-flex; flex-direction: column; align-items: center; gap: 8px;
     color: #fff; font-weight: 800; font-size: 0.95rem;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.4);
+    text-shadow: 0 0 14px rgba(110, 231, 255, 0.9);
     animation: bob 1.6s ease-in-out infinite;
   }
   .scroll-hint .arrow {
     width: 26px; height: 26px;
-    border-right: 3px solid #fff; border-bottom: 3px solid #fff;
+    border-right: 3px solid #6ee7ff; border-bottom: 3px solid #6ee7ff;
     transform: rotate(45deg); border-radius: 2px;
+    filter: drop-shadow(0 0 8px rgba(110,231,255,0.9));
   }
   @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(12px); } }
 
@@ -90,11 +92,11 @@
     border: none; border-radius: 999px; padding: 14px 26px;
     font-size: 1.05rem; font-weight: 800; font-family: inherit;
     color: #14082e; background: #fff; text-decoration: none;
-    box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 30px rgba(167, 139, 250, 0.45);
+    box-shadow: 0 0 24px rgba(110, 231, 255, 0.55);
     transition: transform 0.12s ease, box-shadow 0.12s ease;
   }
-  .btn:active { transform: translateY(3px) scale(0.98); box-shadow: 0 1px 0 rgba(0,0,0,0.3); }
-  .btn.pink { background: #ff2d95; color: #fff; }
+  .btn:active { transform: translateY(3px) scale(0.98); }
+  .btn.pink { background: #ff2d95; color: #fff; box-shadow: 0 0 24px rgba(255, 45, 149, 0.7); }
 
   #device-badge {
     position: fixed; top: 14px; right: 14px; z-index: 40;
@@ -112,52 +114,52 @@
 <div id="device-badge">…</div>
 
 <div id="track">
-  <!-- 0: hero / meadow -->
+  <!-- 0: hero / neon street -->
   <section class="panel">
     <div class="caption hero">
       <h1>her walk</h1>
-      <span class="sub">scroll &mdash; she walks &bull; stop &mdash; she stops &bull; phones AND computers</span>
+      <span class="sub">neon dreams &bull; scroll &mdash; she walks &bull; stop &mdash; she stops</span>
       <div class="scroll-hint"><span>scroll to walk</span><div class="arrow"></div></div>
     </div>
   </section>
 
-  <!-- 1: butterfly garden -->
+  <!-- 1: neon alley -->
   <section class="panel">
     <div class="caption">
-      <span class="reel-text pink">POV: she just entered her main character era 💅</span>
-      <span class="sub">even the butterflies showed up for it</span>
+      <span class="reel-text pink">POV: she owns every neon light in this city 🌃</span>
+      <span class="sub">real glow — every light actually blooms</span>
     </div>
   </section>
 
-  <!-- 2: rainbow + balloons -->
+  <!-- 2: synthwave sunset -->
   <section class="panel">
     <div class="caption">
-      <span class="reel-text yellow">she walked so the rainbow could run 🌈</span>
-      <span class="sub">keep scrolling — every step is yours</span>
+      <span class="reel-text yellow">walking straight into the synthwave sunset 🌅</span>
+      <span class="sub">keep scrolling — the grid goes forever</span>
     </div>
   </section>
 
-  <!-- 3: golden hour lanterns -->
+  <!-- 3: crystal forest -->
   <section class="panel">
     <div class="caption">
-      <span class="reel-text mint">golden hour hits different, no cap 😮‍💨</span>
-      <span class="sub">the sky changes as she walks — watch it melt</span>
-    </div>
-  </section>
-
-  <!-- 4: neon city night -->
-  <section class="panel">
-    <div class="caption">
-      <span class="reel-text purple">city lights? she owns them, periodt 🔥</span>
+      <span class="reel-text mint">crystal era. unmatched. 💎</span>
       <span class="sub">drag or tilt your phone to move the camera</span>
     </div>
   </section>
 
-  <!-- 5: finale -->
+  <!-- 4: among the stars -->
+  <section class="panel">
+    <div class="caption">
+      <span class="reel-text cyan">she really walked among the stars ✨</span>
+      <span class="sub">aurora overhead — almost there</span>
+    </div>
+  </section>
+
+  <!-- 5: finale portal -->
   <section class="panel">
     <div class="caption finale">
-      <span class="reel-text white">slay. that&rsquo;s the whole vibe. 💖</span>
-      <span class="sub">she made it — and so did you</span>
+      <span class="reel-text white">iconic behavior. periodt. 💖</span>
+      <span class="sub">she walked the whole dream — and so did you</span>
       <div>
         <button class="btn pink" id="btnConfetti">confetti 🎉</button>
         <a class="btn" href="ride.html">space ride →</a>
@@ -168,6 +170,7 @@
 </div>
 
 <script src="vendor/three.min.js"></script>
+<script src="vendor/postprocessing.js"></script>
 <script>
 (function () {
   // ---------- device detect ----------
@@ -177,142 +180,229 @@
   document.getElementById('device-badge').textContent =
     isPhone ? '📱 phone mode' : '🖥️ computer mode';
 
-  // ---------- renderer ----------
+  // ---------- renderer + cinematic pipeline ----------
   var canvas = document.getElementById('scene');
   var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: !isPhone });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, isPhone ? 1.75 : 2));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, isPhone ? 1.5 : 2));
   renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.0;
   renderer.shadowMap.enabled = !isPhone;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
   var scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0xffd9ec, 0.012);
+  scene.fog = new THREE.FogExp2(0x150a2e, 0.014);
 
-  var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 300);
+  var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 400);
 
-  scene.add(new THREE.AmbientLight(0xffffff, 0.75));
-  var sun = new THREE.DirectionalLight(0xfff2cc, 0.95);
-  sun.position.set(8, 14, 6);
+  var composer = new THREE.EffectComposer(renderer);
+  composer.addPass(new THREE.RenderPass(scene, camera));
+  var bloom = new THREE.UnrealBloomPass(
+    new THREE.Vector2(window.innerWidth, window.innerHeight),
+    isPhone ? 0.5 : 0.65,   // strength
+    0.5,                    // radius
+    0.62                    // threshold
+  );
+  composer.addPass(bloom);
+
+  // ---------- lights ----------
+  scene.add(new THREE.AmbientLight(0x8a7bd8, 0.4));
+  var moon = new THREE.DirectionalLight(0xb0c8ff, 0.5);
+  moon.position.set(-6, 16, 4);
   if (!isPhone) {
-    sun.castShadow = true;
-    sun.shadow.mapSize.set(1024, 1024);
-    sun.shadow.camera.left = -20; sun.shadow.camera.right = 20;
-    sun.shadow.camera.top = 20; sun.shadow.camera.bottom = -20;
+    moon.castShadow = true;
+    moon.shadow.mapSize.set(1024, 1024);
+    moon.shadow.camera.left = -18; moon.shadow.camera.right = 18;
+    moon.shadow.camera.top = 18; moon.shadow.camera.bottom = -18;
   }
-  scene.add(sun);
-  var glow = new THREE.PointLight(0xff2d95, 0.0, 40);
+  scene.add(moon);
+  var glow = new THREE.PointLight(0xff2d95, 0.55, 18);
   scene.add(glow);
+  var glow2 = new THREE.PointLight(0x6ee7ff, 0.4, 18);
+  scene.add(glow2);
 
   function rand(a, b) { return a + Math.random() * (b - a); }
   function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
   var NEON = [0xff2d95, 0xffb830, 0xffe14d, 0x7dffb2, 0x6ee7ff, 0xa78bfa];
 
-  // She walks down -Z. Six zones, one per caption panel.
   var ZONES = 6;
   var ZONE_GAP = 48;
   var WALK_LEN = ZONE_GAP * (ZONES - 1); // 240
 
-  // ---------- ground + path ----------
+  // ---------- sky dome: dusk gradient that deepens to space ----------
+  var skyUniforms = {
+    top: { value: new THREE.Color(0x2a1052) },
+    mid: { value: new THREE.Color(0xff5e78) },
+    bot: { value: new THREE.Color(0xffb060) },
+    nite: { value: 0.0 } // 0 = dusk, 1 = deep space
+  };
+  var sky = new THREE.Mesh(
+    new THREE.SphereGeometry(280, 24, 24),
+    new THREE.ShaderMaterial({
+      side: THREE.BackSide, depthWrite: false,
+      uniforms: skyUniforms,
+      vertexShader: 'varying vec3 vPos; void main(){ vPos = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
+      fragmentShader: [
+        'varying vec3 vPos; uniform vec3 top; uniform vec3 mid; uniform vec3 bot; uniform float nite;',
+        'void main(){',
+        '  float h = normalize(vPos).y * 0.5 + 0.5;',
+        '  vec3 dusk = h > 0.45 ? mix(mid, top, (h - 0.45) / 0.55) : mix(bot, mid, h / 0.45);',
+        '  vec3 space = mix(vec3(0.05, 0.02, 0.12), vec3(0.01, 0.0, 0.05), h);',
+        '  gl_FragColor = vec4(mix(dusk, space, nite), 1.0);',
+        '}'
+      ].join('\n')
+    })
+  );
+  scene.add(sky);
+
+  // stars fade in as she leaves the city
+  var starCount = isPhone ? 900 : 2200;
+  var starGeo = new THREE.BufferGeometry();
+  var starPos = new Float32Array(starCount * 3);
+  for (var i = 0; i < starCount; i++) {
+    starPos[i * 3] = rand(-140, 140);
+    starPos[i * 3 + 1] = rand(4, 120);
+    starPos[i * 3 + 2] = rand(-WALK_LEN - 160, 60);
+  }
+  starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+  var starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.4, transparent: true, opacity: 0 });
+  scene.add(new THREE.Points(starGeo, starMat));
+
+  // ---------- ground: dark glossy street + glowing edge lines ----------
   var ground = new THREE.Mesh(
-    new THREE.PlaneGeometry(240, WALK_LEN + 160),
-    new THREE.MeshStandardMaterial({ color: 0xa5e8b0, roughness: 1 })
+    new THREE.PlaneGeometry(260, WALK_LEN + 180),
+    new THREE.MeshStandardMaterial({ color: 0x0d0a1e, roughness: 0.32, metalness: 0.75 })
   );
   ground.rotation.x = -Math.PI / 2;
   ground.position.set(0, 0, -WALK_LEN / 2);
   ground.receiveShadow = !isPhone;
   scene.add(ground);
 
-  var path = new THREE.Mesh(
-    new THREE.PlaneGeometry(3.4, WALK_LEN + 60),
-    new THREE.MeshStandardMaterial({ color: 0xffe9b3, roughness: 1 })
+  var laneL = new THREE.Mesh(
+    new THREE.BoxGeometry(0.07, 0.07, WALK_LEN + 80),
+    new THREE.MeshBasicMaterial({ color: 0x6ee7ff })
   );
-  path.rotation.x = -Math.PI / 2;
-  path.position.set(0, 0.01, -WALK_LEN / 2);
-  scene.add(path);
+  laneL.position.set(-1.9, 0.03, -WALK_LEN / 2);
+  scene.add(laneL);
+  var laneR = laneL.clone();
+  laneR.material = new THREE.MeshBasicMaterial({ color: 0xff2d95 });
+  laneR.position.x = 1.9;
+  scene.add(laneR);
 
-  // ---------- the girl ----------
+  // ---------- the girl (v2: jointed knees + glowing accents) ----------
   var girl = new THREE.Group();
   scene.add(girl);
 
-  var SKIN = 0xffd9b8, HAIR = 0x6b3fa0, DRESS = 0xff2d95, SHOE = 0xffffff;
+  var SKIN = 0xffd9b8, HAIR = 0x3b1e6e, DRESS = 0xff2d95;
   function std(color, extra) {
-    var opts = { color: color, roughness: 0.65, metalness: 0.02 };
+    var opts = { color: color, roughness: 0.6, metalness: 0.05 };
     if (extra) for (var k in extra) opts[k] = extra[k];
     return new THREE.MeshStandardMaterial(opts);
   }
   function shadowed(m) { if (!isPhone) m.castShadow = true; return m; }
 
-  // legs (pivot groups at the hips, y = 1.9)
+  // legs: thigh pivot at hip (y=1.95), calf pivot at knee, glow sneakers
   function makeLeg(side) {
-    var g = new THREE.Group();
-    g.position.set(0.24 * side, 1.9, 0);
-    var thigh = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.12, 1.75, 12), std(SKIN)));
-    thigh.position.y = -0.875;
-    g.add(thigh);
-    var shoe = shadowed(new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.18, 0.55), std(SHOE, { roughness: 0.4 })));
-    shoe.position.set(0, -1.82, -0.1);
-    g.add(shoe);
-    return g;
+    var hip = new THREE.Group();
+    hip.position.set(0.24 * side, 1.95, 0);
+    var thigh = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.13, 0.95, 12), std(SKIN)));
+    thigh.position.y = -0.475;
+    hip.add(thigh);
+    var knee = new THREE.Group();
+    knee.position.y = -0.95;
+    hip.add(knee);
+    var calf = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.1, 0.85, 12), std(SKIN)));
+    calf.position.y = -0.425;
+    knee.add(calf);
+    var shoe = shadowed(new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.16, 0.52), std(0xffffff, { roughness: 0.35 })));
+    shoe.position.set(0, -0.87, -0.1);
+    knee.add(shoe);
+    var sole = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.05, 0.54), new THREE.MeshBasicMaterial({ color: 0x6ee7ff }));
+    sole.position.set(0, -0.96, -0.1);
+    knee.add(sole);
+    return { hip: hip, knee: knee };
   }
   var legL = makeLeg(-1), legR = makeLeg(1);
-  girl.add(legL); girl.add(legR);
+  girl.add(legL.hip); girl.add(legR.hip);
 
-  // dress (cone) + torso
-  var dress = shadowed(new THREE.Mesh(new THREE.ConeGeometry(0.78, 1.5, 20), std(DRESS)));
-  dress.position.y = 2.0;
+  // dress with glowing hem + torso
+  var dress = shadowed(new THREE.Mesh(new THREE.ConeGeometry(0.78, 1.45, 22), std(DRESS, { emissive: 0x66103c, roughness: 0.45 })));
+  dress.position.y = 2.05;
   girl.add(dress);
-  var torso = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.36, 0.85, 14), std(DRESS)));
-  torso.position.y = 2.85;
+  var hem = new THREE.Mesh(new THREE.TorusGeometry(0.76, 0.035, 8, 30), new THREE.MeshBasicMaterial({ color: 0xff7ab6 }));
+  hem.rotation.x = Math.PI / 2;
+  hem.position.y = 1.34;
+  girl.add(hem);
+  var torso = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.37, 0.85, 14), std(DRESS, { emissive: 0x66103c, roughness: 0.45 })));
+  torso.position.y = 2.9;
   girl.add(torso);
+  var collar = new THREE.Mesh(new THREE.TorusGeometry(0.3, 0.03, 8, 24), new THREE.MeshBasicMaterial({ color: 0x6ee7ff }));
+  collar.rotation.x = Math.PI / 2;
+  collar.position.y = 3.28;
+  girl.add(collar);
 
-  // arms (pivot groups at the shoulders, y = 3.2)
+  // arms: shoulder pivot + elbow pivot
   function makeArm(side) {
-    var g = new THREE.Group();
-    g.position.set(0.42 * side, 3.2, 0);
-    var arm = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.08, 1.15, 10), std(SKIN)));
-    arm.position.y = -0.575;
-    g.add(arm);
-    var hand = shadowed(new THREE.Mesh(new THREE.SphereGeometry(0.11, 10, 10), std(SKIN)));
-    hand.position.y = -1.18;
-    g.add(hand);
-    g.rotation.z = -0.12 * side;
-    return g;
+    var shoulder = new THREE.Group();
+    shoulder.position.set(0.44 * side, 3.22, 0);
+    var upper = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.08, 0.62, 10), std(SKIN)));
+    upper.position.y = -0.31;
+    shoulder.add(upper);
+    var elbow = new THREE.Group();
+    elbow.position.y = -0.62;
+    shoulder.add(elbow);
+    var fore = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.065, 0.55, 10), std(SKIN)));
+    fore.position.y = -0.275;
+    elbow.add(fore);
+    var hand = shadowed(new THREE.Mesh(new THREE.SphereGeometry(0.1, 10, 10), std(SKIN)));
+    hand.position.y = -0.58;
+    elbow.add(hand);
+    var band = new THREE.Mesh(new THREE.TorusGeometry(0.085, 0.02, 6, 14), new THREE.MeshBasicMaterial({ color: pick([0x6ee7ff, 0xff7ab6, 0xffe14d]) }));
+    band.position.y = -0.45;
+    elbow.add(band);
+    shoulder.rotation.z = -0.14 * side;
+    return { shoulder: shoulder, elbow: elbow };
   }
   var armL = makeArm(-1), armR = makeArm(1);
-  girl.add(armL); girl.add(armR);
+  girl.add(armL.shoulder); girl.add(armR.shoulder);
 
-  // head group (so hair + face move together)
+  // head + hair + face (she faces -Z)
   var head = new THREE.Group();
-  head.position.y = 3.75;
+  head.position.y = 3.8;
   girl.add(head);
-  head.add(shadowed(new THREE.Mesh(new THREE.SphereGeometry(0.46, 22, 22), std(SKIN))));
-
-  // hair: cap + back + ponytail
-  var hairCap = shadowed(new THREE.Mesh(new THREE.SphereGeometry(0.5, 22, 22, 0, Math.PI * 2, 0, Math.PI * 0.55), std(HAIR)));
+  head.add(shadowed(new THREE.Mesh(new THREE.SphereGeometry(0.46, 24, 24), std(SKIN))));
+  var hairCap = shadowed(new THREE.Mesh(new THREE.SphereGeometry(0.5, 24, 24, 0, Math.PI * 2, 0, Math.PI * 0.55), std(HAIR, { roughness: 0.4, emissive: 0x1a0b3a })));
   hairCap.position.set(0, 0.05, 0.02);
   head.add(hairCap);
-  var hairBack = shadowed(new THREE.Mesh(new THREE.SphereGeometry(0.48, 18, 18), std(HAIR)));
-  hairBack.position.set(0, -0.02, 0.16);
-  hairBack.scale.set(0.95, 0.9, 0.7);
+  var hairBack = shadowed(new THREE.Mesh(new THREE.SphereGeometry(0.48, 18, 18), std(HAIR, { roughness: 0.4, emissive: 0x1a0b3a })));
+  hairBack.position.set(0, -0.05, 0.18);
+  hairBack.scale.set(0.95, 1.05, 0.7);
   head.add(hairBack);
+  // two long side strands
+  var strandGeo = new THREE.CylinderGeometry(0.07, 0.03, 0.9, 8);
+  var strandL = shadowed(new THREE.Mesh(strandGeo, std(HAIR, { roughness: 0.4, emissive: 0x1a0b3a })));
+  strandL.position.set(-0.42, -0.4, 0.05);
+  head.add(strandL);
+  var strandR = strandL.clone();
+  strandR.position.x = 0.42;
+  head.add(strandR);
   var ponytail = new THREE.Group();
-  ponytail.position.set(0, 0.32, 0.42);
-  var ponyMesh = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.05, 1.0, 10), std(HAIR)));
-  ponyMesh.position.y = -0.5;
+  ponytail.position.set(0, 0.34, 0.42);
+  var ponyMesh = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.04, 1.15, 10), std(HAIR, { roughness: 0.4, emissive: 0x1a0b3a })));
+  ponyMesh.position.y = -0.575;
   ponytail.add(ponyMesh);
-  var ponyTip = shadowed(new THREE.Mesh(new THREE.SphereGeometry(0.1, 10, 10), std(HAIR)));
-  ponyTip.position.y = -1.0;
+  var ponyTip = shadowed(new THREE.Mesh(new THREE.SphereGeometry(0.09, 10, 10), std(HAIR, { emissive: 0x1a0b3a })));
+  ponyTip.position.y = -1.15;
   ponytail.add(ponyTip);
   ponytail.rotation.x = 0.5;
   head.add(ponytail);
-  var bow = shadowed(new THREE.Mesh(new THREE.SphereGeometry(0.12, 10, 10), std(0xffe14d, { roughness: 0.4 })));
-  bow.scale.set(1.6, 0.8, 0.8);
-  bow.position.set(0, 0.34, 0.4);
-  head.add(bow);
+  var scrunchie = new THREE.Mesh(new THREE.TorusGeometry(0.11, 0.035, 8, 16), new THREE.MeshBasicMaterial({ color: 0xffe14d }));
+  scrunchie.rotation.x = Math.PI / 2 - 0.5;
+  scrunchie.position.set(0, 0.34, 0.4);
+  head.add(scrunchie);
 
-  // face: eyes + blush (she faces -Z, the walking direction)
   var eyeGeo = new THREE.SphereGeometry(0.055, 8, 8);
-  var eyeMat = new THREE.MeshBasicMaterial({ color: 0x2b1a3a });
+  var eyeMat = new THREE.MeshBasicMaterial({ color: 0x1b0f2e });
   var eyeL = new THREE.Mesh(eyeGeo, eyeMat), eyeR = new THREE.Mesh(eyeGeo, eyeMat);
   eyeL.position.set(-0.17, 0.03, -0.42);
   eyeR.position.set(0.17, 0.03, -0.42);
@@ -324,157 +414,182 @@
   blushR.position.set(0.28, -0.12, -0.36); blushR.scale.set(1.2, 0.7, 0.6);
   head.add(blushL); head.add(blushR);
 
+  // ---------- zone 0-1: neon city ----------
+  function neonMat(color) { return new THREE.MeshBasicMaterial({ color: color }); }
 
-  // ---------- scenery ----------
-  var sway = []; // things that gently sway/spin: {obj, speed, amp, axis, base, phase}
-
-  // trees along the whole path
-  var treeCount = isPhone ? 34 : 60;
-  var FOLIAGE = [0x7dffb2, 0x6ee7b7, 0xffb6d9, 0xffe14d, 0xa78bfa];
-  for (var tIdx = 0; tIdx < treeCount; tIdx++) {
-    var tree = new THREE.Group();
+  var buildings = [];
+  var bCount = isPhone ? 26 : 44;
+  for (var bi = 0; bi < bCount; bi++) {
     var side = Math.random() < 0.5 ? -1 : 1;
-    tree.position.set(side * rand(4, 22), 0, rand(8, -WALK_LEN - 20));
-    var th = rand(1.2, 2.4);
-    var trunk = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.22, th, 8), std(0xa5673f)));
-    trunk.position.y = th / 2;
-    tree.add(trunk);
-    var fol = shadowed(new THREE.Mesh(
-      Math.random() < 0.5 ? new THREE.SphereGeometry(rand(0.8, 1.5), 12, 12) : new THREE.ConeGeometry(rand(0.8, 1.3), rand(1.6, 2.6), 10),
-      std(pick(FOLIAGE))
-    ));
-    fol.position.y = th + 0.7;
-    tree.add(fol);
-    scene.add(tree);
-  }
-
-  // flowers near the start
-  for (var fl = 0; fl < (isPhone ? 24 : 50); fl++) {
-    var flower = new THREE.Group();
-    var fside = Math.random() < 0.5 ? -1 : 1;
-    flower.position.set(fside * rand(2.2, 9), 0, rand(6, -ZONE_GAP * 1.4));
-    var stem = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.03, 0.5, 6), std(0x3f9e58));
-    stem.position.y = 0.25;
-    flower.add(stem);
-    var bloom = new THREE.Mesh(new THREE.SphereGeometry(0.11, 8, 8), std(pick(NEON), { roughness: 0.4 }));
-    bloom.position.y = 0.55;
-    flower.add(bloom);
-    scene.add(flower);
-    sway.push({ obj: flower, speed: rand(1, 2.4), amp: 0.12, axis: 'z', base: 0, phase: rand(0, 6.28) });
-  }
-
-  // zone 1: butterflies
-  var butterflies = [];
-  for (var bIdx = 0; bIdx < (isPhone ? 8 : 14); bIdx++) {
-    var b = new THREE.Group();
-    var wingGeo = new THREE.CircleGeometry(0.22, 10);
-    var wingMat = new THREE.MeshBasicMaterial({ color: pick(NEON), side: THREE.DoubleSide });
-    var w1 = new THREE.Mesh(wingGeo, wingMat), w2 = new THREE.Mesh(wingGeo, wingMat);
-    w1.position.x = -0.18; w2.position.x = 0.18;
-    var wg1 = new THREE.Group(), wg2 = new THREE.Group();
-    wg1.add(w1); wg2.add(w2);
-    b.add(wg1); b.add(wg2);
-    b.userData = {
-      wg1: wg1, wg2: wg2,
-      cx: rand(-6, 6), cy: rand(1.2, 4), cz: -ZONE_GAP * 1 + rand(-14, 14),
-      r: rand(1, 3.4), speed: rand(0.5, 1.3), phase: rand(0, 6.28)
-    };
-    scene.add(b);
-    butterflies.push(b);
-  }
-
-  // zone 2: rainbow arch + balloons
-  var RAINBOW = [0xff2d95, 0xffb830, 0xffe14d, 0x7dffb2, 0x6ee7ff, 0xa78bfa];
-  for (var rIdx = 0; rIdx < RAINBOW.length; rIdx++) {
-    var arc = new THREE.Mesh(
-      new THREE.TorusGeometry(7.5 + rIdx * 0.72, 0.32, 10, 40, Math.PI),
-      std(RAINBOW[rIdx], { roughness: 0.5 })
+    var bh = rand(4, 14), bw = rand(1.6, 3.4), bd = rand(1.6, 3.4);
+    var bx = side * rand(4.5, 20);
+    var bz = rand(10, -ZONE_GAP * 1.8);
+    var bld = new THREE.Mesh(
+      new THREE.BoxGeometry(bw, bh, bd),
+      std(0x120c26, { roughness: 0.7, metalness: 0.2 })
     );
-    arc.position.set(0, 0, -ZONE_GAP * 2);
-    scene.add(arc);
-  }
-  var balloons = [];
-  for (var blIdx = 0; blIdx < (isPhone ? 6 : 10); blIdx++) {
-    var bl = new THREE.Group();
-    var bside = Math.random() < 0.5 ? -1 : 1;
-    bl.position.set(bside * rand(3, 10), rand(2.5, 6), -ZONE_GAP * 2 + rand(-16, 16));
-    var ball = new THREE.Mesh(new THREE.SphereGeometry(0.5, 14, 14), std(pick(NEON), { roughness: 0.3 }));
-    ball.scale.y = 1.15;
-    bl.add(ball);
-    var str = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 1.6, 4), std(0xffffff));
-    str.position.y = -1.1;
-    bl.add(str);
-    scene.add(bl);
-    balloons.push({ obj: bl, baseY: bl.position.y, speed: rand(0.5, 1.1), phase: rand(0, 6.28) });
-  }
-
-  // zone 3: floating lanterns
-  var lanterns = [];
-  for (var lIdx = 0; lIdx < (isPhone ? 10 : 18); lIdx++) {
-    var lan = new THREE.Mesh(
-      new THREE.SphereGeometry(rand(0.18, 0.34), 10, 10),
-      new THREE.MeshBasicMaterial({ color: pick([0xffe14d, 0xffb830, 0xfff3c4]) })
-    );
-    lan.position.set(rand(-9, 9), rand(1.5, 6.5), -ZONE_GAP * 3 + rand(-18, 18));
-    scene.add(lan);
-    lanterns.push({ obj: lan, baseY: lan.position.y, speed: rand(0.3, 0.9), phase: rand(0, 6.28) });
-  }
-
-  // zone 4: neon city
-  for (var cIdx = 0; cIdx < (isPhone ? 12 : 22); cIdx++) {
-    var cside = Math.random() < 0.5 ? -1 : 1;
-    var bh = rand(3, 10);
-    var bld = shadowed(new THREE.Mesh(
-      new THREE.BoxGeometry(rand(1.4, 2.6), bh, rand(1.4, 2.6)),
-      std(0x241a3d, { emissive: pick(NEON), emissiveIntensity: 0.28, roughness: 0.5 })
-    ));
-    bld.position.set(cside * rand(4.5, 16), bh / 2, -ZONE_GAP * 4 + rand(-20, 16));
+    bld.position.set(bx, bh / 2, bz);
     scene.add(bld);
+    // glowing roof edge
+    var edge = new THREE.Mesh(new THREE.BoxGeometry(bw + 0.06, 0.08, bd + 0.06), neonMat(pick(NEON)));
+    edge.position.set(bx, bh + 0.04, bz);
+    scene.add(edge);
+    // a neon sign on some buildings
+    if (Math.random() < 0.6) {
+      var sw = rand(0.5, 1.4), sh = rand(0.8, 2.2);
+      var sign = new THREE.Mesh(new THREE.PlaneGeometry(sw, sh), neonMat(pick(NEON)));
+      sign.position.set(bx + (bw / 2 + 0.02) * (bx > 0 ? -1 : 1), rand(1.5, bh - 1), bz);
+      sign.rotation.y = bx > 0 ? -Math.PI / 2 : Math.PI / 2;
+      scene.add(sign);
+      buildings.push({ sign: sign, phase: rand(0, 6.28), speed: rand(2, 7) });
+    }
   }
-  var neonRings = [];
-  for (var nrIdx = 0; nrIdx < 5; nrIdx++) {
-    var nr = new THREE.Mesh(
-      new THREE.TorusGeometry(rand(2.6, 3.4), 0.09, 8, 36),
-      new THREE.MeshBasicMaterial({ color: pick(NEON) })
-    );
-    nr.position.set(0, 3.4, -ZONE_GAP * 4 + 12 - nrIdx * 7);
-    scene.add(nr);
-    neonRings.push(nr);
+  // street lamps: glowing orbs on poles
+  for (var lp = 0; lp < (isPhone ? 8 : 14); lp++) {
+    var lside = lp % 2 === 0 ? -1 : 1;
+    var lz = -lp * 14 + 4;
+    var pole = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 3.4, 6), std(0x221a3e));
+    pole.position.set(lside * 2.8, 1.7, lz);
+    scene.add(pole);
+    var orb = new THREE.Mesh(new THREE.SphereGeometry(0.16, 10, 10), neonMat(lp % 2 ? 0xff2d95 : 0x6ee7ff));
+    orb.position.set(lside * 2.8, 3.5, lz);
+    scene.add(orb);
+  }
+  // floating neon rings over the alley
+  var alleyRings = [];
+  for (var ar = 0; ar < 6; ar++) {
+    var ring = new THREE.Mesh(new THREE.TorusGeometry(rand(2.6, 3.6), 0.07, 8, 40), neonMat(pick(NEON)));
+    ring.position.set(0, 3.6, -ZONE_GAP - 14 + ar * 6);
+    scene.add(ring);
+    alleyRings.push(ring);
   }
 
-  // zone 5: finale arch of shapes
+  // ---------- zone 2: synthwave sun + grid + mountains ----------
+  var sunUniforms = { c1: { value: new THREE.Color(0xffe14d) }, c2: { value: new THREE.Color(0xff2d95) }, fade: { value: 1.0 } };
+  var synthSun = new THREE.Mesh(
+    new THREE.CircleGeometry(15, 48),
+    new THREE.ShaderMaterial({
+      uniforms: sunUniforms, transparent: true, depthWrite: false,
+      vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
+      fragmentShader: [
+        'varying vec2 vUv; uniform vec3 c1; uniform vec3 c2; uniform float fade;',
+        'void main(){',
+        '  vec2 p = vUv * 2.0 - 1.0;',
+        '  if (length(p) > 1.0) discard;',
+        '  float stripes = step(0.0, sin(p.y * 22.0)) * step(p.y, -0.05);',
+        '  if (stripes > 0.5 && p.y < -0.05) discard;',
+        '  vec3 c = mix(c2, c1, vUv.y);',
+        '  gl_FragColor = vec4(c * 1.05, fade);',
+        '}'
+      ].join('\n')
+    })
+  );
+  synthSun.position.set(0, 10, -ZONE_GAP * 2 - 125);
+  scene.add(synthSun);
+
+  var grid = new THREE.GridHelper(220, 56, 0xff2d95, 0xff2d95);
+  grid.material.transparent = true;
+  grid.material.opacity = 0.55;
+  grid.position.set(0, 0.02, -ZONE_GAP * 2 - 20);
+  scene.add(grid);
+
+  for (var mt = 0; mt < (isPhone ? 10 : 16); mt++) {
+    var mside = Math.random() < 0.5 ? -1 : 1;
+    var mh = rand(6, 16);
+    var mtn = new THREE.Mesh(
+      new THREE.ConeGeometry(rand(4, 9), mh, 4),
+      std(0x0e0822, { roughness: 0.8, emissive: 0x2a0b4e, emissiveIntensity: 0.5 })
+    );
+    mtn.position.set(mside * rand(18, 60), mh / 2 - 0.2, -ZONE_GAP * 2 + rand(-70, 10));
+    mtn.rotation.y = rand(0, 1);
+    scene.add(mtn);
+  }
+
+  // ---------- zone 3: crystal forest ----------
+  var crystals = [];
+  for (var cr = 0; cr < (isPhone ? 16 : 30); cr++) {
+    var cside = Math.random() < 0.5 ? -1 : 1;
+    var ch = rand(0.8, 3.4);
+    var cry = new THREE.Mesh(
+      new THREE.ConeGeometry(rand(0.25, 0.7), ch, 5),
+      std(pick(NEON), { emissive: pick(NEON), emissiveIntensity: 0.45, roughness: 0.2, metalness: 0.1 })
+    );
+    cry.position.set(cside * rand(2.8, 16), ch / 2, -ZONE_GAP * 3 + rand(-22, 22));
+    cry.rotation.y = rand(0, 3);
+    scene.add(cry);
+    crystals.push({ obj: cry, phase: rand(0, 6.28), speed: rand(0.6, 1.6), baseI: 0.45 });
+  }
+  // floating glow orbs between the crystals
+  var orbs = [];
+  for (var ob = 0; ob < (isPhone ? 12 : 22); ob++) {
+    var orb2 = new THREE.Mesh(new THREE.SphereGeometry(rand(0.08, 0.2), 8, 8), neonMat(pick(NEON)));
+    orb2.position.set(rand(-10, 10), rand(0.5, 5), -ZONE_GAP * 3 + rand(-24, 24));
+    scene.add(orb2);
+    orbs.push({ obj: orb2, baseY: orb2.position.y, speed: rand(0.4, 1.2), phase: rand(0, 6.28) });
+  }
+
+  // ---------- zone 4: aurora ribbons ----------
+  var auroras = [];
+  for (var au = 0; au < 3; au++) {
+    var auGeo = new THREE.PlaneGeometry(60, 9, 42, 1);
+    var auMat = new THREE.ShaderMaterial({
+      transparent: true, depthWrite: false, side: THREE.DoubleSide,
+      blending: THREE.AdditiveBlending,
+      uniforms: {
+        t: { value: 0 },
+        col: { value: new THREE.Color(pick([0x7dffb2, 0x6ee7ff, 0xa78bfa])) },
+        seed: { value: rand(0, 10) }
+      },
+      vertexShader: [
+        'uniform float t; uniform float seed; varying vec2 vUv;',
+        'void main(){',
+        '  vUv = uv;',
+        '  vec3 p = position;',
+        '  p.y += sin(p.x * 0.24 + t * 0.7 + seed) * 2.2;',
+        '  p.z += cos(p.x * 0.18 + t * 0.5 + seed) * 1.6;',
+        '  gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);',
+        '}'
+      ].join('\n'),
+      fragmentShader: [
+        'uniform vec3 col; varying vec2 vUv;',
+        'void main(){',
+        '  float a = sin(vUv.y * 3.14159) * 0.5;',
+        '  gl_FragColor = vec4(col * 1.4, a * (0.5 + 0.5 * sin(vUv.x * 12.0)));',
+        '}'
+      ].join('\n')
+    });
+    var ribbon = new THREE.Mesh(auGeo, auMat);
+    ribbon.position.set(rand(-8, 8), 13 + au * 3.5, -ZONE_GAP * 4 + rand(-16, 8));
+    ribbon.rotation.x = 0.4;
+    scene.add(ribbon);
+    auroras.push(ribbon);
+  }
+
+  // ---------- zone 5: portal finale ----------
+  var portal = new THREE.Mesh(new THREE.TorusGeometry(5, 0.28, 14, 56), neonMat(0xff2d95));
+  portal.position.set(0, 5.2, -ZONE_GAP * 5 - 6);
+  scene.add(portal);
+  var portal2 = new THREE.Mesh(new THREE.TorusGeometry(5.8, 0.12, 10, 56), neonMat(0x6ee7ff));
+  portal2.position.copy(portal.position);
+  scene.add(portal2);
   var finaleShapes = [];
   var GEOS = [
-    function () { return new THREE.BoxGeometry(0.8, 0.8, 0.8); },
-    function () { return new THREE.TorusKnotGeometry(0.4, 0.15, 40, 8); },
-    function () { return new THREE.IcosahedronGeometry(0.6); },
-    function () { return new THREE.ConeGeometry(0.5, 1, 16); }
+    function () { return new THREE.BoxGeometry(0.7, 0.7, 0.7); },
+    function () { return new THREE.TorusKnotGeometry(0.35, 0.13, 40, 8); },
+    function () { return new THREE.IcosahedronGeometry(0.55); },
+    function () { return new THREE.OctahedronGeometry(0.6); }
   ];
-  var finaleN = isPhone ? 14 : 24;
-  for (var fIdx = 0; fIdx < finaleN; fIdx++) {
-    var fa = (fIdx / (finaleN - 1)) * Math.PI;
-    var fm = new THREE.Mesh(pick(GEOS)(), std(pick(NEON), { emissive: pick(NEON), emissiveIntensity: 0.25, roughness: 0.35 }));
-    fm.position.set(Math.cos(fa) * 8, Math.sin(fa) * 6 + 0.5, -ZONE_GAP * 5 - rand(0, 5));
-    fm.userData = { spin: new THREE.Vector3(rand(-1, 1), rand(-1, 1), rand(-1, 1)) };
+  var finaleN = isPhone ? 12 : 20;
+  for (var fi = 0; fi < finaleN; fi++) {
+    var fa = (fi / (finaleN - 1)) * Math.PI * 2;
+    var fm = new THREE.Mesh(pick(GEOS)(), std(pick(NEON), { emissive: pick(NEON), emissiveIntensity: 0.7, roughness: 0.3 }));
+    fm.userData = {
+      ang: fa, rad: rand(6.5, 8.5),
+      spin: new THREE.Vector3(rand(-1, 1), rand(-1, 1), rand(-1, 1)),
+      speed: rand(0.15, 0.4)
+    };
     scene.add(fm);
     finaleShapes.push(fm);
-  }
-
-  // clouds drifting overhead the whole way
-  var clouds = [];
-  for (var clIdx = 0; clIdx < (isPhone ? 8 : 14); clIdx++) {
-    var cl = new THREE.Group();
-    for (var puff = 0; puff < 3; puff++) {
-      var pm = new THREE.Mesh(
-        new THREE.SphereGeometry(rand(0.7, 1.3), 10, 10),
-        new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 1, transparent: true, opacity: 0.9 })
-      );
-      pm.position.set(puff * rand(0.7, 1.1) - 1, rand(-0.2, 0.2), rand(-0.3, 0.3));
-      cl.add(pm);
-    }
-    cl.position.set(rand(-24, 24), rand(8, 14), rand(6, -WALK_LEN - 20));
-    scene.add(cl);
-    clouds.push({ obj: cl, speed: rand(0.15, 0.5) });
   }
 
   // confetti
@@ -485,7 +600,7 @@
         new THREE.BoxGeometry(0.14, 0.14, 0.03),
         new THREE.MeshBasicMaterial({ color: pick(NEON) })
       );
-      p.position.set(girl.position.x, 4.5, girl.position.z - 2);
+      p.position.set(girl.position.x, 5, girl.position.z - 2);
       p.userData = {
         vel: new THREE.Vector3(rand(-1, 1), rand(0.6, 1.6), rand(-1, 1)).normalize().multiplyScalar(rand(5, 12)),
         rot: new THREE.Vector3(rand(-8, 8), rand(-8, 8), rand(-8, 8)),
@@ -497,7 +612,7 @@
   }
   document.getElementById('btnConfetti').addEventListener('click', popConfetti);
 
-  // ---------- scroll -> walk progress ----------
+  // ---------- scroll -> walk ----------
   var target = 0, progress = 0;
   var progressBar = document.getElementById('progress');
   function readScroll() {
@@ -507,7 +622,6 @@
   window.addEventListener('scroll', readScroll, { passive: true });
   readScroll();
 
-  // pointer / gyro tilt (never fights page scroll)
   var tiltX = 0, tiltY = 0, tiltTX = 0, tiltTY = 0;
   window.addEventListener('mousemove', function (e) {
     tiltTX = (e.clientX / window.innerWidth - 0.5) * 2;
@@ -526,7 +640,6 @@
     });
   }
 
-  // caption reveal
   var captions = document.querySelectorAll('.caption');
   if ('IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (entries) {
@@ -541,16 +654,13 @@
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
+    composer.setSize(window.innerWidth, window.innerHeight);
     readScroll();
   });
 
   // ---------- animate ----------
   var clock = new THREE.Clock();
-  // sky: day -> golden hour -> night
-  var skyA = new THREE.Color(0x9fe3ff), skyB = new THREE.Color(0xffb37d),
-      skyC = new THREE.Color(0x140b33), skyNow = new THREE.Color();
-  var speedSm = 0; // smoothed walking speed for lean/sway
-  var blinkT = 0;
+  var speedSm = 0, blinkT = 0;
 
   function animate() {
     requestAnimationFrame(animate);
@@ -559,48 +669,51 @@
 
     var prev = progress;
     progress += (target - progress) * Math.min(1, dt * 5);
-    var speed = dt > 0 ? (progress - prev) * WALK_LEN / dt : 0; // world units / sec
+    var speed = dt > 0 ? (progress - prev) * WALK_LEN / dt : 0;
     speedSm += (Math.abs(speed) - speedSm) * Math.min(1, dt * 6);
     tiltX += (tiltTX - tiltX) * Math.min(1, dt * 4);
     tiltY += (tiltTY - tiltY) * Math.min(1, dt * 4);
     progressBar.style.width = (target * 100).toFixed(2) + '%';
 
-    // sky shifts: day for first half, golden hour, then night in the city
-    var ph = progress * 2;
-    if (ph < 1) skyNow.copy(skyA).lerp(skyB, ph);
-    else skyNow.copy(skyB).lerp(skyC, Math.min(ph - 1, 1));
-    scene.background = skyNow;
-    scene.fog.color.copy(skyNow);
-    sun.intensity = 0.95 - progress * 0.55;
-    glow.intensity = Math.max(0, (progress - 0.6) * 2.2); // pink glow at night
-    glow.position.set(girl.position.x, 4, girl.position.z - 2);
+    // sky deepens to space over the journey; stars fade in
+    skyUniforms.nite.value = Math.min(1, Math.max(0, (progress - 0.3) / 0.5));
+    starMat.opacity = Math.min(1, Math.max(0, (progress - 0.25) / 0.4));
+    sky.position.z = -progress * WALK_LEN;
 
-    // ---- the girl walks ----
+    // ---- walk cycle with knees ----
     var dist = progress * WALK_LEN;
     girl.position.z = -dist;
-    var walkPhase = dist * 2.4;
-    var amp = Math.min(1, speedSm / 6); // limbs settle when she stops
-    var ls = Math.sin(walkPhase) * 0.62 * amp;
-    legL.rotation.x = ls;
-    legR.rotation.x = -ls;
-    armL.rotation.x = -ls * 0.85;
-    armR.rotation.x = ls * 0.85;
-    girl.position.y = Math.abs(Math.cos(walkPhase)) * 0.14 * amp;
-    girl.rotation.x = -0.06 * amp * (speed >= 0 ? 1 : -1); // little lean into the walk
-    girl.rotation.z = Math.sin(walkPhase) * 0.03 * amp;
-    // idle life: breathing + head tilt + ponytail sway (always on)
+    var wp = dist * 2.4;
+    var amp = Math.min(1, speedSm / 6);
+    var swing = Math.sin(wp) * 0.58 * amp;
+    legL.hip.rotation.x = swing;
+    legR.hip.rotation.x = -swing;
+    legL.knee.rotation.x = Math.max(0, Math.sin(wp + 1.9)) * 0.85 * amp;
+    legR.knee.rotation.x = Math.max(0, Math.sin(wp + 1.9 + Math.PI)) * 0.85 * amp;
+    armL.shoulder.rotation.x = -swing * 0.85;
+    armR.shoulder.rotation.x = swing * 0.85;
+    armL.elbow.rotation.x = -0.35 - Math.max(0, -Math.sin(wp)) * 0.45 * amp;
+    armR.elbow.rotation.x = -0.35 - Math.max(0, Math.sin(wp)) * 0.45 * amp;
+    girl.position.y = Math.abs(Math.cos(wp)) * 0.13 * amp;
+    girl.rotation.x = -0.06 * amp;
+    girl.rotation.z = Math.sin(wp) * 0.03 * amp;
     torso.scale.x = 1 + Math.sin(t * 2.2) * 0.02;
     head.rotation.z = Math.sin(t * 0.8) * 0.05;
     head.rotation.y = Math.sin(t * 0.5) * 0.08 + tiltX * 0.2;
-    ponytail.rotation.x = 0.5 + Math.sin(t * 3 + 1) * 0.08 + amp * 0.35;
-    ponytail.rotation.z = Math.sin(walkPhase) * 0.12 * amp + Math.sin(t * 1.7) * 0.04;
-    dress.rotation.y = Math.sin(walkPhase) * 0.06 * amp;
-    // blink every ~3s
+    ponytail.rotation.x = 0.5 + Math.sin(t * 3 + 1) * 0.08 + amp * 0.4;
+    ponytail.rotation.z = Math.sin(wp) * 0.14 * amp + Math.sin(t * 1.7) * 0.04;
+    strandL.rotation.x = Math.sin(t * 2.1) * 0.06 + amp * 0.15;
+    strandR.rotation.x = Math.sin(t * 2.1 + 1) * 0.06 + amp * 0.15;
+    dress.rotation.y = Math.sin(wp) * 0.06 * amp;
     blinkT += dt;
     var blink = blinkT % 3 > 2.86 ? 0.12 : 1;
     eyeL.scale.y = blink; eyeR.scale.y = blink;
 
-    // ---- camera follows her ----
+    // her personal glow rides along (pink + cyan = cinematic rim light)
+    glow.position.set(girl.position.x - 2.5, 3.4, girl.position.z + 2.5);
+    glow2.position.set(girl.position.x + 2.8, 2.6, girl.position.z - 3);
+
+    // ---- camera ----
     var cz = girl.position.z;
     var weave = Math.sin(progress * Math.PI * 2) * 1.6;
     camera.position.set(
@@ -608,45 +721,47 @@
       3.1 - tiltY * 1.6,
       cz + 7.6
     );
-    camera.lookAt(girl.position.x + tiltX * 1.5, 2.3, cz - 3);
+    camera.lookAt(girl.position.x + tiltX * 1.5, 2.4, cz - 3);
 
     // ---- scenery life ----
-    for (var s = 0; s < sway.length; s++) {
-      var sw = sway[s];
-      sw.obj.rotation[sw.axis] = sw.base + Math.sin(t * sw.speed + sw.phase) * sw.amp;
+    for (var b2 = 0; b2 < buildings.length; b2++) {
+      var bs = buildings[b2]; // neon signs flicker
+      bs.sign.material.color.offsetHSL(0, 0, 0);
+      bs.sign.visible = Math.sin(t * bs.speed + bs.phase) > -0.92;
     }
-    for (var b = 0; b < butterflies.length; b++) {
-      var bf = butterflies[b], bu = bf.userData;
-      var ba = t * bu.speed + bu.phase;
-      bf.position.set(bu.cx + Math.cos(ba) * bu.r, bu.cy + Math.sin(ba * 1.7) * 0.6, bu.cz + Math.sin(ba) * bu.r);
-      bf.rotation.y = -ba;
-      var flap = Math.sin(t * 14 + bu.phase) * 0.9;
-      bu.wg1.rotation.y = flap; bu.wg2.rotation.y = -flap;
+    for (var ar2 = 0; ar2 < alleyRings.length; ar2++) {
+      alleyRings[ar2].rotation.z += dt * (0.3 + ar2 * 0.12);
     }
-    for (var bl2 = 0; bl2 < balloons.length; bl2++) {
-      var bb = balloons[bl2];
-      bb.obj.position.y = bb.baseY + Math.sin(t * bb.speed + bb.phase) * 0.5;
+    synthSun.position.y = 10 + Math.sin(t * 0.4) * 0.6;
+    sunUniforms.fade.value = 1 - Math.min(1, Math.max(0, (progress - 0.48) / 0.14));
+    synthSun.visible = sunUniforms.fade.value > 0.01;
+    for (var cr2 = 0; cr2 < crystals.length; cr2++) {
+      var cy = crystals[cr2];
+      cy.obj.material.emissiveIntensity = cy.baseI + Math.sin(t * cy.speed + cy.phase) * 0.35;
     }
-    for (var l = 0; l < lanterns.length; l++) {
-      var ln = lanterns[l];
-      ln.obj.position.y = ln.baseY + Math.sin(t * ln.speed + ln.phase) * 0.7;
+    for (var ob2 = 0; ob2 < orbs.length; ob2++) {
+      var oo = orbs[ob2];
+      oo.obj.position.y = oo.baseY + Math.sin(t * oo.speed + oo.phase) * 0.6;
     }
-    for (var nr2 = 0; nr2 < neonRings.length; nr2++) {
-      neonRings[nr2].rotation.z += dt * (0.4 + nr2 * 0.15);
+    for (var au2 = 0; au2 < auroras.length; au2++) {
+      auroras[au2].material.uniforms.t.value = t;
     }
+    portal.rotation.z += dt * 0.4;
+    portal2.rotation.z -= dt * 0.25;
+    var pulse = 1 + Math.sin(t * 2.4) * 0.05;
+    portal.scale.set(pulse, pulse, 1);
     for (var f2 = 0; f2 < finaleShapes.length; f2++) {
       var fs = finaleShapes[f2], fu = fs.userData;
+      fu.ang += fu.speed * dt;
+      fs.position.set(
+        portal.position.x + Math.cos(fu.ang) * fu.rad,
+        portal.position.y + Math.sin(fu.ang) * fu.rad * 0.8,
+        portal.position.z + Math.sin(fu.ang * 2) * 1.2
+      );
       fs.rotation.x += fu.spin.x * dt;
       fs.rotation.y += fu.spin.y * dt;
-      fs.rotation.z += fu.spin.z * dt;
-    }
-    for (var c2 = 0; c2 < clouds.length; c2++) {
-      var cc = clouds[c2];
-      cc.obj.position.x += cc.speed * dt;
-      if (cc.obj.position.x > 26) cc.obj.position.x = -26;
     }
 
-    // confetti physics
     for (var j = confetti.length - 1; j >= 0; j--) {
       var p = confetti[j], pu = p.userData;
       pu.vel.y -= dt * 10;
@@ -660,7 +775,7 @@
       }
     }
 
-    renderer.render(scene, camera);
+    composer.render();
   }
   animate();
 })();
