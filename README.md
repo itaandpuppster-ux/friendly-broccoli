@@ -4,7 +4,8 @@ An interactive 3D website playground. Everything is a single HTML file — no bu
 
 ## Pages
 
-- **`index.html` — "the scroll"**: a scroll-driven 3D ride. As you scroll (touch on phones, wheel/trackpad on computers), the camera flies through six scenes — floating crystals, a neon ring tunnel, a color-shifting morphing blob, a 30,000-particle spiral galaxy, a ringed planet with moons, and a confetti finale. Trendy reel-style captions pop in as each scene arrives. Move your mouse (or tilt your phone) to tilt the camera. Automatically switches to a lighter "phone mode" on small touch devices.
+- **`index.html` — "her walk"**: a 3D girl who walks when you scroll and stops when you stop. She strides down a path through six scenes — a flower meadow, a butterfly garden, a rainbow with balloons, golden-hour floating lanterns, a neon city at night, and a confetti finale — while the sky melts from day to sunset to night. Trendy reel-style captions pop in as each scene arrives. Move your mouse (or tilt your phone) to move the camera. Automatically switches to a lighter "phone mode" on small touch devices.
+- **`ride.html` — "the scroll"**: a scroll-driven 3D space ride. The camera flies through floating crystals, a neon ring tunnel, a color-shifting morphing blob, a 30,000-particle spiral galaxy, and a ringed planet with moons.
 - **`3d-playground.html` — "Shape Playground"**: a 3D toy. Drag to spin the world, tap shapes to pop them, tap empty space to spawn new ones. Make-it-rain and party-mode buttons included.
 
 ## Running it

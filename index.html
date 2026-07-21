@@ -3,41 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>the scroll — a 3D vibe check</title>
+<title>her walk — a 3D scroll story</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: auto; }
   body {
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    background: #05010f;
+    background: #ffd9ec;
     color: #fff;
     overflow-x: hidden;
   }
-  #scene {
-    position: fixed; inset: 0;
-    width: 100%; height: 100%;
-    z-index: 0;
-  }
+  #scene { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; }
 
-  /* scroll progress bar */
   #progress {
     position: fixed; top: 0; left: 0; height: 4px; width: 0%;
     background: linear-gradient(90deg, #ff2d95, #ffb830, #6ee7ff, #a78bfa);
-    z-index: 50;
-    border-radius: 0 4px 4px 0;
+    z-index: 50; border-radius: 0 4px 4px 0;
     box-shadow: 0 0 12px rgba(255, 45, 149, 0.8);
   }
 
-  /* the tall scroll track */
   #track { position: relative; z-index: 10; pointer-events: none; }
   .panel {
     height: 100vh; height: 100svh;
-    display: flex; align-items: center; justify-content: center;
-    padding: 24px;
+    display: flex; align-items: flex-start; justify-content: center;
+    padding: max(10vh, 70px) 24px 24px;
   }
   .panel:nth-child(even) { justify-content: flex-start; }
   .panel:nth-child(odd) { justify-content: flex-end; }
-  .panel:first-child, .panel:last-child { justify-content: center; }
+  .panel:first-child, .panel:last-child { justify-content: center; align-items: center; padding-top: 24px; }
 
   .caption {
     max-width: min(560px, 88vw);
@@ -47,24 +39,15 @@
                 transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
     pointer-events: auto;
   }
-  .caption.show {
-    opacity: 1;
-    transform: translateY(0) scale(1) rotate(0deg);
-  }
+  .caption.show { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
 
-  /* Instagram-reel style text blocks */
   .reel-text {
     display: inline;
-    font-size: clamp(1.6rem, 6.5vw, 3.2rem);
-    font-weight: 800;
-    line-height: 1.5;
-    letter-spacing: -0.01em;
-    color: #fff;
-    background: rgba(0, 0, 0, 0.82);
-    box-decoration-break: clone;
-    -webkit-box-decoration-break: clone;
-    padding: 0.12em 0.45em;
-    border-radius: 0.28em;
+    font-size: clamp(1.5rem, 6vw, 2.9rem);
+    font-weight: 800; line-height: 1.5; letter-spacing: -0.01em;
+    color: #fff; background: rgba(0, 0, 0, 0.82);
+    box-decoration-break: clone; -webkit-box-decoration-break: clone;
+    padding: 0.12em 0.45em; border-radius: 0.28em;
   }
   .reel-text.pink   { background: #ff2d95; color: #fff; }
   .reel-text.yellow { background: #ffe14d; color: #1a1200; }
@@ -73,75 +56,53 @@
   .reel-text.white  { background: rgba(255,255,255,0.94); color: #14082e; }
 
   .sub {
-    display: block;
-    margin-top: 14px;
-    font-size: clamp(0.85rem, 3.2vw, 1.05rem);
-    font-weight: 600;
-    color: rgba(255,255,255,0.85);
-    text-shadow: 0 2px 14px rgba(0,0,0,0.7);
+    display: block; margin-top: 14px;
+    font-size: clamp(0.85rem, 3.2vw, 1.05rem); font-weight: 700;
+    color: #fff; text-shadow: 0 2px 14px rgba(0,0,0,0.55);
   }
 
-  /* hero */
   .hero { text-align: center; }
   .hero h1 {
     font-size: clamp(2.6rem, 10vw, 6rem);
-    font-weight: 900;
-    letter-spacing: -0.03em;
-    line-height: 1.02;
-    background: linear-gradient(115deg, #ff2d95 0%, #ffb830 30%, #6ee7ff 65%, #a78bfa 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    filter: drop-shadow(0 6px 30px rgba(255, 45, 149, 0.35));
+    font-weight: 900; letter-spacing: -0.03em; line-height: 1.02;
+    background: linear-gradient(115deg, #ff2d95 0%, #ffb830 40%, #a78bfa 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    filter: drop-shadow(0 4px 22px rgba(255, 45, 149, 0.45));
   }
-  .hero .sub { font-size: clamp(1rem, 3.6vw, 1.3rem); }
   .scroll-hint {
-    margin-top: 42px;
+    margin-top: 30px;
     display: inline-flex; flex-direction: column; align-items: center; gap: 8px;
-    color: rgba(255,255,255,0.9);
-    font-weight: 700; font-size: 0.95rem;
+    color: #fff; font-weight: 800; font-size: 0.95rem;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.4);
     animation: bob 1.6s ease-in-out infinite;
   }
   .scroll-hint .arrow {
     width: 26px; height: 26px;
     border-right: 3px solid #fff; border-bottom: 3px solid #fff;
-    transform: rotate(45deg);
-    border-radius: 2px;
+    transform: rotate(45deg); border-radius: 2px;
   }
-  @keyframes bob {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(12px); }
-  }
+  @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(12px); } }
 
-  /* finale */
   .finale { text-align: center; }
   .btn {
     pointer-events: auto; cursor: pointer;
-    display: inline-block;
-    margin: 10px 6px 0;
-    border: none; border-radius: 999px;
-    padding: 14px 26px;
+    display: inline-block; margin: 10px 6px 0;
+    border: none; border-radius: 999px; padding: 14px 26px;
     font-size: 1.05rem; font-weight: 800; font-family: inherit;
-    color: #14082e; background: #fff;
-    text-decoration: none;
+    color: #14082e; background: #fff; text-decoration: none;
     box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 30px rgba(167, 139, 250, 0.45);
     transition: transform 0.12s ease, box-shadow 0.12s ease;
   }
   .btn:active { transform: translateY(3px) scale(0.98); box-shadow: 0 1px 0 rgba(0,0,0,0.3); }
   .btn.pink { background: #ff2d95; color: #fff; }
 
-  /* device badge */
   #device-badge {
     position: fixed; top: 14px; right: 14px; z-index: 40;
-    background: rgba(0,0,0,0.6);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255,255,255,0.18);
-    border-radius: 999px;
-    padding: 7px 14px;
-    font-size: 0.8rem; font-weight: 700;
-    color: rgba(255,255,255,0.92);
-    pointer-events: none;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.18); border-radius: 999px;
+    padding: 7px 14px; font-size: 0.8rem; font-weight: 700;
+    color: rgba(255,255,255,0.92); pointer-events: none;
   }
 </style>
 </head>
@@ -151,55 +112,56 @@
 <div id="device-badge">…</div>
 
 <div id="track">
-  <!-- 0: hero -->
+  <!-- 0: hero / meadow -->
   <section class="panel">
     <div class="caption hero">
-      <h1>the scroll</h1>
-      <span class="sub">an interactive 3D ride &bull; works on your phone AND your computer</span>
-      <div class="scroll-hint"><span>scroll</span><div class="arrow"></div></div>
+      <h1>her walk</h1>
+      <span class="sub">scroll &mdash; she walks &bull; stop &mdash; she stops &bull; phones AND computers</span>
+      <div class="scroll-hint"><span>scroll to walk</span><div class="arrow"></div></div>
     </div>
   </section>
 
-  <!-- 1: tunnel -->
+  <!-- 1: butterfly garden -->
   <section class="panel">
     <div class="caption">
-      <span class="reel-text pink">POV: you just entered the vibe zone ✨</span>
-      <span class="sub">keep scrolling — the camera is flying through a neon tunnel rn</span>
+      <span class="reel-text pink">POV: she just entered her main character era 💅</span>
+      <span class="sub">even the butterflies showed up for it</span>
     </div>
   </section>
 
-  <!-- 2: blob -->
+  <!-- 2: rainbow + balloons -->
   <section class="panel">
     <div class="caption">
-      <span class="reel-text yellow">it&rsquo;s giving&hellip; main character energy 💅</span>
-      <span class="sub">this blob is 100% generated by code — no downloads, loads instantly</span>
+      <span class="reel-text yellow">she walked so the rainbow could run 🌈</span>
+      <span class="sub">keep scrolling — every step is yours</span>
     </div>
   </section>
 
-  <!-- 3: galaxy -->
+  <!-- 3: golden hour lanterns -->
   <section class="panel">
     <div class="caption">
-      <span class="reel-text mint">no cap, this part is fire 🔥🔥</span>
-      <span class="sub">30,000 particles and your phone isn&rsquo;t even sweating</span>
+      <span class="reel-text mint">golden hour hits different, no cap 😮‍💨</span>
+      <span class="sub">the sky changes as she walks — watch it melt</span>
     </div>
   </section>
 
-  <!-- 4: planet -->
+  <!-- 4: neon city night -->
   <section class="panel">
     <div class="caption">
-      <span class="reel-text purple">the way this hits different 😮‍💨</span>
-      <span class="sub">drag anywhere to tilt the world &bull; scrolling still drives the ride</span>
+      <span class="reel-text purple">city lights? she owns them, periodt 🔥</span>
+      <span class="sub">drag or tilt your phone to move the camera</span>
     </div>
   </section>
 
   <!-- 5: finale -->
   <section class="panel">
     <div class="caption finale">
-      <span class="reel-text white">and that&rsquo;s on periodt. 💖</span>
-      <span class="sub">you made it to the end of the scroll</span>
+      <span class="reel-text white">slay. that&rsquo;s the whole vibe. 💖</span>
+      <span class="sub">she made it — and so did you</span>
       <div>
         <button class="btn pink" id="btnConfetti">confetti 🎉</button>
-        <a class="btn" href="3d-playground.html">play the 3D toy →</a>
+        <a class="btn" href="ride.html">space ride →</a>
+        <a class="btn" href="3d-playground.html">3D toy →</a>
       </div>
     </div>
   </section>
@@ -220,187 +182,312 @@
   var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: !isPhone });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, isPhone ? 1.75 : 2));
   renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.shadowMap.enabled = !isPhone;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
   var scene = new THREE.Scene();
-  scene.fog = new THREE.FogExp2(0x05010f, 0.011);
+  scene.fog = new THREE.FogExp2(0xffd9ec, 0.012);
 
-  var camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 400);
+  var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 300);
 
-  scene.add(new THREE.AmbientLight(0x8888ff, 0.5));
-  var key = new THREE.PointLight(0xff2d95, 1.4, 120);
-  scene.add(key);
-  var fill = new THREE.PointLight(0x6ee7ff, 1.1, 120);
-  scene.add(fill);
+  scene.add(new THREE.AmbientLight(0xffffff, 0.75));
+  var sun = new THREE.DirectionalLight(0xfff2cc, 0.95);
+  sun.position.set(8, 14, 6);
+  if (!isPhone) {
+    sun.castShadow = true;
+    sun.shadow.mapSize.set(1024, 1024);
+    sun.shadow.camera.left = -20; sun.shadow.camera.right = 20;
+    sun.shadow.camera.top = 20; sun.shadow.camera.bottom = -20;
+  }
+  scene.add(sun);
+  var glow = new THREE.PointLight(0xff2d95, 0.0, 40);
+  scene.add(glow);
 
   function rand(a, b) { return a + Math.random() * (b - a); }
   function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
   var NEON = [0xff2d95, 0xffb830, 0xffe14d, 0x7dffb2, 0x6ee7ff, 0xa78bfa];
 
-  // The ride is a straight flight down -Z. Each scene "zone" lives around
-  // z = -ZONE_GAP * index; scroll progress moves the camera through them.
+  // She walks down -Z. Six zones, one per caption panel.
   var ZONES = 6;
-  var ZONE_GAP = 60;
-  var RIDE_LEN = ZONE_GAP * (ZONES - 1);
+  var ZONE_GAP = 48;
+  var WALK_LEN = ZONE_GAP * (ZONES - 1); // 240
 
-  // ---------- zone 0 + everywhere: starfield ----------
-  var starCount = isPhone ? 1200 : 3000;
-  var starGeo = new THREE.BufferGeometry();
-  var starPos = new Float32Array(starCount * 3);
-  for (var i = 0; i < starCount; i++) {
-    starPos[i * 3] = rand(-90, 90);
-    starPos[i * 3 + 1] = rand(-60, 60);
-    starPos[i * 3 + 2] = rand(-RIDE_LEN - 120, 40);
+  // ---------- ground + path ----------
+  var ground = new THREE.Mesh(
+    new THREE.PlaneGeometry(240, WALK_LEN + 160),
+    new THREE.MeshStandardMaterial({ color: 0xa5e8b0, roughness: 1 })
+  );
+  ground.rotation.x = -Math.PI / 2;
+  ground.position.set(0, 0, -WALK_LEN / 2);
+  ground.receiveShadow = !isPhone;
+  scene.add(ground);
+
+  var path = new THREE.Mesh(
+    new THREE.PlaneGeometry(3.4, WALK_LEN + 60),
+    new THREE.MeshStandardMaterial({ color: 0xffe9b3, roughness: 1 })
+  );
+  path.rotation.x = -Math.PI / 2;
+  path.position.set(0, 0.01, -WALK_LEN / 2);
+  scene.add(path);
+
+  // ---------- the girl ----------
+  var girl = new THREE.Group();
+  scene.add(girl);
+
+  var SKIN = 0xffd9b8, HAIR = 0x6b3fa0, DRESS = 0xff2d95, SHOE = 0xffffff;
+  function std(color, extra) {
+    var opts = { color: color, roughness: 0.65, metalness: 0.02 };
+    if (extra) for (var k in extra) opts[k] = extra[k];
+    return new THREE.MeshStandardMaterial(opts);
   }
-  starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
-  var stars = new THREE.Points(starGeo, new THREE.PointsMaterial({
-    color: 0xffffff, size: 0.35, transparent: true, opacity: 0.85
-  }));
-  scene.add(stars);
+  function shadowed(m) { if (!isPhone) m.castShadow = true; return m; }
 
-  // ---------- zone 0: floating crystals around the start ----------
-  var crystals = [];
-  for (var c = 0; c < (isPhone ? 14 : 24); c++) {
-    var cm = new THREE.Mesh(
-      new THREE.OctahedronGeometry(rand(0.5, 1.6)),
-      new THREE.MeshStandardMaterial({
-        color: pick(NEON), roughness: 0.25, metalness: 0.35,
-        emissive: pick(NEON), emissiveIntensity: 0.25
-      })
-    );
-    cm.position.set(rand(-16, 16), rand(-9, 9), rand(-24, 6));
-    cm.userData = {
-      spin: rand(0.3, 1.2), phase: rand(0, Math.PI * 2),
-      baseY: cm.position.y, amp: rand(0.4, 1.2)
+  // legs (pivot groups at the hips, y = 1.9)
+  function makeLeg(side) {
+    var g = new THREE.Group();
+    g.position.set(0.24 * side, 1.9, 0);
+    var thigh = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.12, 1.75, 12), std(SKIN)));
+    thigh.position.y = -0.875;
+    g.add(thigh);
+    var shoe = shadowed(new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.18, 0.55), std(SHOE, { roughness: 0.4 })));
+    shoe.position.set(0, -1.82, -0.1);
+    g.add(shoe);
+    return g;
+  }
+  var legL = makeLeg(-1), legR = makeLeg(1);
+  girl.add(legL); girl.add(legR);
+
+  // dress (cone) + torso
+  var dress = shadowed(new THREE.Mesh(new THREE.ConeGeometry(0.78, 1.5, 20), std(DRESS)));
+  dress.position.y = 2.0;
+  girl.add(dress);
+  var torso = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.36, 0.85, 14), std(DRESS)));
+  torso.position.y = 2.85;
+  girl.add(torso);
+
+  // arms (pivot groups at the shoulders, y = 3.2)
+  function makeArm(side) {
+    var g = new THREE.Group();
+    g.position.set(0.42 * side, 3.2, 0);
+    var arm = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.08, 1.15, 10), std(SKIN)));
+    arm.position.y = -0.575;
+    g.add(arm);
+    var hand = shadowed(new THREE.Mesh(new THREE.SphereGeometry(0.11, 10, 10), std(SKIN)));
+    hand.position.y = -1.18;
+    g.add(hand);
+    g.rotation.z = -0.12 * side;
+    return g;
+  }
+  var armL = makeArm(-1), armR = makeArm(1);
+  girl.add(armL); girl.add(armR);
+
+  // head group (so hair + face move together)
+  var head = new THREE.Group();
+  head.position.y = 3.75;
+  girl.add(head);
+  head.add(shadowed(new THREE.Mesh(new THREE.SphereGeometry(0.46, 22, 22), std(SKIN))));
+
+  // hair: cap + back + ponytail
+  var hairCap = shadowed(new THREE.Mesh(new THREE.SphereGeometry(0.5, 22, 22, 0, Math.PI * 2, 0, Math.PI * 0.55), std(HAIR)));
+  hairCap.position.set(0, 0.05, 0.02);
+  head.add(hairCap);
+  var hairBack = shadowed(new THREE.Mesh(new THREE.SphereGeometry(0.48, 18, 18), std(HAIR)));
+  hairBack.position.set(0, -0.02, 0.16);
+  hairBack.scale.set(0.95, 0.9, 0.7);
+  head.add(hairBack);
+  var ponytail = new THREE.Group();
+  ponytail.position.set(0, 0.32, 0.42);
+  var ponyMesh = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.05, 1.0, 10), std(HAIR)));
+  ponyMesh.position.y = -0.5;
+  ponytail.add(ponyMesh);
+  var ponyTip = shadowed(new THREE.Mesh(new THREE.SphereGeometry(0.1, 10, 10), std(HAIR)));
+  ponyTip.position.y = -1.0;
+  ponytail.add(ponyTip);
+  ponytail.rotation.x = 0.5;
+  head.add(ponytail);
+  var bow = shadowed(new THREE.Mesh(new THREE.SphereGeometry(0.12, 10, 10), std(0xffe14d, { roughness: 0.4 })));
+  bow.scale.set(1.6, 0.8, 0.8);
+  bow.position.set(0, 0.34, 0.4);
+  head.add(bow);
+
+  // face: eyes + blush (she faces -Z, the walking direction)
+  var eyeGeo = new THREE.SphereGeometry(0.055, 8, 8);
+  var eyeMat = new THREE.MeshBasicMaterial({ color: 0x2b1a3a });
+  var eyeL = new THREE.Mesh(eyeGeo, eyeMat), eyeR = new THREE.Mesh(eyeGeo, eyeMat);
+  eyeL.position.set(-0.17, 0.03, -0.42);
+  eyeR.position.set(0.17, 0.03, -0.42);
+  head.add(eyeL); head.add(eyeR);
+  var blushMat = new THREE.MeshBasicMaterial({ color: 0xff9ec4 });
+  var blushGeo = new THREE.SphereGeometry(0.06, 8, 8);
+  var blushL = new THREE.Mesh(blushGeo, blushMat), blushR = new THREE.Mesh(blushGeo, blushMat);
+  blushL.position.set(-0.28, -0.12, -0.36); blushL.scale.set(1.2, 0.7, 0.6);
+  blushR.position.set(0.28, -0.12, -0.36); blushR.scale.set(1.2, 0.7, 0.6);
+  head.add(blushL); head.add(blushR);
+
+
+  // ---------- scenery ----------
+  var sway = []; // things that gently sway/spin: {obj, speed, amp, axis, base, phase}
+
+  // trees along the whole path
+  var treeCount = isPhone ? 34 : 60;
+  var FOLIAGE = [0x7dffb2, 0x6ee7b7, 0xffb6d9, 0xffe14d, 0xa78bfa];
+  for (var tIdx = 0; tIdx < treeCount; tIdx++) {
+    var tree = new THREE.Group();
+    var side = Math.random() < 0.5 ? -1 : 1;
+    tree.position.set(side * rand(4, 22), 0, rand(8, -WALK_LEN - 20));
+    var th = rand(1.2, 2.4);
+    var trunk = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.22, th, 8), std(0xa5673f)));
+    trunk.position.y = th / 2;
+    tree.add(trunk);
+    var fol = shadowed(new THREE.Mesh(
+      Math.random() < 0.5 ? new THREE.SphereGeometry(rand(0.8, 1.5), 12, 12) : new THREE.ConeGeometry(rand(0.8, 1.3), rand(1.6, 2.6), 10),
+      std(pick(FOLIAGE))
+    ));
+    fol.position.y = th + 0.7;
+    tree.add(fol);
+    scene.add(tree);
+  }
+
+  // flowers near the start
+  for (var fl = 0; fl < (isPhone ? 24 : 50); fl++) {
+    var flower = new THREE.Group();
+    var fside = Math.random() < 0.5 ? -1 : 1;
+    flower.position.set(fside * rand(2.2, 9), 0, rand(6, -ZONE_GAP * 1.4));
+    var stem = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.03, 0.5, 6), std(0x3f9e58));
+    stem.position.y = 0.25;
+    flower.add(stem);
+    var bloom = new THREE.Mesh(new THREE.SphereGeometry(0.11, 8, 8), std(pick(NEON), { roughness: 0.4 }));
+    bloom.position.y = 0.55;
+    flower.add(bloom);
+    scene.add(flower);
+    sway.push({ obj: flower, speed: rand(1, 2.4), amp: 0.12, axis: 'z', base: 0, phase: rand(0, 6.28) });
+  }
+
+  // zone 1: butterflies
+  var butterflies = [];
+  for (var bIdx = 0; bIdx < (isPhone ? 8 : 14); bIdx++) {
+    var b = new THREE.Group();
+    var wingGeo = new THREE.CircleGeometry(0.22, 10);
+    var wingMat = new THREE.MeshBasicMaterial({ color: pick(NEON), side: THREE.DoubleSide });
+    var w1 = new THREE.Mesh(wingGeo, wingMat), w2 = new THREE.Mesh(wingGeo, wingMat);
+    w1.position.x = -0.18; w2.position.x = 0.18;
+    var wg1 = new THREE.Group(), wg2 = new THREE.Group();
+    wg1.add(w1); wg2.add(w2);
+    b.add(wg1); b.add(wg2);
+    b.userData = {
+      wg1: wg1, wg2: wg2,
+      cx: rand(-6, 6), cy: rand(1.2, 4), cz: -ZONE_GAP * 1 + rand(-14, 14),
+      r: rand(1, 3.4), speed: rand(0.5, 1.3), phase: rand(0, 6.28)
     };
-    scene.add(cm);
-    crystals.push(cm);
+    scene.add(b);
+    butterflies.push(b);
   }
 
-  // ---------- zone 1: neon ring tunnel ----------
-  var rings = [];
-  var ringCount = isPhone ? 22 : 36;
-  for (var r = 0; r < ringCount; r++) {
-    var ring = new THREE.Mesh(
-      new THREE.TorusGeometry(rand(5, 8), 0.12, 10, 48),
-      new THREE.MeshBasicMaterial({ color: NEON[r % NEON.length] })
+  // zone 2: rainbow arch + balloons
+  var RAINBOW = [0xff2d95, 0xffb830, 0xffe14d, 0x7dffb2, 0x6ee7ff, 0xa78bfa];
+  for (var rIdx = 0; rIdx < RAINBOW.length; rIdx++) {
+    var arc = new THREE.Mesh(
+      new THREE.TorusGeometry(7.5 + rIdx * 0.72, 0.32, 10, 40, Math.PI),
+      std(RAINBOW[rIdx], { roughness: 0.5 })
     );
-    var z = -ZONE_GAP * 1 + rand(-26, 26);
-    ring.position.set(Math.sin(z * 0.18) * 2, Math.cos(z * 0.14) * 2, z);
-    ring.userData = { spin: rand(-0.8, 0.8) };
-    scene.add(ring);
-    rings.push(ring);
+    arc.position.set(0, 0, -ZONE_GAP * 2);
+    scene.add(arc);
+  }
+  var balloons = [];
+  for (var blIdx = 0; blIdx < (isPhone ? 6 : 10); blIdx++) {
+    var bl = new THREE.Group();
+    var bside = Math.random() < 0.5 ? -1 : 1;
+    bl.position.set(bside * rand(3, 10), rand(2.5, 6), -ZONE_GAP * 2 + rand(-16, 16));
+    var ball = new THREE.Mesh(new THREE.SphereGeometry(0.5, 14, 14), std(pick(NEON), { roughness: 0.3 }));
+    ball.scale.y = 1.15;
+    bl.add(ball);
+    var str = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 1.6, 4), std(0xffffff));
+    str.position.y = -1.1;
+    bl.add(str);
+    scene.add(bl);
+    balloons.push({ obj: bl, baseY: bl.position.y, speed: rand(0.5, 1.1), phase: rand(0, 6.28) });
   }
 
-  // ---------- zone 2: morphing blob ----------
-  var blobGeo = new THREE.IcosahedronGeometry(6, isPhone ? 12 : 24);
-  var blobBase = blobGeo.attributes.position.array.slice();
-  var blob = new THREE.Mesh(blobGeo, new THREE.MeshStandardMaterial({
-    color: 0xff2d95, roughness: 0.2, metalness: 0.3,
-    emissive: 0x550030, flatShading: false
-  }));
-  blob.position.set(0, 0, -ZONE_GAP * 2);
-  scene.add(blob);
+  // zone 3: floating lanterns
+  var lanterns = [];
+  for (var lIdx = 0; lIdx < (isPhone ? 10 : 18); lIdx++) {
+    var lan = new THREE.Mesh(
+      new THREE.SphereGeometry(rand(0.18, 0.34), 10, 10),
+      new THREE.MeshBasicMaterial({ color: pick([0xffe14d, 0xffb830, 0xfff3c4]) })
+    );
+    lan.position.set(rand(-9, 9), rand(1.5, 6.5), -ZONE_GAP * 3 + rand(-18, 18));
+    scene.add(lan);
+    lanterns.push({ obj: lan, baseY: lan.position.y, speed: rand(0.3, 0.9), phase: rand(0, 6.28) });
+  }
 
-  // orbiting sparkles around the blob
-  var orbiters = [];
-  for (var o = 0; o < (isPhone ? 10 : 18); o++) {
-    var om = new THREE.Mesh(
-      new THREE.SphereGeometry(rand(0.12, 0.3), 10, 10),
+  // zone 4: neon city
+  for (var cIdx = 0; cIdx < (isPhone ? 12 : 22); cIdx++) {
+    var cside = Math.random() < 0.5 ? -1 : 1;
+    var bh = rand(3, 10);
+    var bld = shadowed(new THREE.Mesh(
+      new THREE.BoxGeometry(rand(1.4, 2.6), bh, rand(1.4, 2.6)),
+      std(0x241a3d, { emissive: pick(NEON), emissiveIntensity: 0.28, roughness: 0.5 })
+    ));
+    bld.position.set(cside * rand(4.5, 16), bh / 2, -ZONE_GAP * 4 + rand(-20, 16));
+    scene.add(bld);
+  }
+  var neonRings = [];
+  for (var nrIdx = 0; nrIdx < 5; nrIdx++) {
+    var nr = new THREE.Mesh(
+      new THREE.TorusGeometry(rand(2.6, 3.4), 0.09, 8, 36),
       new THREE.MeshBasicMaterial({ color: pick(NEON) })
     );
-    om.userData = { rad: rand(7.5, 11), speed: rand(0.4, 1.3), phase: rand(0, Math.PI * 2), tilt: rand(-0.8, 0.8) };
-    scene.add(om);
-    orbiters.push(om);
+    nr.position.set(0, 3.4, -ZONE_GAP * 4 + 12 - nrIdx * 7);
+    scene.add(nr);
+    neonRings.push(nr);
   }
 
-  // ---------- zone 3: spiral galaxy ----------
-  var galCount = isPhone ? 12000 : 30000;
-  var galGeo = new THREE.BufferGeometry();
-  var galPos = new Float32Array(galCount * 3);
-  var galCol = new Float32Array(galCount * 3);
-  var inner = new THREE.Color(0xffb830), outer = new THREE.Color(0xa78bfa), tmp = new THREE.Color();
-  for (var g = 0; g < galCount; g++) {
-    var rad = Math.pow(Math.random(), 1.6) * 16;
-    var arm = (g % 3) * (Math.PI * 2 / 3);
-    var ang = arm + rad * 0.42 + rand(-0.25, 0.25);
-    galPos[g * 3] = Math.cos(ang) * rad + rand(-0.4, 0.4);
-    galPos[g * 3 + 1] = rand(-0.6, 0.6) * (1 - rad / 20);
-    galPos[g * 3 + 2] = Math.sin(ang) * rad + rand(-0.4, 0.4);
-    tmp.copy(inner).lerp(outer, rad / 16);
-    galCol[g * 3] = tmp.r; galCol[g * 3 + 1] = tmp.g; galCol[g * 3 + 2] = tmp.b;
-  }
-  galGeo.setAttribute('position', new THREE.BufferAttribute(galPos, 3));
-  galGeo.setAttribute('color', new THREE.BufferAttribute(galCol, 3));
-  var galaxy = new THREE.Points(galGeo, new THREE.PointsMaterial({
-    size: 0.09, vertexColors: true, transparent: true, opacity: 0.95,
-    depthWrite: false, blending: THREE.AdditiveBlending
-  }));
-  galaxy.position.set(0, -2, -ZONE_GAP * 3);
-  galaxy.rotation.x = 0.45;
-  scene.add(galaxy);
-
-  // ---------- zone 4: planet with rings + moons ----------
-  var planetGroup = new THREE.Group();
-  planetGroup.position.set(0, 0, -ZONE_GAP * 4);
-  scene.add(planetGroup);
-
-  var planet = new THREE.Mesh(
-    new THREE.SphereGeometry(4.6, isPhone ? 32 : 48, isPhone ? 32 : 48),
-    new THREE.MeshStandardMaterial({ color: 0x6ee7ff, roughness: 0.55, metalness: 0.15, emissive: 0x02222e })
-  );
-  planetGroup.add(planet);
-
-  var pring = new THREE.Mesh(
-    new THREE.TorusGeometry(7.4, 0.5, 12, 64),
-    new THREE.MeshStandardMaterial({ color: 0xffb830, roughness: 0.4, emissive: 0x331f00 })
-  );
-  pring.rotation.x = Math.PI / 2.35;
-  planetGroup.add(pring);
-
-  var moons = [];
-  for (var mn = 0; mn < 4; mn++) {
-    var moon = new THREE.Mesh(
-      new THREE.SphereGeometry(rand(0.4, 0.8), 16, 16),
-      new THREE.MeshStandardMaterial({ color: pick(NEON), emissive: 0x111111, roughness: 0.5 })
-    );
-    moon.userData = { rad: rand(9, 13), speed: rand(0.25, 0.7), phase: rand(0, Math.PI * 2), tilt: rand(-0.5, 0.5) };
-    planetGroup.add(moon);
-    moons.push(moon);
-  }
-
-  // ---------- zone 5: finale — arch of shapes + confetti ----------
+  // zone 5: finale arch of shapes
   var finaleShapes = [];
   var GEOS = [
-    function () { return new THREE.BoxGeometry(1, 1, 1); },
-    function () { return new THREE.TorusKnotGeometry(0.5, 0.18, 48, 10); },
-    function () { return new THREE.IcosahedronGeometry(0.8); },
-    function () { return new THREE.ConeGeometry(0.6, 1.2, 20); }
+    function () { return new THREE.BoxGeometry(0.8, 0.8, 0.8); },
+    function () { return new THREE.TorusKnotGeometry(0.4, 0.15, 40, 8); },
+    function () { return new THREE.IcosahedronGeometry(0.6); },
+    function () { return new THREE.ConeGeometry(0.5, 1, 16); }
   ];
-  for (var f = 0; f < (isPhone ? 16 : 28); f++) {
-    var ang2 = (f / (isPhone ? 16 : 28)) * Math.PI;
-    var fm = new THREE.Mesh(pick(GEOS)(), new THREE.MeshStandardMaterial({
-      color: pick(NEON), roughness: 0.3, metalness: 0.2,
-      emissive: pick(NEON), emissiveIntensity: 0.2
-    }));
-    fm.position.set(Math.cos(ang2) * 12, Math.sin(ang2) * 9 - 2, -ZONE_GAP * 5 + rand(-6, 2));
+  var finaleN = isPhone ? 14 : 24;
+  for (var fIdx = 0; fIdx < finaleN; fIdx++) {
+    var fa = (fIdx / (finaleN - 1)) * Math.PI;
+    var fm = new THREE.Mesh(pick(GEOS)(), std(pick(NEON), { emissive: pick(NEON), emissiveIntensity: 0.25, roughness: 0.35 }));
+    fm.position.set(Math.cos(fa) * 8, Math.sin(fa) * 6 + 0.5, -ZONE_GAP * 5 - rand(0, 5));
     fm.userData = { spin: new THREE.Vector3(rand(-1, 1), rand(-1, 1), rand(-1, 1)) };
     scene.add(fm);
     finaleShapes.push(fm);
   }
 
+  // clouds drifting overhead the whole way
+  var clouds = [];
+  for (var clIdx = 0; clIdx < (isPhone ? 8 : 14); clIdx++) {
+    var cl = new THREE.Group();
+    for (var puff = 0; puff < 3; puff++) {
+      var pm = new THREE.Mesh(
+        new THREE.SphereGeometry(rand(0.7, 1.3), 10, 10),
+        new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 1, transparent: true, opacity: 0.9 })
+      );
+      pm.position.set(puff * rand(0.7, 1.1) - 1, rand(-0.2, 0.2), rand(-0.3, 0.3));
+      cl.add(pm);
+    }
+    cl.position.set(rand(-24, 24), rand(8, 14), rand(6, -WALK_LEN - 20));
+    scene.add(cl);
+    clouds.push({ obj: cl, speed: rand(0.15, 0.5) });
+  }
+
+  // confetti
   var confetti = [];
   function popConfetti() {
-    var origin = new THREE.Vector3(
-      camera.position.x, camera.position.y - 2, camera.position.z - 10
-    );
     for (var i = 0; i < (isPhone ? 60 : 120); i++) {
       var p = new THREE.Mesh(
-        new THREE.BoxGeometry(0.16, 0.16, 0.03),
+        new THREE.BoxGeometry(0.14, 0.14, 0.03),
         new THREE.MeshBasicMaterial({ color: pick(NEON) })
       );
-      p.position.copy(origin);
+      p.position.set(girl.position.x, 4.5, girl.position.z - 2);
       p.userData = {
-        vel: new THREE.Vector3(rand(-1, 1), rand(0.6, 1.6), rand(-1, 1)).normalize().multiplyScalar(rand(6, 14)),
+        vel: new THREE.Vector3(rand(-1, 1), rand(0.6, 1.6), rand(-1, 1)).normalize().multiplyScalar(rand(5, 12)),
         rot: new THREE.Vector3(rand(-8, 8), rand(-8, 8), rand(-8, 8)),
         life: rand(1.2, 2.2)
       };
@@ -410,7 +497,7 @@
   }
   document.getElementById('btnConfetti').addEventListener('click', popConfetti);
 
-  // ---------- scroll -> ride progress (with smoothing) ----------
+  // ---------- scroll -> walk progress ----------
   var target = 0, progress = 0;
   var progressBar = document.getElementById('progress');
   function readScroll() {
@@ -420,7 +507,7 @@
   window.addEventListener('scroll', readScroll, { passive: true });
   readScroll();
 
-  // ---------- drag / tilt (mouse or touch) — does not fight page scroll ----------
+  // pointer / gyro tilt (never fights page scroll)
   var tiltX = 0, tiltY = 0, tiltTX = 0, tiltTY = 0;
   window.addEventListener('mousemove', function (e) {
     tiltTX = (e.clientX / window.innerWidth - 0.5) * 2;
@@ -432,7 +519,6 @@
       tiltTY = (e.touches[0].clientY / window.innerHeight - 0.5) * 2;
     }
   }, { passive: true });
-  // phones: also react to device tilt when available (no permission prompt path)
   if (isTouch && window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission !== 'function') {
     window.addEventListener('deviceorientation', function (e) {
       if (e.gamma !== null) tiltTX = Math.max(-1, Math.min(1, e.gamma / 30));
@@ -440,20 +526,17 @@
     });
   }
 
-  // ---------- caption reveal ----------
+  // caption reveal
   var captions = document.querySelectorAll('.caption');
   if ('IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        en.target.classList.toggle('show', en.isIntersecting);
-      });
+      entries.forEach(function (en) { en.target.classList.toggle('show', en.isIntersecting); });
     }, { threshold: 0.35 });
     captions.forEach(function (c) { io.observe(c); });
   } else {
     captions.forEach(function (c) { c.classList.add('show'); });
   }
 
-  // ---------- resize ----------
   window.addEventListener('resize', function () {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
@@ -463,103 +546,104 @@
 
   // ---------- animate ----------
   var clock = new THREE.Clock();
-  var bgA = new THREE.Color(0x05010f), bgB = new THREE.Color(0x1a0533),
-      bgC = new THREE.Color(0x001a2e), bgNow = new THREE.Color();
+  // sky: day -> golden hour -> night
+  var skyA = new THREE.Color(0x9fe3ff), skyB = new THREE.Color(0xffb37d),
+      skyC = new THREE.Color(0x140b33), skyNow = new THREE.Color();
+  var speedSm = 0; // smoothed walking speed for lean/sway
+  var blinkT = 0;
 
   function animate() {
     requestAnimationFrame(animate);
     var dt = Math.min(clock.getDelta(), 0.05);
     var t = clock.elapsedTime;
 
-    // smooth the scroll + tilt
+    var prev = progress;
     progress += (target - progress) * Math.min(1, dt * 5);
+    var speed = dt > 0 ? (progress - prev) * WALK_LEN / dt : 0; // world units / sec
+    speedSm += (Math.abs(speed) - speedSm) * Math.min(1, dt * 6);
     tiltX += (tiltTX - tiltX) * Math.min(1, dt * 4);
     tiltY += (tiltTY - tiltY) * Math.min(1, dt * 4);
     progressBar.style.width = (target * 100).toFixed(2) + '%';
 
-    // camera flies down the ride, weaving gently, tilted by pointer/gyro
-    var z = -progress * RIDE_LEN;
-    camera.position.set(
-      Math.sin(progress * Math.PI * 3) * 3 + tiltX * 2.4,
-      Math.cos(progress * Math.PI * 2) * 1.6 - tiltY * 2.0,
-      z + 14
-    );
-    camera.lookAt(tiltX * 3, -tiltY * 2.4, z - 12);
-
-    // lights ride along
-    key.position.set(camera.position.x + 6, camera.position.y + 4, z - 4);
-    fill.position.set(camera.position.x - 6, camera.position.y - 3, z - 10);
-
-    // background color shifts through the ride
+    // sky shifts: day for first half, golden hour, then night in the city
     var ph = progress * 2;
-    if (ph < 1) bgNow.copy(bgA).lerp(bgB, ph);
-    else bgNow.copy(bgB).lerp(bgC, ph - 1);
-    scene.background = bgNow;
-    scene.fog.color.copy(bgNow);
+    if (ph < 1) skyNow.copy(skyA).lerp(skyB, ph);
+    else skyNow.copy(skyB).lerp(skyC, Math.min(ph - 1, 1));
+    scene.background = skyNow;
+    scene.fog.color.copy(skyNow);
+    sun.intensity = 0.95 - progress * 0.55;
+    glow.intensity = Math.max(0, (progress - 0.6) * 2.2); // pink glow at night
+    glow.position.set(girl.position.x, 4, girl.position.z - 2);
 
-    // zone 0: crystals bob + spin
-    for (var i = 0; i < crystals.length; i++) {
-      var cm = crystals[i], cu = cm.userData;
-      cm.rotation.x += cu.spin * dt;
-      cm.rotation.y += cu.spin * 0.7 * dt;
-      cm.position.y = cu.baseY + Math.sin(t * cu.spin + cu.phase) * cu.amp;
+    // ---- the girl walks ----
+    var dist = progress * WALK_LEN;
+    girl.position.z = -dist;
+    var walkPhase = dist * 2.4;
+    var amp = Math.min(1, speedSm / 6); // limbs settle when she stops
+    var ls = Math.sin(walkPhase) * 0.62 * amp;
+    legL.rotation.x = ls;
+    legR.rotation.x = -ls;
+    armL.rotation.x = -ls * 0.85;
+    armR.rotation.x = ls * 0.85;
+    girl.position.y = Math.abs(Math.cos(walkPhase)) * 0.14 * amp;
+    girl.rotation.x = -0.06 * amp * (speed >= 0 ? 1 : -1); // little lean into the walk
+    girl.rotation.z = Math.sin(walkPhase) * 0.03 * amp;
+    // idle life: breathing + head tilt + ponytail sway (always on)
+    torso.scale.x = 1 + Math.sin(t * 2.2) * 0.02;
+    head.rotation.z = Math.sin(t * 0.8) * 0.05;
+    head.rotation.y = Math.sin(t * 0.5) * 0.08 + tiltX * 0.2;
+    ponytail.rotation.x = 0.5 + Math.sin(t * 3 + 1) * 0.08 + amp * 0.35;
+    ponytail.rotation.z = Math.sin(walkPhase) * 0.12 * amp + Math.sin(t * 1.7) * 0.04;
+    dress.rotation.y = Math.sin(walkPhase) * 0.06 * amp;
+    // blink every ~3s
+    blinkT += dt;
+    var blink = blinkT % 3 > 2.86 ? 0.12 : 1;
+    eyeL.scale.y = blink; eyeR.scale.y = blink;
+
+    // ---- camera follows her ----
+    var cz = girl.position.z;
+    var weave = Math.sin(progress * Math.PI * 2) * 1.6;
+    camera.position.set(
+      4.4 + weave + tiltX * 2.2,
+      3.1 - tiltY * 1.6,
+      cz + 7.6
+    );
+    camera.lookAt(girl.position.x + tiltX * 1.5, 2.3, cz - 3);
+
+    // ---- scenery life ----
+    for (var s = 0; s < sway.length; s++) {
+      var sw = sway[s];
+      sw.obj.rotation[sw.axis] = sw.base + Math.sin(t * sw.speed + sw.phase) * sw.amp;
     }
-
-    // zone 1: rings spin
-    for (var r = 0; r < rings.length; r++) {
-      rings[r].rotation.z += rings[r].userData.spin * dt;
+    for (var b = 0; b < butterflies.length; b++) {
+      var bf = butterflies[b], bu = bf.userData;
+      var ba = t * bu.speed + bu.phase;
+      bf.position.set(bu.cx + Math.cos(ba) * bu.r, bu.cy + Math.sin(ba * 1.7) * 0.6, bu.cz + Math.sin(ba) * bu.r);
+      bf.rotation.y = -ba;
+      var flap = Math.sin(t * 14 + bu.phase) * 0.9;
+      bu.wg1.rotation.y = flap; bu.wg2.rotation.y = -flap;
     }
-
-    // zone 2: blob morph (cheap noise via layered sines)
-    var pos = blob.geometry.attributes.position;
-    for (var v = 0; v < pos.count; v++) {
-      var ox = blobBase[v * 3], oy = blobBase[v * 3 + 1], oz = blobBase[v * 3 + 2];
-      var n = 1
-        + 0.16 * Math.sin(ox * 0.9 + t * 1.6)
-        + 0.13 * Math.sin(oy * 1.3 + t * 1.1)
-        + 0.11 * Math.sin(oz * 1.1 + t * 2.0);
-      pos.array[v * 3] = ox * n;
-      pos.array[v * 3 + 1] = oy * n;
-      pos.array[v * 3 + 2] = oz * n;
+    for (var bl2 = 0; bl2 < balloons.length; bl2++) {
+      var bb = balloons[bl2];
+      bb.obj.position.y = bb.baseY + Math.sin(t * bb.speed + bb.phase) * 0.5;
     }
-    pos.needsUpdate = true;
-    blob.geometry.computeVertexNormals();
-    blob.rotation.y += dt * 0.25;
-    blob.material.color.setHSL((t * 0.045) % 1, 0.85, 0.6);
-
-    for (var o = 0; o < orbiters.length; o++) {
-      var om = orbiters[o], ou = om.userData;
-      var oa = t * ou.speed + ou.phase;
-      om.position.set(
-        blob.position.x + Math.cos(oa) * ou.rad,
-        blob.position.y + Math.sin(oa * 1.3) * ou.rad * 0.4 + ou.tilt * 3,
-        blob.position.z + Math.sin(oa) * ou.rad
-      );
+    for (var l = 0; l < lanterns.length; l++) {
+      var ln = lanterns[l];
+      ln.obj.position.y = ln.baseY + Math.sin(t * ln.speed + ln.phase) * 0.7;
     }
-
-    // zone 3: galaxy slowly rotates
-    galaxy.rotation.y += dt * 0.12;
-
-    // zone 4: planet + moons
-    planetGroup.rotation.y += dt * 0.1;
-    planet.rotation.y += dt * 0.3;
-    pring.rotation.z += dt * 0.15;
-    for (var mn = 0; mn < moons.length; mn++) {
-      var moon = moons[mn], mu = moon.userData;
-      var ma = t * mu.speed + mu.phase;
-      moon.position.set(
-        Math.cos(ma) * mu.rad,
-        Math.sin(ma) * mu.rad * mu.tilt,
-        Math.sin(ma) * mu.rad
-      );
+    for (var nr2 = 0; nr2 < neonRings.length; nr2++) {
+      neonRings[nr2].rotation.z += dt * (0.4 + nr2 * 0.15);
     }
-
-    // zone 5: finale shapes spin
-    for (var f = 0; f < finaleShapes.length; f++) {
-      var fm = finaleShapes[f], fu = fm.userData;
-      fm.rotation.x += fu.spin.x * dt;
-      fm.rotation.y += fu.spin.y * dt;
-      fm.rotation.z += fu.spin.z * dt;
+    for (var f2 = 0; f2 < finaleShapes.length; f2++) {
+      var fs = finaleShapes[f2], fu = fs.userData;
+      fs.rotation.x += fu.spin.x * dt;
+      fs.rotation.y += fu.spin.y * dt;
+      fs.rotation.z += fu.spin.z * dt;
+    }
+    for (var c2 = 0; c2 < clouds.length; c2++) {
+      var cc = clouds[c2];
+      cc.obj.position.x += cc.speed * dt;
+      if (cc.obj.position.x > 26) cc.obj.position.x = -26;
     }
 
     // confetti physics
