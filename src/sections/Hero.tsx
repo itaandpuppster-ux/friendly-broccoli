@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion'
+import { useRef } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import Navbar from '../components/Navbar'
 import { WordsPullUp } from '../components/animations'
@@ -9,16 +10,31 @@ const HERO_VIDEO =
 const EASE = [0.16, 1, 0.3, 1] as const
 
 export default function Hero() {
+  const sectionRef = useRef<HTMLElement>(null)
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end start'],
+  })
+
+  const containerScale = useTransform(scrollYProgress, [0, 1], [1, 0.92])
+  const containerOpacity = useTransform(scrollYProgress, [0, 1], [1, 0.5])
+  const videoY = useTransform(scrollYProgress, [0, 1], ['0%', '18%'])
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, 90])
+
   return (
-    <section className="h-screen p-4 md:p-6 bg-black">
-      <div className="relative h-full w-full rounded-2xl md:rounded-[2rem] overflow-hidden">
-        <video
+    <section ref={sectionRef} className="h-screen p-4 md:p-6 bg-black">
+      <motion.div
+        className="relative h-full w-full rounded-2xl md:rounded-[2rem] overflow-hidden"
+        style={{ scale: containerScale, opacity: containerOpacity }}
+      >
+        <motion.video
           src={HERO_VIDEO}
           autoPlay
           loop
           muted
           playsInline
           className="absolute inset-0 h-full w-full object-cover"
+          style={{ y: videoY, scale: 1.15 }}
         />
 
         <div className="absolute inset-0 noise-overlay opacity-[0.7] mix-blend-overlay pointer-events-none" />
@@ -26,7 +42,10 @@ export default function Hero() {
 
         <Navbar />
 
-        <div className="absolute bottom-0 left-0 right-0 px-4 sm:px-6 md:px-10 pb-6 md:pb-10">
+        <motion.div
+          className="absolute bottom-0 left-0 right-0 px-4 sm:px-6 md:px-10 pb-6 md:pb-10"
+          style={{ y: contentY }}
+        >
           <div className="grid grid-cols-12 items-end gap-4">
             <div className="col-span-12 lg:col-span-8">
               <h1>
@@ -65,8 +84,8 @@ export default function Hero() {
               </motion.button>
             </div>
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </section>
   )
 }

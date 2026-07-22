@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { motion, useInView, useScroll, useTransform } from 'framer-motion'
 import { ArrowRight, Check } from 'lucide-react'
 import { WordsPullUpMultiStyle } from '../components/animations'
 
@@ -87,12 +87,23 @@ function FeatureCard({
 }
 
 export default function Features() {
+  const sectionRef = useRef<HTMLElement>(null)
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start end', 'end start'],
+  })
+  const headerY = useTransform(scrollYProgress, [0, 0.5], [60, -20])
+  const gridY = useTransform(scrollYProgress, [0, 0.5], [80, 0])
+
   return (
-    <section className="relative min-h-screen bg-black px-4 py-16 sm:px-6 sm:py-20 md:px-10 md:py-28">
+    <section
+      ref={sectionRef}
+      className="relative min-h-screen bg-black px-4 py-16 sm:px-6 sm:py-20 md:px-10 md:py-28"
+    >
       <div className="absolute inset-0 bg-noise opacity-[0.15] pointer-events-none" />
 
       <div className="relative mx-auto max-w-7xl">
-        <div className="text-center mb-12 sm:mb-16 md:mb-20">
+        <motion.div className="text-center mb-12 sm:mb-16 md:mb-20" style={{ y: headerY }}>
           <h2>
             <WordsPullUpMultiStyle
               className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-normal max-w-3xl mx-auto gap-x-[0.25em] gap-y-1"
@@ -108,9 +119,12 @@ export default function Features() {
               ]}
             />
           </h2>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-2 md:gap-1 lg:h-[480px]">
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-2 md:gap-1 lg:h-[480px]"
+          style={{ y: gridY }}
+        >
           <CardShell index={0} className="min-h-[380px] lg:min-h-0">
             <video
               src={CARD_VIDEO}
@@ -165,7 +179,7 @@ export default function Features() {
               'Sync focus blocks with your production schedule.',
             ]}
           />
-        </div>
+        </motion.div>
       </div>
     </section>
   )

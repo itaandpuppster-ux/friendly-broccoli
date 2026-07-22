@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion'
+import { useRef } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import Navbar from './Navbar'
@@ -12,12 +13,24 @@ interface PageLayoutProps {
 }
 
 export default function PageLayout({ label, titleSegments, intro, children }: PageLayoutProps) {
+  const headerRef = useRef<HTMLElement>(null)
+  const { scrollYProgress } = useScroll({
+    target: headerRef,
+    offset: ['start start', 'end start'],
+  })
+  const headerY = useTransform(scrollYProgress, [0, 1], [0, 80])
+  const headerOpacity = useTransform(scrollYProgress, [0, 1], [1, 0.15])
+
   return (
     <div className="min-h-screen bg-black">
       <div className="relative">
         <Navbar />
 
-        <header className="px-4 sm:px-6 md:px-10 pt-28 sm:pt-32 md:pt-40 pb-12 sm:pb-16 text-center">
+        <motion.header
+          ref={headerRef}
+          className="px-4 sm:px-6 md:px-10 pt-28 sm:pt-32 md:pt-40 pb-12 sm:pb-16 text-center"
+          style={{ y: headerY, opacity: headerOpacity }}
+        >
           <WordsPullUp
             text={label}
             className="text-primary text-[10px] sm:text-xs uppercase tracking-widest justify-center"
@@ -38,7 +51,7 @@ export default function PageLayout({ label, titleSegments, intro, children }: Pa
           >
             {intro}
           </motion.p>
-        </header>
+        </motion.header>
       </div>
 
       <main className="px-4 sm:px-6 md:px-10 pb-20 sm:pb-28">{children}</main>

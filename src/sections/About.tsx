@@ -33,11 +33,24 @@ export default function About() {
     offset: ['start 0.8', 'end 0.2'],
   })
 
+  const cardRef = useRef<HTMLDivElement>(null)
+  const { scrollYProgress: cardProgress } = useScroll({
+    target: cardRef,
+    offset: ['start end', 'start 0.3'],
+  })
+  const cardScale = useTransform(cardProgress, [0, 1], [0.92, 1])
+  const cardY = useTransform(cardProgress, [0, 1], [80, 0])
+  const cardOpacity = useTransform(cardProgress, [0, 1], [0.4, 1])
+
   const chars = BODY_TEXT.split('')
 
   return (
     <section className="bg-black px-4 py-16 sm:px-6 sm:py-20 md:px-10 md:py-28">
-      <div className="mx-auto max-w-6xl rounded-2xl md:rounded-[2rem] bg-[#101010] px-6 py-16 sm:px-10 sm:py-20 md:px-16 md:py-28 text-center">
+      <motion.div
+        ref={cardRef}
+        className="mx-auto max-w-6xl rounded-2xl md:rounded-[2rem] bg-[#101010] px-6 py-16 sm:px-10 sm:py-20 md:px-16 md:py-28 text-center"
+        style={{ scale: cardScale, y: cardY, opacity: cardOpacity }}
+      >
         <WordsPullUp
           text="Visual arts"
           className="text-primary text-[10px] sm:text-xs uppercase tracking-widest justify-center"
@@ -72,7 +85,7 @@ export default function About() {
             />
           ))}
         </p>
-      </div>
+      </motion.div>
     </section>
   )
 }
