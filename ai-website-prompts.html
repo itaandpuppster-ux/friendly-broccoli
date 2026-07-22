@@ -364,6 +364,88 @@
   }
   @keyframes spot-move { to { transform: translate(140px, 70px); } }
 
+  /* ---------- 3D motion lab ---------- */
+  .lab-banner {
+    position: relative; border-radius: var(--radius); overflow: hidden;
+    border: 1px solid var(--card-border); background: var(--bg-2);
+    height: clamp(260px, 40vw, 420px); margin-bottom: 40px;
+  }
+  .lab-banner canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .lab-banner .lab-caption {
+    position: absolute; left: 22px; bottom: 18px; z-index: 2;
+    display: flex; align-items: center; gap: 10px;
+    font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); text-shadow: 0 2px 12px rgba(0,0,0,0.8);
+  }
+  .lab-caption .pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); animation: pulse 1.6s ease-in-out infinite; }
+  .copy-all-row { display: flex; justify-content: center; margin-top: 40px; }
+  .copy-all {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 15px 34px; border-radius: 999px; border: 1px solid rgba(244,114,182,0.5);
+    background: rgba(244,114,182,0.12); color: #f9a8d4;
+    font-family: inherit; font-size: 1rem; font-weight: 800; cursor: pointer;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  }
+  .copy-all:hover { background: rgba(244,114,182,0.24); transform: translateY(-2px); box-shadow: 0 0 34px rgba(244,114,182,0.3); }
+  .copy-all.copied { background: rgba(163,230,53,0.16); border-color: rgba(163,230,53,0.5); color: #d9f99d; }
+  .img-prompt-label {
+    font-size: 0.7rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--amber); margin: 10px 16px 0;
+  }
+  .preview canvas.webgl { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+  /* CSS spinning cube preview */
+  .pv-cube-stage { perspective: 700px; }
+  .pv-cube { width: 90px; height: 90px; position: relative; transform-style: preserve-3d; animation: cube-spin 9s linear infinite; }
+  @keyframes cube-spin { from { transform: rotateX(-18deg) rotateY(0); } to { transform: rotateX(-18deg) rotateY(360deg); } }
+  .pv-cube i {
+    position: absolute; inset: 0; border-radius: 10px;
+    background: rgba(139,92,246,0.14); border: 1px solid rgba(139,92,246,0.55);
+    box-shadow: inset 0 0 26px rgba(139,92,246,0.35);
+  }
+  .pv-cube i:nth-child(1) { transform: rotateY(0deg) translateZ(45px); }
+  .pv-cube i:nth-child(2) { transform: rotateY(90deg) translateZ(45px); border-color: rgba(34,211,238,0.55); background: rgba(34,211,238,0.1); box-shadow: inset 0 0 26px rgba(34,211,238,0.3); }
+  .pv-cube i:nth-child(3) { transform: rotateY(180deg) translateZ(45px); }
+  .pv-cube i:nth-child(4) { transform: rotateY(270deg) translateZ(45px); border-color: rgba(34,211,238,0.55); background: rgba(34,211,238,0.1); box-shadow: inset 0 0 26px rgba(34,211,238,0.3); }
+  .pv-cube i:nth-child(5) { transform: rotateX(90deg) translateZ(45px); border-color: rgba(244,114,182,0.55); background: rgba(244,114,182,0.1); }
+  .pv-cube i:nth-child(6) { transform: rotateX(-90deg) translateZ(45px); border-color: rgba(244,114,182,0.55); background: rgba(244,114,182,0.1); }
+
+  /* CSS 3D carousel ring preview */
+  .pv-ring3d-stage { perspective: 800px; }
+  .pv-ring3d { width: 70px; height: 96px; position: relative; transform-style: preserve-3d; animation: ring3d-spin 14s linear infinite; }
+  @keyframes ring3d-spin { from { transform: rotateX(-6deg) rotateY(0); } to { transform: rotateX(-6deg) rotateY(-360deg); } }
+  .pv-ring3d i {
+    position: absolute; inset: 0; border-radius: 10px;
+    background: linear-gradient(160deg, rgba(255,255,255,0.16), rgba(255,255,255,0.03));
+    border: 1px solid rgba(255,255,255,0.25);
+    backface-visibility: hidden;
+  }
+  /* 8 panels around the ring, set via inline style --a */
+  .pv-ring3d i { transform: rotateY(var(--a)) translateZ(120px); }
+
+  /* CSS flip card preview */
+  .pv-flip-stage { perspective: 700px; }
+  .pv-flip { width: 120px; height: 140px; position: relative; transform-style: preserve-3d; animation: flip-loop 5s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+  @keyframes flip-loop {
+    0%, 35% { transform: rotateY(0); }
+    50%, 85% { transform: rotateY(180deg); }
+    100% { transform: rotateY(360deg); }
+  }
+  .pv-flip i {
+    position: absolute; inset: 0; border-radius: 14px; backface-visibility: hidden;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.9rem;
+  }
+  .pv-flip i:nth-child(1) {
+    background: linear-gradient(160deg, rgba(139,92,246,0.3), rgba(139,92,246,0.05));
+    border: 1px solid rgba(139,92,246,0.5);
+  }
+  .pv-flip i:nth-child(2) {
+    background: linear-gradient(160deg, rgba(34,211,238,0.28), rgba(34,211,238,0.05));
+    border: 1px solid rgba(34,211,238,0.5);
+    transform: rotateY(180deg);
+  }
+
   /* ---------- steps ---------- */
   .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; }
   .step {
@@ -414,6 +496,7 @@
   <a class="logo" href="#"><span class="logo-dot"></span>PromptMotion</a>
   <div class="nav-links">
     <a href="#prompts">Prompts</a>
+    <a href="#lab3d">3D Lab</a>
     <a href="#how">How it works</a>
     <a class="nav-cta" href="#prompts">Browse library</a>
   </div>
@@ -639,6 +722,144 @@ Requirements:
     </div>
   </section>
 
+  <!-- ================= 3D MOTION LAB ================= -->
+  <section id="lab3d">
+    <div class="section-head reveal">
+      <div class="kicker">3D Motion Lab</div>
+      <h2>Real-time 3D, one prompt away</h2>
+      <p>Live <strong>WebGL and CSS 3D</strong> previews rendered right here in your browser. Every prompt also includes a matching <strong>AI image-generator prompt</strong> (Midjourney / DALL·E / Canva) for the artwork.</p>
+    </div>
+
+    <div class="lab-banner reveal">
+      <canvas id="labCanvas"></canvas>
+      <div class="lab-caption"><span class="pulse"></span> Live 3D — rendered in your browser with WebGL</div>
+    </div>
+
+    <div class="prompt-grid">
+
+      <!-- 3D-1: WebGL neon shapes -->
+      <article class="prompt-card reveal">
+        <div class="preview"><canvas class="webgl" id="shapesCanvas"></canvas></div>
+        <div class="card-body">
+          <div class="card-title-row"><h3>Neon 3D Shape Field (WebGL)</h3></div>
+          <div class="tags"><span class="tag v">Three.js</span><span class="tag">Lovable</span><span class="tag p">Claude</span></div>
+          <p class="card-desc">Floating glossy 3D shapes lit by violet, cyan and pink point lights, slowly tumbling behind your hero content.</p>
+          <details class="prompt-box">
+            <summary>View full prompt</summary>
+            <div class="prompt-text">Add a real-time 3D animated background to my hero section using Three.js (load r128 from a CDN).
+
+Requirements:
+- Full-bleed WebGLRenderer canvas behind the hero content (position absolute, z-index below text, pointer-events none, alpha: true so the page background shows through).
+- Scene: 10–14 floating shapes — icosahedrons, torus and spheres — with MeshStandardMaterial (metalness 0.7, roughness 0.25) in near-black base color.
+- Lighting: three colored point lights — violet #8b5cf6, cyan #22d3ee, pink #f472b6 — orbiting the scene slowly on different axes, plus a dim ambient light, so the shapes pick up neon reflections.
+- Animation loop: each shape tumbles on its own random rotation speeds and bobs up/down on a sine wave with a per-shape phase offset; the camera drifts slightly toward the mouse position (parallax, eased with lerp).
+- Handle window resize (update camera aspect + renderer size). Cap pixel ratio at 2.
+- If WebGL is unavailable or prefers-reduced-motion is set, skip the canvas entirely and fall back to a static CSS gradient.
+
+AI IMAGE PROMPT (for Midjourney / DALL·E / Canva — use for a matching static hero image or og:image):
+"Futuristic abstract 3D render: glossy chrome and iridescent glass shapes — floating torus, sphere and cube — with neon violet, cyan and pink rim lighting on a near-black background, soft depth of field, high-end 3D motion design aesthetic, 16:9, no text"</div>
+          </details>
+          <button class="copy-btn">📋 Copy prompt</button>
+        </div>
+      </article>
+
+      <!-- 3D-2: CSS spinning cube -->
+      <article class="prompt-card reveal">
+        <div class="preview">
+          <div class="pv-cube-stage"><div class="pv-cube"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+        </div>
+        <div class="card-body">
+          <div class="card-title-row"><h3>Holographic CSS Cube</h3></div>
+          <div class="tags"><span class="tag v">Pure CSS</span><span class="tag">Bolt</span><span class="tag p">v0</span></div>
+          <p class="card-desc">A translucent neon wireframe cube spinning in 3D — zero libraries, pure CSS transforms.</p>
+          <details class="prompt-box">
+            <summary>View full prompt</summary>
+            <div class="prompt-text">Create a holographic 3D spinning cube with pure CSS (no libraries, no canvas).
+
+Requirements:
+- A cube built from 6 absolutely-positioned faces inside a transform-style: preserve-3d container, each face rotated into place with rotateX/rotateY + translateZ(half the cube size).
+- Faces: translucent neon glass — rgba violet/cyan/pink backgrounds at ~0.1 opacity, 1px glowing borders, inset box-shadow glow, 10px border-radius.
+- The cube sits inside a perspective: 700px stage and rotates forever: rotateY 0→360° over 9s, linear, with a constant rotateX(-18°) tilt.
+- On hover, pause the spin (animation-play-state: paused) and scale up 1.06 with a smooth transition.
+- Add a soft elliptical shadow beneath the cube that subtly pulses in sync.
+- Make the cube size a CSS variable (--size) so it scales responsively with clamp().
+- Freeze rotation under prefers-reduced-motion.
+
+AI IMAGE PROMPT (for Midjourney / DALL·E / Canva):
+"Translucent holographic neon cube floating in dark space, glowing violet and cyan wireframe edges, glassmorphism, volumetric light, dark futuristic background, minimal 3D render, square, no text"</div>
+          </details>
+          <button class="copy-btn">📋 Copy prompt</button>
+        </div>
+      </article>
+
+      <!-- 3D-3: CSS carousel ring -->
+      <article class="prompt-card reveal">
+        <div class="preview">
+          <div class="pv-ring3d-stage">
+            <div class="pv-ring3d">
+              <i style="--a: 0deg"></i><i style="--a: 45deg"></i><i style="--a: 90deg"></i><i style="--a: 135deg"></i>
+              <i style="--a: 180deg"></i><i style="--a: 225deg"></i><i style="--a: 270deg"></i><i style="--a: 315deg"></i>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-title-row"><h3>3D Carousel Ring</h3></div>
+          <div class="tags"><span class="tag v">Pure CSS</span><span class="tag">Lovable</span><span class="tag p">Cursor</span></div>
+          <p class="card-desc">Cards orbiting on an infinite 3D ring — a showcase carousel for screenshots, covers or testimonials.</p>
+          <details class="prompt-box">
+            <summary>View full prompt</summary>
+            <div class="prompt-text">Build an infinite 3D rotating carousel ring for showcasing images or cards.
+
+Requirements:
+- 8 glass cards arranged in a circle: each card is absolutely positioned in a preserve-3d container and placed with transform: rotateY(index × 45deg) translateZ(radius). Compute radius so cards don't overlap: radius ≈ (cardWidth / 2) / tan(π / 8) (or just set a CSS variable).
+- The whole ring rotates continuously: rotateY 0→-360° over ~25s, linear, infinite, inside a perspective: 900px stage with a slight rotateX(-6°) tilt.
+- Cards: glassmorphism (translucent gradient, 1px light border, backdrop-filter blur, 12px radius) with backface-visibility: hidden so only front-facing cards show.
+- Pause the rotation on hover; on card click, smoothly rotate the ring so that card faces front (JS reads the index and animates the rotation with a transition).
+- Dim and slightly blur cards on the far side using a JS loop or CSS custom property based on rotation, to fake depth of field.
+- Responsive: shrink card size and radius with clamp()/media queries. Freeze under prefers-reduced-motion.
+
+AI IMAGE PROMPT (for Midjourney / DALL·E / Canva):
+"3D carousel of glowing glass cards orbiting in a circle, dark scene with cyan and violet neon reflections, depth of field, futuristic UI concept art, wide shot, no text"</div>
+          </details>
+          <button class="copy-btn">📋 Copy prompt</button>
+        </div>
+      </article>
+
+      <!-- 3D-4: CSS flip card -->
+      <article class="prompt-card reveal">
+        <div class="preview">
+          <div class="pv-flip-stage"><div class="pv-flip"><i>🚀</i><i>✨</i></div></div>
+        </div>
+        <div class="card-body">
+          <div class="card-title-row"><h3>3D Flip Reveal Cards</h3></div>
+          <div class="tags"><span class="tag v">Pure CSS</span><span class="tag">Bolt</span><span class="tag p">Claude</span></div>
+          <p class="card-desc">Feature cards that flip 180° in 3D to reveal details on the back — on hover or on an auto-loop.</p>
+          <details class="prompt-box">
+            <summary>View full prompt</summary>
+            <div class="prompt-text">Create 3D flip-reveal cards for a features or team section.
+
+Requirements:
+- Each card has a front face (icon + title) and a back face (description + link), both absolutely positioned with backface-visibility: hidden inside a preserve-3d wrapper; the back face is pre-rotated rotateY(180deg).
+- The wrapper sits in a perspective: 700px stage. On hover/focus-visible it flips to rotateY(180deg) with a 0.7s cubic-bezier(0.4, 0, 0.2, 1) transition; make it keyboard-accessible (tabindex, :focus-within).
+- Front: dark violet glass gradient with a glowing border; back: cyan glass gradient. Both 14px radius with a deep drop shadow that shifts during the flip.
+- Add a subtle idle float: the whole card bobs 6px up/down on a 4s ease-in-out loop, staggered per card.
+- On touch devices (no hover), flip on tap and flip back on second tap.
+- Under prefers-reduced-motion, swap the flip for a simple cross-fade.
+
+AI IMAGE PROMPT (for Midjourney / DALL·E / Canva):
+"Two-sided glass card mid-flip in 3D space, front glowing violet and back glowing cyan, motion blur on the edges, dark studio background, sleek product-design render, no text"</div>
+          </details>
+          <button class="copy-btn">📋 Copy prompt</button>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="copy-all-row reveal">
+      <button class="copy-all" id="copyAll3d">⚡ Copy ALL 3D prompts</button>
+    </div>
+  </section>
+
   <!-- ================= HOW ================= -->
   <section id="how">
     <div class="section-head reveal">
@@ -672,6 +893,92 @@ Requirements:
 
 <div id="toast">✓ Prompt copied to clipboard</div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+  // ---------- 3D Motion Lab (WebGL) ----------
+  (function () {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced || typeof THREE === 'undefined') return;
+
+    const PALETTE = [0x8b5cf6, 0x22d3ee, 0xf472b6];
+
+    function makeScene(canvas, opts) {
+      let renderer;
+      try {
+        renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+      } catch (e) { return; }
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
+      camera.position.z = opts.camZ;
+
+      scene.add(new THREE.AmbientLight(0xffffff, 0.15));
+      const lights = PALETTE.map((c, i) => {
+        const l = new THREE.PointLight(c, 1.6, 60);
+        l.userData.phase = (i / 3) * Math.PI * 2;
+        scene.add(l);
+        return l;
+      });
+
+      const geos = [
+        new THREE.IcosahedronGeometry(1, 0),
+        new THREE.TorusGeometry(0.8, 0.32, 24, 48),
+        new THREE.SphereGeometry(0.75, 32, 32),
+        new THREE.TorusKnotGeometry(0.65, 0.24, 100, 16),
+      ];
+      const shapes = [];
+      for (let i = 0; i < opts.count; i++) {
+        const mat = new THREE.MeshStandardMaterial({ color: 0x14141f, metalness: 0.7, roughness: 0.25 });
+        const m = new THREE.Mesh(geos[i % geos.length], mat);
+        const spread = opts.spread;
+        m.position.set((Math.random() - 0.5) * spread * 2, (Math.random() - 0.5) * spread, (Math.random() - 0.5) * spread * 0.6);
+        m.scale.setScalar(opts.scale * (0.6 + Math.random() * 0.8));
+        m.userData = {
+          rx: (Math.random() - 0.5) * 0.014, ry: (Math.random() - 0.5) * 0.014,
+          phase: Math.random() * Math.PI * 2, baseY: m.position.y,
+        };
+        scene.add(m);
+        shapes.push(m);
+      }
+
+      function resize() {
+        const w = canvas.clientWidth, h = canvas.clientHeight;
+        if (canvas.width !== w || canvas.height !== h) {
+          renderer.setSize(w, h, false);
+          camera.aspect = w / h;
+          camera.updateProjectionMatrix();
+        }
+      }
+      window.addEventListener('resize', resize);
+
+      let visible = false;
+      new IntersectionObserver((en) => { visible = en[0].isIntersecting; }, { threshold: 0.05 }).observe(canvas);
+
+      let t = 0;
+      (function loop() {
+        requestAnimationFrame(loop);
+        if (!visible) return;
+        resize();
+        t += 0.01;
+        shapes.forEach((m) => {
+          m.rotation.x += m.userData.rx;
+          m.rotation.y += m.userData.ry;
+          m.position.y = m.userData.baseY + Math.sin(t * 1.4 + m.userData.phase) * 0.35;
+        });
+        lights.forEach((l, i) => {
+          const a = t * (0.5 + i * 0.18) + l.userData.phase;
+          l.position.set(Math.cos(a) * 8, Math.sin(a * 1.3) * 5, 4 + Math.sin(a) * 3);
+        });
+        renderer.render(scene, camera);
+      })();
+    }
+
+    const banner = document.getElementById('labCanvas');
+    if (banner) makeScene(banner, { count: 14, spread: 7, scale: 1.05, camZ: 9 });
+    const cardCanvas = document.getElementById('shapesCanvas');
+    if (cardCanvas) makeScene(cardCanvas, { count: 7, spread: 3.2, scale: 0.6, camZ: 6 });
+  })();
+</script>
 <script>
   // typing effect
   const phrases = [
@@ -758,6 +1065,34 @@ Requirements:
       clearTimeout(toastTimer);
       toastTimer = setTimeout(() => toast.classList.remove('show'), 2000);
     });
+  });
+
+  // copy ALL 3D prompts
+  const copyAllBtn = document.getElementById('copyAll3d');
+  copyAllBtn.addEventListener('click', async () => {
+    const all = [...document.querySelectorAll('#lab3d .prompt-card')]
+      .map((card) => {
+        const title = card.querySelector('h3').textContent;
+        const text = card.querySelector('.prompt-text').textContent.trim();
+        return `━━━ ${title} ━━━\n\n${text}`;
+      })
+      .join('\n\n\n');
+    try {
+      await navigator.clipboard.writeText(all);
+    } catch {
+      const ta = document.createElement('textarea');
+      ta.value = all;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      ta.remove();
+    }
+    copyAllBtn.classList.add('copied');
+    copyAllBtn.textContent = '✓ All 4 3D prompts copied!';
+    setTimeout(() => { copyAllBtn.classList.remove('copied'); copyAllBtn.textContent = '⚡ Copy ALL 3D prompts'; }, 2200);
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 2000);
   });
 </script>
 </body>
