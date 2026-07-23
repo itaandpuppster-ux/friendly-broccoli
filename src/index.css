@@ -51,3 +51,97 @@ body {
     transform: none;
   }
 }
+
+/* Scroll-driven squirrel mascot */
+.squirrel-runner {
+  position: fixed;
+  left: 0;
+  bottom: 16px;
+  z-index: 40;
+  width: 76px;
+  height: 60px;
+  pointer-events: none;
+  transform: translateX(16px);
+  will-change: transform;
+}
+
+.squirrel-runner .sq-bob {
+  transform-origin: 50% 100%;
+}
+
+.squirrel-runner .sq-tail {
+  transform-origin: 26% 66%;
+}
+
+.squirrel-runner.is-running .sq-bob {
+  animation: sq-bob 0.34s ease-in-out infinite;
+}
+
+.squirrel-runner.is-running .sq-tail {
+  animation: sq-tail 0.34s ease-in-out infinite;
+}
+
+.squirrel-runner.is-running .sq-leg-front {
+  animation: sq-leg 0.34s ease-in-out infinite;
+}
+
+.squirrel-runner.is-running .sq-leg-back {
+  animation: sq-leg 0.34s ease-in-out infinite reverse;
+}
+
+.squirrel-runner .sq-leg {
+  transform-origin: 50% 30%;
+}
+
+/* When stopped at the target section: settle, gentle idle tail flick */
+.squirrel-runner.is-stopped .sq-tail {
+  animation: sq-tail-idle 1.8s ease-in-out infinite;
+}
+
+@keyframes sq-bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-5px) rotate(-2deg);
+  }
+}
+
+@keyframes sq-tail {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-12deg);
+  }
+}
+
+@keyframes sq-tail-idle {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-6deg);
+  }
+}
+
+@keyframes sq-leg {
+  0%,
+  100% {
+    transform: translateX(-2px) scaleX(0.9);
+  }
+  50% {
+    transform: translateX(3px) scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .squirrel-runner .sq-bob,
+  .squirrel-runner .sq-tail,
+  .squirrel-runner .sq-leg {
+    animation: none !important;
+  }
+}

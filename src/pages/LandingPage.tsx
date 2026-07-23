@@ -5,6 +5,7 @@ import ToonhubSections from '../components/ToonhubSections';
 import AxonHero from '../components/AxonHero';
 import Showcase3D from '../components/Showcase3D';
 import SiteFooter from '../components/SiteFooter';
+import SquirrelRunner from '../components/SquirrelRunner';
 import Experience3D from '../three/Experience3D';
 import { useScrollProgress } from '../three/useScrollProgress';
 import { useRevealAll } from '../hooks/useReveal';
@@ -23,6 +24,9 @@ export default function LandingPage() {
     <div className="relative w-full">
       {/* Fixed 3D scene behind everything */}
       <Experience3D scroll={scroll} />
+
+      {/* Scroll-driven squirrel mascot (fixed, runs until the Axon section) */}
+      <SquirrelRunner />
 
       {/* Scrolling content, layered above the 3D */}
       <div className="relative z-10">

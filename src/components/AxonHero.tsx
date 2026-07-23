@@ -3,7 +3,7 @@ const NAV_LINKS = ['Features', 'Plans', 'Security', 'About'];
 /** Full-viewport hero section for "Axon" — digital workers for mundane workflows. */
 export default function AxonHero() {
   return (
-    <section className="relative h-screen w-full overflow-hidden flex flex-col font-inter text-[#1B133C] bg-gradient-to-b from-[#e9e7f3] to-[#d0cce3]">
+    <section id="axon-hero" className="relative h-screen w-full overflow-hidden flex flex-col font-inter text-[#1B133C] bg-gradient-to-b from-[#e9e7f3] to-[#d0cce3]">
       {/* Background video */}
       <video
         className="absolute inset-0 z-0 w-full h-[130%] object-cover object-top"
