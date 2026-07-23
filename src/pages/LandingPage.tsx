@@ -3,6 +3,8 @@ import SecuritySections from '../components/SecuritySections';
 import ToonhubHero from '../components/ToonhubHero';
 import ToonhubSections from '../components/ToonhubSections';
 import AxonHero from '../components/AxonHero';
+import MeasuredHero from '../components/MeasuredHero';
+import ViktorHero from '../components/ViktorHero';
 import Showcase3D from '../components/Showcase3D';
 import SiteFooter from '../components/SiteFooter';
 import SquirrelRunner from '../components/SquirrelRunner';
@@ -47,6 +49,8 @@ export default function LandingPage() {
         <ToonhubHero />
         <ToonhubSections />
         <AxonHero />
+        <MeasuredHero />
+        <ViktorHero />
         <SiteFooter />
       </div>
     </div>

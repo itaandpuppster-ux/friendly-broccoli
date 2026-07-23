@@ -7,6 +7,13 @@ export default {
         readex: ['"Readex Pro"', 'system-ui', '-apple-system', 'sans-serif'],
         anton: ['"Anton"', 'sans-serif'],
         inter: ['"Inter"', 'sans-serif'],
+        figtree: ['"Figtree"', 'sans-serif'],
+        'instrument-serif': ['"Instrument Serif"', 'serif'],
+      },
+      screens: {
+        xs: '480px',
+        mobile: { max: '809.98px' },
+        'md-tablet': { min: '810px', max: '1199.98px' },
       },
     },
   },
