@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#171021">
+<title>Trinity Spring Studio</title>
+<style>html,body{margin:0;padding:0}</style>
+</head>
+<body>
+<style>
+  :root{
+    --ground:#efeaf2; --ground-2:#e7dfee;
+    --card:#fbf8fd; --card-edge:#ffffff; --card-shadow:#cdbfd9;
+    --ink:#2b2140; --ink-soft:#5b4f70; --ink-faint:#8a7ea0;
+    --lav:#a892d6; --violet:#6a54a6; --clay:#d99a78; --terra:#c56a48;
+    --accent:#c05c3c; --accent-ink:#ffffff;
+    --good:#3f9d6b; --line:rgba(43,33,64,.10);
+    --radius:22px; --radius-lg:30px;
+    --shadow:0 18px 40px -20px rgba(43,33,64,.45);
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    --sans:-apple-system,"SF Pro Text","Segoe UI",system-ui,Roboto,sans-serif;
+    --round:"SF Pro Rounded",-apple-system,"Segoe UI",system-ui,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --ground:#171021; --ground-2:#120c1b;
+      --card:#241a33; --card-edge:#332545; --card-shadow:#0c0813;
+      --ink:#efe6f7; --ink-soft:#c3b4d6; --ink-faint:#8c7da3;
+      --accent:#e08461; --accent-ink:#1c1226;
+      --line:rgba(239,230,247,.12);
+      --shadow:0 22px 46px -22px rgba(0,0,0,.7);
+    }
+  }
+  :root[data-theme="light"]{
+    --ground:#efeaf2; --ground-2:#e7dfee;
+    --card:#fbf8fd; --card-edge:#ffffff; --card-shadow:#cdbfd9;
+    --ink:#2b2140; --ink-soft:#5b4f70; --ink-faint:#8a7ea0;
+    --accent:#c05c3c; --accent-ink:#ffffff; --line:rgba(43,33,64,.10);
+    --shadow:0 18px 40px -20px rgba(43,33,64,.45);
+  }
+  :root[data-theme="dark"]{
+    --ground:#171021; --ground-2:#120c1b;
+    --card:#241a33; --card-edge:#332545; --card-shadow:#0c0813;
+    --ink:#efe6f7; --ink-soft:#c3b4d6; --ink-faint:#8c7da3;
+    --accent:#e08461; --accent-ink:#1c1226; --line:rgba(239,230,247,.12);
+    --shadow:0 22px 46px -22px rgba(0,0,0,.7);
+  }
+
+  *{box-sizing:border-box}
+  body{margin:0}
+  .wrap{
+    font-family:var(--sans); color:var(--ink);
+    background:
+      radial-gradient(120% 80% at 50% -10%, var(--ground-2), transparent 60%),
+      var(--ground);
+    min-height:100vh; display:flex; justify-content:center;
+    -webkit-font-smoothing:antialiased;
+  }
+  .app{width:100%; max-width:480px; padding:0 18px 40px}
+
+  /* ---------- HERO ---------- */
+  .hero{position:relative; margin:0 -18px 6px; overflow:hidden}
+  #stage{display:block; width:100%; height:340px}
+  .hero-copy{
+    position:absolute; left:0; right:0; bottom:0; padding:20px 22px 24px;
+    background:linear-gradient(to top, var(--ground) 6%, rgba(0,0,0,0) 92%);
+  }
+  .eyebrow{
+    font-family:var(--mono); font-size:11px; letter-spacing:.22em;
+    text-transform:uppercase; color:var(--accent); margin:0 0 8px; font-weight:600;
+  }
+  h1{
+    font-family:var(--round); font-weight:800; letter-spacing:-.03em;
+    line-height:1.02; margin:0; font-size:clamp(30px,9vw,40px);
+    text-wrap:balance;
+  }
+  h1 .g{
+    background:linear-gradient(100deg,var(--lav),var(--violet) 40%,var(--terra));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .sub{margin:10px 0 0; color:var(--ink-soft); font-size:14.5px; line-height:1.5; max-width:34ch}
+
+  /* ---------- shared card ---------- */
+  .card{
+    background:linear-gradient(180deg,var(--card-edge),var(--card));
+    border:1px solid var(--line); border-radius:var(--radius);
+    box-shadow:var(--shadow); padding:18px; margin-top:14px;
+  }
+  .kicker{
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.2em;
+    text-transform:uppercase; color:var(--ink-faint); font-weight:600; margin:0 0 12px;
+  }
+
+  /* ---------- run control ---------- */
+  .run-card{display:flex; flex-direction:column; gap:14px}
+  .btn{
+    appearance:none; border:0; cursor:pointer; width:100%;
+    font-family:var(--round); font-weight:800; font-size:17px; letter-spacing:-.01em;
+    color:var(--accent-ink); padding:16px 20px; border-radius:18px;
+    background:linear-gradient(180deg,var(--terra),var(--accent));
+    box-shadow:0 10px 24px -8px rgba(192,92,60,.6), inset 0 1px 0 rgba(255,255,255,.35);
+    transition:transform .12s ease, box-shadow .12s ease;
+    display:flex; align-items:center; justify-content:center; gap:10px;
+  }
+  .btn:active{transform:translateY(2px) scale(.995); box-shadow:0 6px 16px -8px rgba(192,92,60,.6)}
+  .btn:focus-visible{outline:3px solid var(--violet); outline-offset:3px}
+  .btn .dot{width:9px;height:9px;border-radius:50%;background:var(--accent-ink);opacity:.85}
+  .mode{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-faint)}
+  .mode .pill{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    padding:4px 9px;border-radius:999px;border:1px solid var(--line);color:var(--ink-soft);
+  }
+  .mode .pill.live{color:var(--good);border-color:color-mix(in srgb,var(--good) 45%,transparent)}
+
+  /* progress steps (live mode) */
+  .track{display:none;flex-direction:column;gap:2px}
+  .track.on{display:flex}
+  .trow{display:flex;align-items:center;gap:12px;padding:9px 2px}
+  .trow .n{
+    flex:0 0 26px;height:26px;border-radius:50%;display:grid;place-items:center;
+    font-family:var(--mono);font-size:12px;color:var(--ink-faint);
+    border:1.5px solid var(--line);background:transparent;transition:.2s;
+  }
+  .trow.active .n{border-color:var(--accent);color:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 18%,transparent)}
+  .trow.done .n{background:var(--good);border-color:var(--good);color:#fff}
+  .trow .lbl{font-size:13.5px;color:var(--ink-soft)}
+  .trow.active .lbl,.trow.done .lbl{color:var(--ink)}
+
+  /* ---------- prompt ---------- */
+  .prompt-body{
+    font-family:var(--mono); font-size:12.5px; line-height:1.65; color:var(--ink-soft);
+    background:color-mix(in srgb,var(--violet) 8%,transparent);
+    border:1px dashed var(--line); border-radius:14px; padding:14px; margin:0;
+    white-space:pre-wrap;
+  }
+  .copy{
+    margin-top:12px; appearance:none; cursor:pointer; font-family:var(--mono);
+    font-size:12px; letter-spacing:.06em; color:var(--ink); background:transparent;
+    border:1px solid var(--line); border-radius:12px; padding:9px 14px;
+    display:inline-flex; align-items:center; gap:8px; transition:.15s;
+  }
+  .copy:active{transform:translateY(1px)}
+  .copy.ok{color:var(--good);border-color:color-mix(in srgb,var(--good) 45%,transparent)}
+
+  /* ---------- steps ---------- */
+  .steps{display:flex;flex-direction:column;gap:12px;margin-top:14px}
+  .step{
+    background:linear-gradient(180deg,var(--card-edge),var(--card));
+    border:1px solid var(--line); border-radius:var(--radius);
+    box-shadow:var(--shadow); padding:16px 16px 16px 15px;
+    display:grid; grid-template-columns:44px 1fr; gap:14px; align-items:start;
+    position:relative; overflow:hidden;
+  }
+  .step::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;
+    background:linear-gradient(var(--lav),var(--terra));opacity:.9}
+  .glyph{
+    width:44px;height:44px;border-radius:14px;display:grid;place-items:center;
+    background:color-mix(in srgb,var(--violet) 14%,transparent);
+    border:1px solid var(--line);
+  }
+  .glyph svg{width:24px;height:24px}
+  .step h3{margin:0;font-family:var(--round);font-weight:800;font-size:16px;letter-spacing:-.01em}
+  .step p{margin:5px 0 0;font-size:13px;line-height:1.5;color:var(--ink-soft)}
+  .tag{
+    margin-top:9px;display:inline-block;font-family:var(--mono);font-size:10.5px;
+    letter-spacing:.08em;text-transform:uppercase;color:var(--accent);
+    padding:3px 9px;border-radius:999px;
+    background:color-mix(in srgb,var(--accent) 12%,transparent);
+  }
+  .stepnum{
+    position:absolute;right:14px;top:12px;font-family:var(--round);font-weight:800;
+    font-size:13px;color:var(--ink-faint);opacity:.6
+  }
+
+  /* ---------- quickstart ---------- */
+  pre.cmd{
+    font-family:var(--mono); font-size:12px; line-height:1.7; color:var(--ink);
+    background:var(--ground-2); border:1px solid var(--line); border-radius:14px;
+    padding:14px; margin:0; overflow-x:auto;
+  }
+  pre.cmd .c{color:var(--ink-faint)}
+  pre.cmd .k{color:var(--accent)}
+  .note{margin:12px 0 0;font-size:12.5px;line-height:1.55;color:var(--ink-faint)}
+  .note b{color:var(--ink-soft);font-weight:600}
+
+  footer{margin-top:22px;text-align:center;color:var(--ink-faint);font-size:11.5px;line-height:1.6}
+  footer .mono{font-family:var(--mono);letter-spacing:.04em}
+  a{color:var(--accent)}
+
+  @media (prefers-reduced-motion:reduce){.btn{transition:none}}
+</style>
+
+<div class="wrap">
+  <div class="app">
+
+    <header class="hero">
+      <canvas id="stage" aria-hidden="true"></canvas>
+      <div class="hero-copy">
+        <p class="eyebrow">3D · Instagram · Auto-pipeline</p>
+        <h1><span class="g">Trinity Spring</span> Studio</h1>
+        <p class="sub">One tap turns a trend prompt into a rendered, spinning 3D reel — image → cutout → 3D model → video.</p>
+      </div>
+    </header>
+
+    <section class="card run-card">
+      <button class="btn" id="run"><span class="dot"></span><span id="runlabel">Run the pipeline</span></button>
+      <div class="mode"><span class="pill" id="modepill">checking…</span><span id="modetext">Looking for a local engine…</span></div>
+      <div class="track" id="track">
+        <div class="trow" data-step="1"><div class="n">1</div><div class="lbl">Generate 4:5 hero image</div></div>
+        <div class="trow" data-step="2"><div class="n">2</div><div class="lbl">Isolate the 3D spring</div></div>
+        <div class="trow" data-step="3"><div class="n">3</div><div class="lbl">Build textured .glb model</div></div>
+        <div class="trow" data-step="4"><div class="n">4</div><div class="lbl">Render &amp; composite the MP4</div></div>
+      </div>
+      <div id="result"></div>
+    </section>
+
+    <section class="card">
+      <p class="kicker">The trend prompt</p>
+      <p class="prompt-body" id="prompt">A viral 3D digital art composition. Surreal, floating 'Trinity' background with three massive geometric arches layered in deep perspective, shifting from pastel lavender to muted terracotta. In the center, a minimalist human character interacts with an oversized 3D spiral spring. Tactile, hand-molded plasticine mixed with smooth clay-like textures. Deep-of-field blurring in the background, sharp crisp focus on the central objects.</p>
+      <button class="copy" id="copyprompt">⧉ Copy prompt</button>
+    </section>
+
+    <p class="kicker" style="margin:22px 4px 0">Four steps, one trigger</p>
+    <div class="steps" id="steps"></div>
+
+    <section class="card">
+      <p class="kicker">Run it on your phone</p>
+      <pre class="cmd"><span class="c"># Termux / iSH / a-Shell</span>
+pip install -r requirements.txt
+cp .env.example .env   <span class="c"># paste your keys</span>
+python run_pipeline.py <span class="k">--preflight</span>
+python run_pipeline.py</pre>
+      <button class="copy" id="copycmd">⧉ Copy commands</button>
+      <p class="note"><b>Keys go in one place:</b> <span class="mono">.env</span> — Fal.ai for image + cutout, Tripo3D (or Meshy) for the 3D model. Steps 1–3 are pure API calls; no local GPU needed.</p>
+    </section>
+
+    <footer>
+      <div class="mono">Trinity Spring Studio</div>
+      <div>friendly-broccoli · instagram_3d_pipeline</div>
+    </footer>
+
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- step cards ---------- */
+  var STEPS=[
+    {t:"Image creation",prov:"Fal.ai · Flux",d:"Generates the 4:5 Instagram hero image straight from the trend prompt.",
+     ic:'<path d="M4 5h16v14H4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="9" cy="10" r="1.8" fill="currentColor"/><path d="M5 18l5-5 4 4 3-3 2 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>'},
+    {t:"Object isolation",prov:"Segment Anything",d:"Detects, masks and crops the 3D spring out of the frame automatically.",
+     ic:'<path d="M4 8V4h4M20 8V4h-4M4 16v4h4M20 16v4h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="3.4" fill="none" stroke="currentColor" stroke-width="2"/>'},
+    {t:"Image → 3D",prov:"Tripo3D / Meshy",d:"Turns the cropped spring into a production-ready textured .glb model.",
+     ic:'<path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>'},
+    {t:"Render & composite",prov:"Headless Blender",d:"Spins the spring back over the background and renders a high-fidelity MP4.",
+     ic:'<path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M10 9l5 3-5 3z" fill="currentColor"/>'}
+  ];
+  var host=document.getElementById("steps");
+  STEPS.forEach(function(s,i){
+    var el=document.createElement("div"); el.className="step";
+    el.innerHTML='<div class="glyph"><svg viewBox="0 0 24 24" style="color:var(--violet)">'+s.ic+'</svg></div>'+
+      '<div><h3>'+s.t+'</h3><p>'+s.d+'</p><span class="tag">'+s.prov+'</span></div>'+
+      '<span class="stepnum">0'+(i+1)+'</span>';
+    host.appendChild(el);
+  });
+
+  /* ---------- copy buttons ---------- */
+  function wireCopy(btnId, getText, label){
+    var b=document.getElementById(btnId);
+    b.addEventListener("click", function(){
+      var t=getText();
+      var done=function(){ var o=b.textContent; b.textContent="✓ Copied"; b.classList.add("ok");
+        setTimeout(function(){ b.textContent=label; b.classList.remove("ok"); },1400); };
+      if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(t).then(done,done); }
+      else { done(); }
+    });
+  }
+  wireCopy("copyprompt", function(){ return document.getElementById("prompt").textContent.trim(); }, "⧉ Copy prompt");
+  wireCopy("copycmd", function(){ return "pip install -r requirements.txt\ncp .env.example .env\npython run_pipeline.py --preflight\npython run_pipeline.py"; }, "⧉ Copy commands");
+
+  /* ---------- live vs showcase mode ---------- */
+  var pill=document.getElementById("modepill"), modetext=document.getElementById("modetext");
+  var runBtn=document.getElementById("run"), runLabel=document.getElementById("runlabel");
+  var track=document.getElementById("track"), result=document.getElementById("result");
+  var LIVE=false;
+
+  function setShowcase(){
+    LIVE=false;
+    pill.textContent="Preview"; pill.classList.remove("live");
+    modetext.textContent="Tap to copy the run command for your terminal.";
+    runLabel.textContent="Copy run command";
+  }
+  function setLive(){
+    LIVE=true;
+    pill.textContent="Live engine"; pill.classList.add("live");
+    modetext.textContent="Connected to your local pipeline — tap to run.";
+    runLabel.textContent="Run the pipeline";
+  }
+
+  // Detect a local engine (serve.py). On the hosted preview this simply fails → showcase.
+  var probe=fetch("api/health",{cache:"no-store"}).then(function(r){return r.ok?r.json():Promise.reject();});
+  probe.then(setLive).catch(setShowcase);
+
+  function markSteps(active){
+    track.classList.add("on");
+    document.querySelectorAll(".trow").forEach(function(row){
+      var n=+row.getAttribute("data-step");
+      row.classList.toggle("done", n<active);
+      row.classList.toggle("active", n===active);
+    });
+  }
+
+  runBtn.addEventListener("click", function(){
+    if(!LIVE){
+      navigator.clipboard&&navigator.clipboard.writeText("python run_pipeline.py");
+      runLabel.textContent="✓ Copied — paste in your terminal";
+      setTimeout(function(){ runLabel.textContent="Copy run command"; },1600);
+      return;
+    }
+    runBtn.disabled=true; runLabel.textContent="Running…"; result.innerHTML="";
+    fetch("api/run",{method:"POST"}).catch(function(){});
+    var poll=setInterval(function(){
+      fetch("api/status",{cache:"no-store"}).then(function(r){return r.json();}).then(function(s){
+        markSteps(s.step||1);
+        if(s.done){
+          clearInterval(poll); runBtn.disabled=false; runLabel.textContent="Run again";
+          document.querySelectorAll(".trow").forEach(function(r){r.classList.remove("active");r.classList.add("done");});
+          if(s.video){ result.innerHTML='<a class="copy ok" style="margin-top:14px" href="'+s.video+'">▶ Open the finished reel</a>'; }
+        }
+        if(s.error){ clearInterval(poll); runBtn.disabled=false; runLabel.textContent="Retry"; modetext.textContent=s.error; }
+      }).catch(function(){});
+    },1500);
+  });
+
+  /* ---------- canvas hero: Trinity arches + rotating spring ---------- */
+  var cv=document.getElementById("stage"), ctx=cv.getContext("2d");
+  var reduce=window.matchMedia("(prefers-reduced-motion:reduce)").matches;
+  var W=0,H=0,DPR=Math.min(window.devicePixelRatio||1,2);
+
+  function pal(){
+    var cs=getComputedStyle(document.documentElement);
+    var g=function(n){return cs.getPropertyValue(n).trim();};
+    return {lav:g("--lav")||"#a892d6",violet:g("--violet")||"#6a54a6",
+            clay:g("--clay")||"#d99a78",terra:g("--terra")||"#c56a48",
+            ground:g("--ground")||"#efeaf2",ground2:g("--ground-2")||"#e7dfee"};
+  }
+  function size(){
+    W=cv.clientWidth; H=cv.clientHeight;
+    cv.width=W*DPR; cv.height=H*DPR; ctx.setTransform(DPR,0,0,DPR,0,0);
+  }
+
+  function arch(p,cx,base,w,top,color,alpha,blur){
+    ctx.save(); ctx.globalAlpha=alpha; ctx.filter=blur?("blur("+blur+"px)"):"none";
+    ctx.strokeStyle=color; ctx.lineWidth=w*0.30; ctx.lineCap="round";
+    var r=w*0.9;
+    ctx.beginPath();
+    ctx.moveTo(cx-w, base);
+    ctx.lineTo(cx-w, top+r);
+    ctx.quadraticCurveTo(cx-w, top, cx-w+r, top);
+    ctx.lineTo(cx+w-r, top);
+    ctx.quadraticCurveTo(cx+w, top, cx+w, top+r);
+    ctx.lineTo(cx+w, base);
+    ctx.stroke(); ctx.restore();
+  }
+
+  function spring(cx,cy,ph,c){
+    var loops=5, segs=260, R=Math.min(W*0.20,74), Hs=190, top=cy-Hs/2;
+    var pts=[];
+    for(var i=0;i<=segs;i++){
+      var t=i/segs, a=t*loops*Math.PI*2+ph;
+      pts.push({x:cx+R*Math.cos(a), y:top+t*Hs, z:Math.sin(a)});
+    }
+    var order=[]; for(var j=0;j<segs;j++) order.push(j);
+    order.sort(function(m,n){ return (pts[m].z+pts[m+1].z)-(pts[n].z+pts[n+1].z); });
+    for(var k=0;k<order.length;k++){
+      var idx=order[k], A=pts[idx], B=pts[idx+1], z=(A.z+B.z)/2, t=idx/segs;
+      var col=mix(c.lav,c.terra,t);
+      var shade=0.55+0.45*((z+1)/2);
+      ctx.strokeStyle=shadeColor(col,shade);
+      ctx.lineWidth=9*(0.6+0.4*((z+1)/2));
+      ctx.lineCap="round";
+      ctx.beginPath(); ctx.moveTo(A.x,A.y); ctx.lineTo(B.x,B.y); ctx.stroke();
+    }
+  }
+  function hx(c){c=c.replace("#","");if(c.length===3)c=c.split("").map(function(x){return x+x;}).join("");
+    return [parseInt(c.substr(0,2),16),parseInt(c.substr(2,2),16),parseInt(c.substr(4,2),16)];}
+  function mix(a,b,t){var x=hx(a),y=hx(b);return"rgb("+Math.round(x[0]+(y[0]-x[0])*t)+","+Math.round(x[1]+(y[1]-x[1])*t)+","+Math.round(x[2]+(y[2]-x[2])*t)+")";}
+  function shadeColor(rgb,f){var m=rgb.match(/\d+/g);return"rgb("+Math.min(255,Math.round(m[0]*f))+","+Math.min(255,Math.round(m[1]*f))+","+Math.min(255,Math.round(m[2]*f))+")";}
+
+  var ph=0;
+  function frame(){
+    var c=pal();
+    ctx.clearRect(0,0,W,H);
+    var bg=ctx.createLinearGradient(0,0,0,H);
+    bg.addColorStop(0,c.ground2); bg.addColorStop(1,c.ground);
+    ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+    var cx=W/2, base=H*0.92;
+    // three arches in depth — far ones blurred (depth of field)
+    arch(c,cx,base, Math.min(W*0.42,150), H*0.20, c.lav,   0.5, 7);
+    arch(c,cx,base, Math.min(W*0.30,108), H*0.30, c.violet,0.6, 3);
+    arch(c,cx,base, Math.min(W*0.19,68),  H*0.40, c.terra, 0.9, 0);
+    spring(cx, H*0.55, ph, c);
+    if(!reduce){ ph+=0.02; requestAnimationFrame(frame); }
+  }
+
+  size(); frame();
+  window.addEventListener("resize", function(){ size(); if(reduce) frame(); });
+  // repaint on theme flip so canvas colors track the toggle
+  var mq=window.matchMedia("(prefers-color-scheme:dark)");
+  (mq.addEventListener||mq.addListener).call(mq,"change",function(){ if(reduce) frame(); });
+  new MutationObserver(function(){ if(reduce) frame(); })
+    .observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+})();
+</script>
+
+</body>
+</html>
