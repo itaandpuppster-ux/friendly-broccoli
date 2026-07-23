@@ -5,14 +5,15 @@ import ToonhubSections from '../components/ToonhubSections';
 import AxonHero from '../components/AxonHero';
 import MeasuredHero from '../components/MeasuredHero';
 import ViktorHero from '../components/ViktorHero';
+import Scene3DSection from '../components/Scene3DSection';
 import SiteFooter from '../components/SiteFooter';
 import SquirrelRunner from '../components/SquirrelRunner';
 import { useRevealAll } from '../hooks/useReveal';
 
 /**
  * The single, scrollable website. Each section is a clean, self-contained block
- * with scroll-reveal animations; the only 3D lives inside the Measured hero as
- * its scroll-driven object.
+ * with scroll-reveal animations. The moving 3D scene lives in its own contained
+ * Scene3DSection (in the securify area); the Measured hero has its own 3D too.
  */
 export default function LandingPage() {
   useRevealAll();
@@ -24,6 +25,7 @@ export default function LandingPage() {
 
       <div className="relative z-10">
         <SecurifyHero />
+        <Scene3DSection />
         <SecuritySections />
         <ToonhubHero />
         <ToonhubSections />
