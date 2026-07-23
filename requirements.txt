@@ -1,0 +1,13 @@
+# ---------------------------------------------------------------------------
+# Instagram 3D Art Pipeline — Python dependencies
+# ---------------------------------------------------------------------------
+# Install with:   pip install -r requirements.txt
+#
+# NOTE: Blender is NOT a pip dependency. It is a separate binary that must be
+# available on your PATH (see PIPELINE_README.md). Everything else is pure
+# Python and works on a phone terminal app (Termux, iSH, a-Shell, etc.).
+# ---------------------------------------------------------------------------
+
+requests>=2.31.0        # All HTTP calls to the cloud APIs
+Pillow>=10.0.0          # Local image cropping / mask compositing
+python-dotenv>=1.0.0    # Loads API keys from a .env file
