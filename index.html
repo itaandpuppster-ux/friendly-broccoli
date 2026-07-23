@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumière Med Spa — Advanced Aesthetics & Wellness</title>
+<meta name="description" content="Lumière Med Spa offers luxury injectables, skin treatments, and body contouring. Book your complimentary consultation today.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ivory:#f7f3ee;--cream:#efe7dc;--nude:#d8c3ad;--blush:#e7cfc4;
+    --espresso:#2e2823;--muted:#7c7268;--gold:#b08d57;--sage:#8a9a83;--white:#fffdfb;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',sans-serif;color:var(--espresso);background:var(--ivory);line-height:1.7;font-weight:300}
+  h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:500;line-height:1.15;letter-spacing:.3px}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+  .eyebrow{font-family:'Inter';font-size:.72rem;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:18px}
+  .btn{display:inline-block;padding:15px 34px;border-radius:40px;font-size:.82rem;letter-spacing:.14em;text-transform:uppercase;font-weight:500;transition:.35s;cursor:pointer;border:1px solid var(--gold)}
+  .btn-solid{background:var(--gold);color:var(--white)}
+  .btn-solid:hover{background:transparent;color:var(--gold)}
+  .btn-ghost{background:transparent;color:var(--espresso);border-color:var(--espresso)}
+  .btn-ghost:hover{background:var(--espresso);color:var(--white)}
+
+  /* NAV */
+  header{position:fixed;top:0;left:0;right:0;z-index:50;transition:.4s;padding:22px 0}
+  header.scrolled{background:rgba(247,243,238,.92);backdrop-filter:blur(10px);padding:14px 0;box-shadow:0 4px 30px rgba(46,40,35,.06)}
+  nav{display:flex;align-items:center;justify-content:space-between}
+  .logo{font-family:'Cormorant Garamond';font-size:1.7rem;font-weight:600;letter-spacing:2px}
+  .logo span{color:var(--gold)}
+  .nav-links{display:flex;gap:34px;align-items:center}
+  .nav-links a{font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;transition:.25s}
+  .nav-links a:hover{color:var(--gold)}
+  .nav-cta{padding:11px 26px;border:1px solid var(--gold);border-radius:40px;color:var(--gold)!important}
+  .nav-cta:hover{background:var(--gold);color:var(--white)!important}
+  .burger{display:none;flex-direction:column;gap:5px;cursor:pointer}
+  .burger span{width:26px;height:2px;background:var(--espresso)}
+
+  /* HERO */
+  .hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;
+    background:linear-gradient(115deg,#f7f3ee 0%,#efe7dc 45%,#e7cfc4 100%)}
+  .hero::after{content:"";position:absolute;right:-8%;top:-10%;width:60%;height:120%;
+    background:radial-gradient(circle at 60% 40%,rgba(176,141,87,.18),transparent 60%);pointer-events:none}
+  .hero-inner{display:grid;grid-template-columns:1.05fr .95fr;gap:50px;align-items:center;width:100%}
+  .hero h1{font-size:clamp(2.8rem,6vw,5rem);margin:12px 0 22px}
+  .hero p{font-size:1.08rem;color:var(--muted);max-width:460px;margin-bottom:34px}
+  .hero-cta{display:flex;gap:16px;flex-wrap:wrap}
+  .hero-visual{position:relative;height:520px;border-radius:280px 280px 24px 24px;overflow:hidden;
+    background:linear-gradient(160deg,var(--nude),var(--blush));box-shadow:0 40px 80px rgba(46,40,35,.18)}
+  .hero-visual::before{content:"✦";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font-size:6rem;color:rgba(255,255,255,.35)}
+  .hero-badge{position:absolute;bottom:26px;left:-22px;background:var(--white);padding:18px 26px;border-radius:16px;
+    box-shadow:0 20px 45px rgba(46,40,35,.14);text-align:center}
+  .hero-badge strong{font-family:'Cormorant Garamond';font-size:2rem;color:var(--gold);display:block;line-height:1}
+  .hero-badge small{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+  /* TRUST STRIP */
+  .trust{background:var(--espresso);color:var(--cream);padding:26px 0}
+  .trust-row{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;text-align:center}
+  .trust-row div{flex:1;min-width:130px}
+  .trust-row span{font-family:'Cormorant Garamond';font-size:1.9rem;color:var(--gold);display:block}
+  .trust-row small{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;opacity:.75}
+
+  /* SECTIONS */
+  section{padding:110px 0}
+  .sec-head{text-align:center;max-width:620px;margin:0 auto 64px}
+  .sec-head h2{font-size:clamp(2.2rem,4vw,3.4rem);margin-bottom:16px}
+  .sec-head p{color:var(--muted)}
+
+  /* ABOUT */
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+  .about-img{height:460px;border-radius:20px;background:linear-gradient(150deg,var(--sage),var(--nude));
+    box-shadow:0 30px 60px rgba(46,40,35,.14);position:relative}
+  .about-img::after{content:"Lumière";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font-family:'Cormorant Garamond';font-size:2.4rem;color:rgba(255,255,255,.55);letter-spacing:3px}
+  .about-text h2{font-size:2.8rem;margin:10px 0 20px}
+  .about-text p{color:var(--muted);margin-bottom:18px}
+  .sig{font-family:'Cormorant Garamond';font-size:1.6rem;color:var(--gold);margin-top:10px}
+
+  /* SERVICES */
+  .services{background:var(--cream)}
+  .svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+  .svc{background:var(--white);border-radius:18px;padding:40px 32px;transition:.4s;border:1px solid rgba(176,141,87,.12)}
+  .svc:hover{transform:translateY(-8px);box-shadow:0 30px 55px rgba(46,40,35,.12)}
+  .svc-icon{width:60px;height:60px;border-radius:50%;background:linear-gradient(140deg,var(--blush),var(--nude));
+    display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:22px}
+  .svc h3{font-size:1.6rem;margin-bottom:12px}
+  .svc p{color:var(--muted);font-size:.95rem;margin-bottom:18px}
+  .svc .price{font-family:'Cormorant Garamond';color:var(--gold);font-size:1.25rem}
+
+  /* GALLERY */
+  .gal-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .gal-grid div{height:230px;border-radius:14px;background:linear-gradient(150deg,var(--nude),var(--blush));transition:.4s}
+  .gal-grid div:nth-child(2n){background:linear-gradient(150deg,var(--sage),var(--cream))}
+  .gal-grid div:nth-child(3n){background:linear-gradient(150deg,var(--blush),var(--nude))}
+  .gal-grid div:hover{transform:scale(1.03);box-shadow:0 20px 40px rgba(46,40,35,.14)}
+
+  /* TESTIMONIALS */
+  .testimonials{background:var(--espresso);color:var(--cream)}
+  .testimonials .sec-head h2{color:var(--white)}
+  .testimonials .sec-head p{color:rgba(239,231,220,.7)}
+  .tst-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+  .tst{background:rgba(255,255,255,.05);border:1px solid rgba(176,141,87,.25);border-radius:18px;padding:34px}
+  .tst .stars{color:var(--gold);letter-spacing:3px;margin-bottom:14px}
+  .tst p{font-family:'Cormorant Garamond';font-size:1.35rem;line-height:1.5;margin-bottom:20px}
+  .tst small{letter-spacing:.14em;text-transform:uppercase;font-size:.72rem;opacity:.7}
+
+  /* CTA / CONTACT */
+  .contact{background:linear-gradient(120deg,var(--cream),var(--blush))}
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+  .contact-info h2{font-size:2.8rem;margin:10px 0 20px}
+  .contact-info p{color:var(--muted);margin-bottom:26px}
+  .contact-info ul{list-style:none}
+  .contact-info li{padding:10px 0;border-bottom:1px solid rgba(46,40,35,.1);font-size:.98rem}
+  .contact-info li b{font-weight:500}
+  form{background:var(--white);padding:40px;border-radius:20px;box-shadow:0 30px 60px rgba(46,40,35,.12)}
+  form h3{font-size:1.9rem;margin-bottom:22px}
+  .field{margin-bottom:16px}
+  .field input,.field select{width:100%;padding:14px 16px;border:1px solid rgba(46,40,35,.15);border-radius:10px;
+    font-family:inherit;font-size:.95rem;background:var(--ivory);color:var(--espresso)}
+  .field input:focus,.field select:focus{outline:none;border-color:var(--gold)}
+  form .btn{width:100%;border:none}
+
+  /* FOOTER */
+  footer{background:#241f1b;color:var(--cream);padding:60px 0 30px}
+  .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:40px;margin-bottom:40px}
+  .foot-grid h4{font-size:1.1rem;letter-spacing:.1em;margin-bottom:16px;color:var(--gold);font-family:'Inter';text-transform:uppercase;font-size:.8rem}
+  .foot-grid a,.foot-grid p{display:block;color:rgba(239,231,220,.7);font-size:.9rem;padding:5px 0}
+  .foot-grid a:hover{color:var(--gold)}
+  .foot-logo{font-family:'Cormorant Garamond';font-size:1.8rem;font-weight:600;color:var(--white);margin-bottom:14px}
+  .foot-bottom{text-align:center;padding-top:26px;border-top:1px solid rgba(255,255,255,.08);font-size:.8rem;opacity:.6}
+
+  /* FLOATING CALL */
+  .float-call{position:fixed;bottom:24px;right:24px;z-index:60;background:var(--gold);color:var(--white);
+    width:60px;height:60px;border-radius:50%;display:none;align-items:center;justify-content:center;font-size:1.5rem;
+    box-shadow:0 12px 30px rgba(176,141,87,.5)}
+
+  /* reveal */
+  .reveal{opacity:0;transform:translateY(30px);transition:.8s ease}
+  .reveal.in{opacity:1;transform:none}
+
+  @media(max-width:900px){
+    .hero-inner,.about-grid,.contact-grid{grid-template-columns:1fr}
+    .hero-visual{height:380px;border-radius:200px 200px 20px 20px;margin-top:20px}
+    .svc-grid,.tst-grid{grid-template-columns:1fr}
+    .gal-grid{grid-template-columns:1fr 1fr}
+    .foot-grid{grid-template-columns:1fr}
+    .nav-links{position:fixed;top:0;right:0;height:100vh;width:260px;background:var(--ivory);flex-direction:column;
+      justify-content:center;transform:translateX(100%);transition:.4s;box-shadow:-10px 0 40px rgba(0,0,0,.1)}
+    .nav-links.open{transform:none}
+    .burger{display:flex;z-index:60}
+    .float-call{display:flex}
+    section{padding:80px 0}
+  }
+</style>
+</head>
+<body>
+
+<header id="header">
+  <div class="wrap">
+    <nav>
+      <a href="#home" class="logo">Lumi<span>è</span>re</a>
+      <div class="nav-links" id="navLinks">
+        <a href="#about">About</a>
+        <a href="#services">Services</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#reviews">Reviews</a>
+        <a href="#contact" class="nav-cta">Book Now</a>
+      </div>
+      <div class="burger" id="burger"><span></span><span></span><span></span></div>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="home" style="padding-top:120px">
+  <div class="wrap">
+    <div class="hero-inner">
+      <div>
+        <div class="eyebrow">Advanced Aesthetics · Est. 2014</div>
+        <h1>Reveal your most<br>radiant self.</h1>
+        <p>A luxury medical spa where science meets serenity. Personalized injectables, skin, and body treatments — delivered by board-certified experts.</p>
+        <div class="hero-cta">
+          <a href="#contact" class="btn btn-solid">Book Free Consultation</a>
+          <a href="#services" class="btn btn-ghost">Explore Treatments</a>
+        </div>
+      </div>
+      <div style="position:relative">
+        <div class="hero-visual"></div>
+        <div class="hero-badge"><strong>4.9★</strong><small>500+ Reviews</small></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST -->
+<div class="trust">
+  <div class="wrap">
+    <div class="trust-row">
+      <div><span>12+</span><small>Years of Care</small></div>
+      <div><span>15k+</span><small>Treatments Given</small></div>
+      <div><span>Board</span><small>Certified Team</small></div>
+      <div><span>4.9★</span><small>Google Rated</small></div>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="wrap">
+    <div class="about-grid reveal">
+      <div class="about-img"></div>
+      <div class="about-text">
+        <div class="eyebrow">Our Story</div>
+        <h2>Where medical expertise meets true luxury.</h2>
+        <p>Founded by Dr. Elena Rossi, Lumière was born from a simple belief: aesthetic care should feel as good as it looks. Every treatment begins with a thoughtful consultation and a plan built around you — never a template.</p>
+        <p>Our team of board-certified providers combines the latest science with an artist's eye, so your results are natural, refined, and unmistakably you.</p>
+        <div class="sig">— Dr. Elena Rossi, Founder</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Signature Treatments</div>
+      <h2>Curated care for face &amp; body</h2>
+      <p>From subtle enhancements to complete rejuvenation, every service is tailored to your goals.</p>
+    </div>
+    <div class="svc-grid">
+      <div class="svc reveal"><div class="svc-icon">💉</div><h3>Injectables</h3><p>Botox &amp; dermal fillers to smooth lines and restore natural volume.</p><div class="price">From $12 / unit</div></div>
+      <div class="svc reveal"><div class="svc-icon">✨</div><h3>Skin Rejuvenation</h3><p>Medical facials, chemical peels &amp; microneedling for luminous skin.</p><div class="price">From $180</div></div>
+      <div class="svc reveal"><div class="svc-icon">🌿</div><h3>Laser Therapy</h3><p>Laser resurfacing &amp; hair removal with minimal downtime.</p><div class="price">From $250</div></div>
+      <div class="svc reveal"><div class="svc-icon">💧</div><h3>IV &amp; Wellness</h3><p>Hydration and vitamin infusions to restore energy and glow.</p><div class="price">From $150</div></div>
+      <div class="svc reveal"><div class="svc-icon">🔷</div><h3>Body Contouring</h3><p>Non-invasive fat reduction &amp; skin tightening treatments.</p><div class="price">From $400</div></div>
+      <div class="svc reveal"><div class="svc-icon">👑</div><h3>Membership</h3><p>Monthly perks, priority booking &amp; exclusive member pricing.</p><div class="price">From $99 / mo</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Real Results</div>
+      <h2>The Lumière difference</h2>
+      <p>Subtle, natural, confidence-restoring outcomes our clients love.</p>
+    </div>
+    <div class="gal-grid reveal">
+      <div></div><div></div><div></div><div></div>
+      <div></div><div></div><div></div><div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="reviews">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Client Love</div>
+      <h2>What our guests say</h2>
+    </div>
+    <div class="tst-grid">
+      <div class="tst reveal"><div class="stars">★★★★★</div><p>"I've never felt more cared for. My results look completely natural — exactly what I wanted."</p><small>— Sophia M.</small></div>
+      <div class="tst reveal"><div class="stars">★★★★★</div><p>"The team is genuinely artistic. Lumière feels like a getaway, not an appointment."</p><small>— James T.</small></div>
+      <div class="tst reveal"><div class="stars">★★★★★</div><p>"From consultation to results, everything was flawless. I recommend them to everyone."</p><small>— Priya K.</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="wrap">
+    <div class="contact-grid">
+      <div class="contact-info reveal">
+        <div class="eyebrow">Visit Us</div>
+        <h2>Book your complimentary consultation</h2>
+        <p>Tell us your goals and we'll craft a personalized plan. No pressure — just expert guidance in a beautiful, calming space.</p>
+        <ul>
+          <li><b>📍 Address</b> &nbsp; 128 Rosewood Ave, Suite 200</li>
+          <li><b>📞 Phone</b> &nbsp; <a href="tel:+15551234567">(555) 123-4567</a></li>
+          <li><b>✉️ Email</b> &nbsp; hello@lumierespa.com</li>
+          <li><b>🕐 Hours</b> &nbsp; Mon–Sat · 9am – 7pm</li>
+        </ul>
+      </div>
+      <form class="reveal" onsubmit="event.preventDefault();this.innerHTML='<h3>Thank you! ✨</h3><p style=&quot;color:var(--muted)&quot;>We\'ll reach out within one business day to confirm your consultation.</p>';">
+        <h3>Request an appointment</h3>
+        <div class="field"><input type="text" placeholder="Full name" required></div>
+        <div class="field"><input type="tel" placeholder="Phone number" required></div>
+        <div class="field"><input type="email" placeholder="Email address" required></div>
+        <div class="field">
+          <select required>
+            <option value="">Select a treatment…</option>
+            <option>Injectables</option><option>Skin Rejuvenation</option>
+            <option>Laser Therapy</option><option>IV &amp; Wellness</option>
+            <option>Body Contouring</option><option>Not sure yet</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-solid">Book Free Consultation</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-logo">Lumière</div>
+        <p>A luxury medical spa dedicated to natural, confidence-restoring results.</p>
+        <p>Instagram · Facebook · TikTok</p>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <a href="#about">About</a><a href="#services">Services</a>
+        <a href="#gallery">Gallery</a><a href="#reviews">Reviews</a>
+      </div>
+      <div>
+        <h4>Visit</h4>
+        <p>128 Rosewood Ave</p><p>(555) 123-4567</p>
+        <p>Mon–Sat · 9–7</p>
+      </div>
+    </div>
+    <div class="foot-bottom">© 2026 Lumière Med Spa · Demo site. All rights reserved.</div>
+  </div>
+</footer>
+
+<a href="tel:+15551234567" class="float-call">📞</a>
+
+<script>
+  const header=document.getElementById('header');
+  window.addEventListener('scroll',()=>header.classList.toggle('scrolled',window.scrollY>40));
+  const burger=document.getElementById('burger'),navLinks=document.getElementById('navLinks');
+  burger.addEventListener('click',()=>navLinks.classList.toggle('open'));
+  navLinks.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>navLinks.classList.remove('open')));
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:.15});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
