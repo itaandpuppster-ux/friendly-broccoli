@@ -113,10 +113,31 @@ Blender you can reach — the rest of the pipeline is identical.
 
 ---
 
+## 📲 Tap-to-run web app (phone friendly)
+
+Prefer a button over the terminal? There's a mobile control panel that runs the
+whole pipeline from a tap:
+
+```bash
+python serve.py                 # open http://localhost:8000 on the same device
+python serve.py --host 0.0.0.0  # open http://<this-machine-ip>:8000 from your phone
+```
+
+It uses only the Python standard library (no extra installs) and shows live
+progress through the four steps, then links straight to the finished MP4. When
+the page can't find a local engine (e.g. opened as a static preview) it falls
+back to a showcase that copies the run command for you.
+
+The same page (`webapp/page.html`) is also publishable as a shareable link.
+
+---
+
 ## Project layout
 
 ```
-run_pipeline.py                     # single-trigger entrypoint
+run_pipeline.py                     # single-trigger CLI entrypoint
+serve.py                            # tap-to-run mobile web app (stdlib only)
+webapp/page.html                    # the mobile control panel UI
 instagram_3d_pipeline/
 ├── config.py                       # ← settings, sizes, embedded trend prompt
 ├── pipeline.py                     # orchestrates the 4 steps
