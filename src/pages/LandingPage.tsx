@@ -2,6 +2,7 @@ import SecurifyHero from '../components/SecurifyHero';
 import SecuritySections from '../components/SecuritySections';
 import ToonhubHero from '../components/ToonhubHero';
 import ToonhubSections from '../components/ToonhubSections';
+import AxonHero from '../components/AxonHero';
 import Showcase3D from '../components/Showcase3D';
 import SiteFooter from '../components/SiteFooter';
 import Experience3D from '../three/Experience3D';
@@ -41,6 +42,7 @@ export default function LandingPage() {
         />
         <ToonhubHero />
         <ToonhubSections />
+        <AxonHero />
         <SiteFooter />
       </div>
     </div>
