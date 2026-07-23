@@ -75,9 +75,9 @@ const PLANS = [
 /** Scrolling body sections for the securify landing page (dark theme). */
 export default function SecuritySections() {
   return (
-    <div className="bg-black text-white">
+    <div className="text-white">
       {/* Trust strip */}
-      <section className="mx-auto max-w-6xl px-6 py-16 md:py-20">
+      <section className="reveal mx-auto max-w-6xl px-6 py-16 md:py-20">
         <p className="text-center text-xs uppercase tracking-[0.3em] text-white/40">
           trusted by security teams at
         </p>
@@ -92,7 +92,7 @@ export default function SecuritySections() {
 
       {/* Features */}
       <section id="features" className="mx-auto max-w-6xl px-6 py-16 md:py-24">
-        <div className="max-w-2xl">
+        <div className="reveal max-w-2xl">
           <h2 className="hero-title text-4xl md:text-6xl font-medium lowercase">
             security that stays out of your way
           </h2>
@@ -100,11 +100,11 @@ export default function SecuritySections() {
             everything you need to lock down your data — and nothing you have to babysit.
           </p>
         </div>
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="reveal mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {FEATURES.map(({ icon: Icon, title, desc }) => (
             <div
               key={title}
-              className="rounded-2xl border border-white/10 bg-neutral-900/60 p-6 transition-colors hover:border-white/25"
+              className="rounded-2xl border border-white/10 bg-neutral-900/60 p-6 backdrop-blur transition-colors hover:border-white/25"
             >
               <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/10">
                 <Icon className="h-5 w-5 text-white" strokeWidth={1.75} />
@@ -117,8 +117,8 @@ export default function SecuritySections() {
       </section>
 
       {/* How it works */}
-      <section className="border-y border-white/10 bg-neutral-950">
-        <div className="mx-auto max-w-6xl px-6 py-16 md:py-24">
+      <section className="border-y border-white/10 bg-neutral-950/60 backdrop-blur-sm">
+        <div className="reveal mx-auto max-w-6xl px-6 py-16 md:py-24">
           <h2 className="hero-title text-4xl md:text-6xl font-medium lowercase">how it works</h2>
           <div className="mt-12 grid gap-10 md:grid-cols-3">
             {STEPS.map((step) => (
@@ -134,7 +134,7 @@ export default function SecuritySections() {
 
       {/* Stats band */}
       <section className="mx-auto max-w-6xl px-6 py-16 md:py-24">
-        <div className="grid gap-10 sm:grid-cols-3">
+        <div className="reveal grid gap-10 sm:grid-cols-3">
           {STATS.map((stat) => (
             <div key={stat.value} className="text-center">
               <div className="text-5xl md:text-6xl font-medium tracking-tight">{stat.value}</div>
@@ -147,11 +147,11 @@ export default function SecuritySections() {
       {/* Testimonials */}
       <section className="border-t border-white/10">
         <div className="mx-auto max-w-6xl px-6 py-16 md:py-24">
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="reveal grid gap-6 md:grid-cols-2">
             {TESTIMONIALS.map((t) => (
               <figure
                 key={t.name}
-                className="rounded-2xl border border-white/10 bg-neutral-900/60 p-8"
+                className="rounded-2xl border border-white/10 bg-neutral-900/60 p-8 backdrop-blur"
               >
                 <blockquote className="text-xl md:text-2xl font-medium leading-snug lowercase">
                   “{t.quote}”
@@ -166,9 +166,9 @@ export default function SecuritySections() {
       </section>
 
       {/* Pricing */}
-      <section id="pricing" className="border-t border-white/10 bg-neutral-950">
+      <section id="pricing" className="border-t border-white/10 bg-neutral-950/60 backdrop-blur-sm">
         <div className="mx-auto max-w-6xl px-6 py-16 md:py-24">
-          <div className="max-w-2xl">
+          <div className="reveal max-w-2xl">
             <h2 className="hero-title text-4xl md:text-6xl font-medium lowercase">
               simple, honest pricing
             </h2>
@@ -176,7 +176,7 @@ export default function SecuritySections() {
               start free, scale when you need to. no surprises.
             </p>
           </div>
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
+          <div className="reveal mt-12 grid gap-6 md:grid-cols-3">
             {PLANS.map((plan) => (
               <div
                 key={plan.name}
@@ -216,7 +216,7 @@ export default function SecuritySections() {
 
       {/* CTA band */}
       <section className="mx-auto max-w-6xl px-6 py-20 md:py-28">
-        <div className="rounded-3xl border border-white/10 bg-neutral-900/60 px-8 py-16 text-center md:px-16">
+        <div className="reveal rounded-3xl border border-white/10 bg-neutral-900/60 px-8 py-16 text-center backdrop-blur md:px-16">
           <h2 className="hero-title text-4xl md:text-6xl font-medium lowercase">
             start protecting your data today
           </h2>

@@ -47,7 +47,7 @@ export default function ToonhubSections() {
     <div style={{ fontFamily: 'Inter, sans-serif' }} className="bg-neutral-50 text-neutral-900">
       {/* Product grid */}
       <section id="shop" className="mx-auto max-w-6xl px-6 py-16 md:py-24">
-        <div className="flex items-end justify-between gap-6">
+        <div className="reveal flex items-end justify-between gap-6">
           <h2 style={ANTON} className="text-4xl md:text-6xl uppercase leading-none">
             The collection
           </h2>
@@ -55,7 +55,7 @@ export default function ToonhubSections() {
             Four characters, endless shelf appeal. Pick your favorite or collect them all.
           </p>
         </div>
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="reveal mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {PRODUCTS.map((p) => (
             <div key={p.name} className="group">
               <div
@@ -82,7 +82,7 @@ export default function ToonhubSections() {
       {/* Craft / perks */}
       <section className="border-y border-neutral-200 bg-white">
         <div className="mx-auto max-w-6xl px-6 py-16 md:py-24">
-          <div className="grid gap-12 md:grid-cols-2 md:items-center">
+          <div className="reveal grid gap-12 md:grid-cols-2 md:items-center">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-neutral-400">
                 the craft
@@ -120,7 +120,7 @@ export default function ToonhubSections() {
         <h2 style={ANTON} className="text-4xl md:text-6xl uppercase leading-none">
           Loved by collectors
         </h2>
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
+        <div className="reveal mt-12 grid gap-6 md:grid-cols-3">
           {REVIEWS.map((r) => (
             <figure key={r.name} className="rounded-2xl border border-neutral-200 bg-white p-8">
               <div className="flex gap-1 text-neutral-900">
@@ -137,7 +137,7 @@ export default function ToonhubSections() {
 
       {/* CTA */}
       <section className="px-6 pb-20 md:pb-28">
-        <div className="mx-auto max-w-6xl rounded-3xl bg-neutral-900 px-8 py-16 text-center text-white md:px-16">
+        <div className="reveal mx-auto max-w-6xl rounded-3xl bg-neutral-900 px-8 py-16 text-center text-white md:px-16">
           <h2 style={ANTON} className="text-4xl md:text-6xl uppercase leading-none">
             Order yours now
           </h2>
