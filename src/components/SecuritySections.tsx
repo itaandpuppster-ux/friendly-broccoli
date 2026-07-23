@@ -75,7 +75,7 @@ const PLANS = [
 /** Scrolling body sections for the securify landing page (dark theme). */
 export default function SecuritySections() {
   return (
-    <div className="text-white">
+    <div className="bg-black text-white">
       {/* Trust strip */}
       <section className="reveal mx-auto max-w-6xl px-6 py-16 md:py-20">
         <p className="text-center text-xs uppercase tracking-[0.3em] text-white/40">
@@ -117,7 +117,7 @@ export default function SecuritySections() {
       </section>
 
       {/* How it works */}
-      <section className="border-y border-white/10 bg-neutral-950/60 backdrop-blur-sm">
+      <section className="border-y border-white/10 bg-neutral-950">
         <div className="reveal mx-auto max-w-6xl px-6 py-16 md:py-24">
           <h2 className="hero-title text-4xl md:text-6xl font-medium lowercase">how it works</h2>
           <div className="mt-12 grid gap-10 md:grid-cols-3">
@@ -166,7 +166,7 @@ export default function SecuritySections() {
       </section>
 
       {/* Pricing */}
-      <section id="pricing" className="border-t border-white/10 bg-neutral-950/60 backdrop-blur-sm">
+      <section id="pricing" className="border-t border-white/10 bg-neutral-950">
         <div className="mx-auto max-w-6xl px-6 py-16 md:py-24">
           <div className="reveal max-w-2xl">
             <h2 className="hero-title text-4xl md:text-6xl font-medium lowercase">
