@@ -1,0 +1,333 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Readex Pro', system-ui, -apple-system, sans-serif;
+  background: #000;
+  color: #fff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.hero-title {
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+}
+
+/* Scroll-reveal: elements start shifted/faded, ease in when .is-visible is set. */
+.reveal {
+  opacity: 0;
+  transform: translateY(36px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+:root {
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ---- Viktor portfolio hero ---- */
+@keyframes videoFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes revealUp {
+  from {
+    opacity: 0;
+    transform: translateY(80px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes revealRight {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes dotPulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(1.45);
+  }
+}
+
+.nav-link-underline {
+  position: relative;
+}
+
+.nav-link-underline::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s var(--ease-spring);
+}
+
+.nav-link-underline:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.role-link {
+  transition: transform 0.4s var(--ease-spring);
+}
+
+.role-link:hover {
+  transform: translateX(4px);
+}
+
+.viktor-reveal-up {
+  animation: revealUp 0.9s var(--ease-spring) both;
+}
+
+.viktor-reveal-right {
+  animation: revealRight 0.9s var(--ease-spring) both;
+}
+
+.viktor-cta-fill {
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.viktor-cta-fill::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: #f598f2;
+  transform: translateY(101%);
+  transition: transform 0.45s var(--ease-spring);
+}
+
+.viktor-cta-fill:hover {
+  color: #000;
+  border-color: #f598f2;
+}
+
+.viktor-cta-fill:hover::before {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .viktor-reveal-up,
+  .viktor-reveal-right,
+  .nav-link-underline::after,
+  .role-link,
+  .viktor-cta-fill::before {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Helvetica Neue for the Measured hero. The self-hosted woff2/woff weren't
+   provided, so we use the locally-installed Helvetica Neue with a safe stack. */
+.font-helvetica-neue {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+/* Liquid-glass frosted pill effect */
+.liquid-glass {
+  background: rgba(255, 255, 255, 0.01);
+  background-blend-mode: luminosity;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: none;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.liquid-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.4px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.45) 0%,
+    rgba(255, 255, 255, 0.15) 20%,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(255, 255, 255, 0) 60%,
+    rgba(255, 255, 255, 0.15) 80%,
+    rgba(255, 255, 255, 0.45) 100%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Staggered entry for the mobile menu */
+@keyframes measured-item-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes measured-close-in {
+  from {
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(0) scale(1);
+  }
+}
+
+/* Scroll-driven squirrel mascot */
+.squirrel-runner {
+  position: fixed;
+  left: 0;
+  bottom: 16px;
+  z-index: 40;
+  width: 76px;
+  height: 60px;
+  pointer-events: none;
+  transform: translateX(16px);
+  will-change: transform;
+}
+
+.squirrel-runner .sq-bob {
+  transform-origin: 50% 100%;
+}
+
+.squirrel-runner .sq-tail {
+  transform-origin: 26% 66%;
+}
+
+.squirrel-runner.is-running .sq-bob {
+  animation: sq-bob 0.34s ease-in-out infinite;
+}
+
+.squirrel-runner.is-running .sq-tail {
+  animation: sq-tail 0.34s ease-in-out infinite;
+}
+
+.squirrel-runner.is-running .sq-leg-front {
+  animation: sq-leg 0.34s ease-in-out infinite;
+}
+
+.squirrel-runner.is-running .sq-leg-back {
+  animation: sq-leg 0.34s ease-in-out infinite reverse;
+}
+
+.squirrel-runner .sq-leg {
+  transform-origin: 50% 30%;
+}
+
+/* When stopped at the target section: settle, gentle idle tail flick */
+.squirrel-runner.is-stopped .sq-tail {
+  animation: sq-tail-idle 1.8s ease-in-out infinite;
+}
+
+@keyframes sq-bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-5px) rotate(-2deg);
+  }
+}
+
+@keyframes sq-tail {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-12deg);
+  }
+}
+
+@keyframes sq-tail-idle {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-6deg);
+  }
+}
+
+@keyframes sq-leg {
+  0%,
+  100% {
+    transform: translateX(-2px) scaleX(0.9);
+  }
+  50% {
+    transform: translateX(3px) scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .squirrel-runner .sq-bob,
+  .squirrel-runner .sq-tail,
+  .squirrel-runner .sq-leg {
+    animation: none !important;
+  }
+}
