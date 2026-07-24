@@ -75,7 +75,21 @@ const PLANS = [
 /** Scrolling body sections for the securify landing page (dark theme). */
 export default function SecuritySections() {
   return (
-    <div className="bg-black text-white">
+    <div className="relative bg-black text-white">
+      {/* Grid / wireframe texture background (from the Measured look) */}
+      <div className="pointer-events-none absolute inset-0 z-0" style={{ opacity: 0.2 }}>
+        <svg width="100%" height="100%" aria-hidden="true">
+          <defs>
+            <pattern id="securify-grid" width="48" height="48" patternUnits="userSpaceOnUse">
+              <path d="M 48 0 L 0 0 0 48" fill="none" stroke="#64748b" strokeWidth="0.6" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#securify-grid)" />
+        </svg>
+      </div>
+
+      {/* Content sits above the texture */}
+      <div className="relative z-10">
       {/* Trust strip */}
       <section className="reveal mx-auto max-w-6xl px-6 py-16 md:py-20">
         <p className="text-center text-xs uppercase tracking-[0.3em] text-white/40">
@@ -229,6 +243,7 @@ export default function SecuritySections() {
           </button>
         </div>
       </section>
+      </div>
     </div>
   );
 }
