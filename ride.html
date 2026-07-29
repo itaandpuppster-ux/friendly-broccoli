@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>the scroll — a 3D vibe check</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: auto; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #05010f;
+    color: #fff;
+    overflow-x: hidden;
+  }
+  #scene {
+    position: fixed; inset: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+  }
+
+  /* scroll progress bar */
+  #progress {
+    position: fixed; top: 0; left: 0; height: 4px; width: 0%;
+    background: linear-gradient(90deg, #ff2d95, #ffb830, #6ee7ff, #a78bfa);
+    z-index: 50;
+    border-radius: 0 4px 4px 0;
+    box-shadow: 0 0 12px rgba(255, 45, 149, 0.8);
+  }
+
+  /* the tall scroll track */
+  #track { position: relative; z-index: 10; pointer-events: none; }
+  .panel {
+    height: 100vh; height: 100svh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  .panel:nth-child(even) { justify-content: flex-start; }
+  .panel:nth-child(odd) { justify-content: flex-end; }
+  .panel:first-child, .panel:last-child { justify-content: center; }
+
+  .caption {
+    max-width: min(560px, 88vw);
+    opacity: 0;
+    transform: translateY(60px) scale(0.9) rotate(-2deg);
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    pointer-events: auto;
+  }
+  .caption.show {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(0deg);
+  }
+
+  /* Instagram-reel style text blocks */
+  .reel-text {
+    display: inline;
+    font-size: clamp(1.6rem, 6.5vw, 3.2rem);
+    font-weight: 800;
+    line-height: 1.5;
+    letter-spacing: -0.01em;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.82);
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+    padding: 0.12em 0.45em;
+    border-radius: 0.28em;
+  }
+  .reel-text.pink   { background: #ff2d95; color: #fff; }
+  .reel-text.yellow { background: #ffe14d; color: #1a1200; }
+  .reel-text.mint   { background: #7dffb2; color: #00331a; }
+  .reel-text.purple { background: #a78bfa; color: #170a33; }
+  .reel-text.white  { background: rgba(255,255,255,0.94); color: #14082e; }
+
+  .sub {
+    display: block;
+    margin-top: 14px;
+    font-size: clamp(0.85rem, 3.2vw, 1.05rem);
+    font-weight: 600;
+    color: rgba(255,255,255,0.85);
+    text-shadow: 0 2px 14px rgba(0,0,0,0.7);
+  }
+
+  /* hero */
+  .hero { text-align: center; }
+  .hero h1 {
+    font-size: clamp(2.6rem, 10vw, 6rem);
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 1.02;
+    background: linear-gradient(115deg, #ff2d95 0%, #ffb830 30%, #6ee7ff 65%, #a78bfa 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 6px 30px rgba(255, 45, 149, 0.35));
+  }
+  .hero .sub { font-size: clamp(1rem, 3.6vw, 1.3rem); }
+  .scroll-hint {
+    margin-top: 42px;
+    display: inline-flex; flex-direction: column; align-items: center; gap: 8px;
+    color: rgba(255,255,255,0.9);
+    font-weight: 700; font-size: 0.95rem;
+    animation: bob 1.6s ease-in-out infinite;
+  }
+  .scroll-hint .arrow {
+    width: 26px; height: 26px;
+    border-right: 3px solid #fff; border-bottom: 3px solid #fff;
+    transform: rotate(45deg);
+    border-radius: 2px;
+  }
+  @keyframes bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(12px); }
+  }
+
+  /* finale */
+  .finale { text-align: center; }
+  .btn {
+    pointer-events: auto; cursor: pointer;
+    display: inline-block;
+    margin: 10px 6px 0;
+    border: none; border-radius: 999px;
+    padding: 14px 26px;
+    font-size: 1.05rem; font-weight: 800; font-family: inherit;
+    color: #14082e; background: #fff;
+    text-decoration: none;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.3), 0 10px 30px rgba(167, 139, 250, 0.45);
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+  }
+  .btn:active { transform: translateY(3px) scale(0.98); box-shadow: 0 1px 0 rgba(0,0,0,0.3); }
+  .btn.pink { background: #ff2d95; color: #fff; }
+
+  /* device badge */
+  #device-badge {
+    position: fixed; top: 14px; right: 14px; z-index: 40;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 999px;
+    padding: 7px 14px;
+    font-size: 0.8rem; font-weight: 700;
+    color: rgba(255,255,255,0.92);
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<canvas id="scene"></canvas>
+<div id="progress"></div>
+<div id="device-badge">…</div>
+
+<div id="track">
+  <!-- 0: hero -->
+  <section class="panel">
+    <div class="caption hero">
+      <h1>the scroll</h1>
+      <span class="sub">an interactive 3D ride &bull; works on your phone AND your computer</span>
+      <div class="scroll-hint"><span>scroll</span><div class="arrow"></div></div>
+    </div>
+  </section>
+
+  <!-- 1: tunnel -->
+  <section class="panel">
+    <div class="caption">
+      <span class="reel-text pink">POV: you just entered the vibe zone ✨</span>
+      <span class="sub">keep scrolling — the camera is flying through a neon tunnel rn</span>
+    </div>
+  </section>
+
+  <!-- 2: blob -->
+  <section class="panel">
+    <div class="caption">
+      <span class="reel-text yellow">it&rsquo;s giving&hellip; main character energy 💅</span>
+      <span class="sub">this blob is 100% generated by code — no downloads, loads instantly</span>
+    </div>
+  </section>
+
+  <!-- 3: galaxy -->
+  <section class="panel">
+    <div class="caption">
+      <span class="reel-text mint">no cap, this part is fire 🔥🔥</span>
+      <span class="sub">30,000 particles and your phone isn&rsquo;t even sweating</span>
+    </div>
+  </section>
+
+  <!-- 4: planet -->
+  <section class="panel">
+    <div class="caption">
+      <span class="reel-text purple">the way this hits different 😮‍💨</span>
+      <span class="sub">drag anywhere to tilt the world &bull; scrolling still drives the ride</span>
+    </div>
+  </section>
+
+  <!-- 5: finale -->
+  <section class="panel">
+    <div class="caption finale">
+      <span class="reel-text white">and that&rsquo;s on periodt. 💖</span>
+      <span class="sub">you made it to the end of the scroll</span>
+      <div>
+        <button class="btn pink" id="btnConfetti">confetti 🎉</button>
+        <a class="btn" href="3d-playground.html">play the 3D toy →</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script src="vendor/three.min.js"></script>
+<script>
+(function () {
+  // ---------- device detect ----------
+  var isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+  var isSmall = Math.min(window.innerWidth, window.innerHeight) < 620;
+  var isPhone = isTouch && isSmall;
+  document.getElementById('device-badge').textContent =
+    isPhone ? '📱 phone mode' : '🖥️ computer mode';
+
+  // ---------- renderer ----------
+  var canvas = document.getElementById('scene');
+  var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: !isPhone });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, isPhone ? 1.75 : 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  var scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(0x05010f, 0.011);
+
+  var camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 400);
+
+  scene.add(new THREE.AmbientLight(0x8888ff, 0.5));
+  var key = new THREE.PointLight(0xff2d95, 1.4, 120);
+  scene.add(key);
+  var fill = new THREE.PointLight(0x6ee7ff, 1.1, 120);
+  scene.add(fill);
+
+  function rand(a, b) { return a + Math.random() * (b - a); }
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+  var NEON = [0xff2d95, 0xffb830, 0xffe14d, 0x7dffb2, 0x6ee7ff, 0xa78bfa];
+
+  // The ride is a straight flight down -Z. Each scene "zone" lives around
+  // z = -ZONE_GAP * index; scroll progress moves the camera through them.
+  var ZONES = 6;
+  var ZONE_GAP = 60;
+  var RIDE_LEN = ZONE_GAP * (ZONES - 1);
+
+  // ---------- zone 0 + everywhere: starfield ----------
+  var starCount = isPhone ? 1200 : 3000;
+  var starGeo = new THREE.BufferGeometry();
+  var starPos = new Float32Array(starCount * 3);
+  for (var i = 0; i < starCount; i++) {
+    starPos[i * 3] = rand(-90, 90);
+    starPos[i * 3 + 1] = rand(-60, 60);
+    starPos[i * 3 + 2] = rand(-RIDE_LEN - 120, 40);
+  }
+  starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+  var stars = new THREE.Points(starGeo, new THREE.PointsMaterial({
+    color: 0xffffff, size: 0.35, transparent: true, opacity: 0.85
+  }));
+  scene.add(stars);
+
+  // ---------- zone 0: floating crystals around the start ----------
+  var crystals = [];
+  for (var c = 0; c < (isPhone ? 14 : 24); c++) {
+    var cm = new THREE.Mesh(
+      new THREE.OctahedronGeometry(rand(0.5, 1.6)),
+      new THREE.MeshStandardMaterial({
+        color: pick(NEON), roughness: 0.25, metalness: 0.35,
+        emissive: pick(NEON), emissiveIntensity: 0.25
+      })
+    );
+    cm.position.set(rand(-16, 16), rand(-9, 9), rand(-24, 6));
+    cm.userData = {
+      spin: rand(0.3, 1.2), phase: rand(0, Math.PI * 2),
+      baseY: cm.position.y, amp: rand(0.4, 1.2)
+    };
+    scene.add(cm);
+    crystals.push(cm);
+  }
+
+  // ---------- zone 1: neon ring tunnel ----------
+  var rings = [];
+  var ringCount = isPhone ? 22 : 36;
+  for (var r = 0; r < ringCount; r++) {
+    var ring = new THREE.Mesh(
+      new THREE.TorusGeometry(rand(5, 8), 0.12, 10, 48),
+      new THREE.MeshBasicMaterial({ color: NEON[r % NEON.length] })
+    );
+    var z = -ZONE_GAP * 1 + rand(-26, 26);
+    ring.position.set(Math.sin(z * 0.18) * 2, Math.cos(z * 0.14) * 2, z);
+    ring.userData = { spin: rand(-0.8, 0.8) };
+    scene.add(ring);
+    rings.push(ring);
+  }
+
+  // ---------- zone 2: morphing blob ----------
+  var blobGeo = new THREE.IcosahedronGeometry(6, isPhone ? 12 : 24);
+  var blobBase = blobGeo.attributes.position.array.slice();
+  var blob = new THREE.Mesh(blobGeo, new THREE.MeshStandardMaterial({
+    color: 0xff2d95, roughness: 0.2, metalness: 0.3,
+    emissive: 0x550030, flatShading: false
+  }));
+  blob.position.set(0, 0, -ZONE_GAP * 2);
+  scene.add(blob);
+
+  // orbiting sparkles around the blob
+  var orbiters = [];
+  for (var o = 0; o < (isPhone ? 10 : 18); o++) {
+    var om = new THREE.Mesh(
+      new THREE.SphereGeometry(rand(0.12, 0.3), 10, 10),
+      new THREE.MeshBasicMaterial({ color: pick(NEON) })
+    );
+    om.userData = { rad: rand(7.5, 11), speed: rand(0.4, 1.3), phase: rand(0, Math.PI * 2), tilt: rand(-0.8, 0.8) };
+    scene.add(om);
+    orbiters.push(om);
+  }
+
+  // ---------- zone 3: spiral galaxy ----------
+  var galCount = isPhone ? 12000 : 30000;
+  var galGeo = new THREE.BufferGeometry();
+  var galPos = new Float32Array(galCount * 3);
+  var galCol = new Float32Array(galCount * 3);
+  var inner = new THREE.Color(0xffb830), outer = new THREE.Color(0xa78bfa), tmp = new THREE.Color();
+  for (var g = 0; g < galCount; g++) {
+    var rad = Math.pow(Math.random(), 1.6) * 16;
+    var arm = (g % 3) * (Math.PI * 2 / 3);
+    var ang = arm + rad * 0.42 + rand(-0.25, 0.25);
+    galPos[g * 3] = Math.cos(ang) * rad + rand(-0.4, 0.4);
+    galPos[g * 3 + 1] = rand(-0.6, 0.6) * (1 - rad / 20);
+    galPos[g * 3 + 2] = Math.sin(ang) * rad + rand(-0.4, 0.4);
+    tmp.copy(inner).lerp(outer, rad / 16);
+    galCol[g * 3] = tmp.r; galCol[g * 3 + 1] = tmp.g; galCol[g * 3 + 2] = tmp.b;
+  }
+  galGeo.setAttribute('position', new THREE.BufferAttribute(galPos, 3));
+  galGeo.setAttribute('color', new THREE.BufferAttribute(galCol, 3));
+  var galaxy = new THREE.Points(galGeo, new THREE.PointsMaterial({
+    size: 0.09, vertexColors: true, transparent: true, opacity: 0.95,
+    depthWrite: false, blending: THREE.AdditiveBlending
+  }));
+  galaxy.position.set(0, -2, -ZONE_GAP * 3);
+  galaxy.rotation.x = 0.45;
+  scene.add(galaxy);
+
+  // ---------- zone 4: planet with rings + moons ----------
+  var planetGroup = new THREE.Group();
+  planetGroup.position.set(0, 0, -ZONE_GAP * 4);
+  scene.add(planetGroup);
+
+  var planet = new THREE.Mesh(
+    new THREE.SphereGeometry(4.6, isPhone ? 32 : 48, isPhone ? 32 : 48),
+    new THREE.MeshStandardMaterial({ color: 0x6ee7ff, roughness: 0.55, metalness: 0.15, emissive: 0x02222e })
+  );
+  planetGroup.add(planet);
+
+  var pring = new THREE.Mesh(
+    new THREE.TorusGeometry(7.4, 0.5, 12, 64),
+    new THREE.MeshStandardMaterial({ color: 0xffb830, roughness: 0.4, emissive: 0x331f00 })
+  );
+  pring.rotation.x = Math.PI / 2.35;
+  planetGroup.add(pring);
+
+  var moons = [];
+  for (var mn = 0; mn < 4; mn++) {
+    var moon = new THREE.Mesh(
+      new THREE.SphereGeometry(rand(0.4, 0.8), 16, 16),
+      new THREE.MeshStandardMaterial({ color: pick(NEON), emissive: 0x111111, roughness: 0.5 })
+    );
+    moon.userData = { rad: rand(9, 13), speed: rand(0.25, 0.7), phase: rand(0, Math.PI * 2), tilt: rand(-0.5, 0.5) };
+    planetGroup.add(moon);
+    moons.push(moon);
+  }
+
+  // ---------- zone 5: finale — arch of shapes + confetti ----------
+  var finaleShapes = [];
+  var GEOS = [
+    function () { return new THREE.BoxGeometry(1, 1, 1); },
+    function () { return new THREE.TorusKnotGeometry(0.5, 0.18, 48, 10); },
+    function () { return new THREE.IcosahedronGeometry(0.8); },
+    function () { return new THREE.ConeGeometry(0.6, 1.2, 20); }
+  ];
+  for (var f = 0; f < (isPhone ? 16 : 28); f++) {
+    var ang2 = (f / (isPhone ? 16 : 28)) * Math.PI;
+    var fm = new THREE.Mesh(pick(GEOS)(), new THREE.MeshStandardMaterial({
+      color: pick(NEON), roughness: 0.3, metalness: 0.2,
+      emissive: pick(NEON), emissiveIntensity: 0.2
+    }));
+    fm.position.set(Math.cos(ang2) * 12, Math.sin(ang2) * 9 - 2, -ZONE_GAP * 5 + rand(-6, 2));
+    fm.userData = { spin: new THREE.Vector3(rand(-1, 1), rand(-1, 1), rand(-1, 1)) };
+    scene.add(fm);
+    finaleShapes.push(fm);
+  }
+
+  var confetti = [];
+  function popConfetti() {
+    var origin = new THREE.Vector3(
+      camera.position.x, camera.position.y - 2, camera.position.z - 10
+    );
+    for (var i = 0; i < (isPhone ? 60 : 120); i++) {
+      var p = new THREE.Mesh(
+        new THREE.BoxGeometry(0.16, 0.16, 0.03),
+        new THREE.MeshBasicMaterial({ color: pick(NEON) })
+      );
+      p.position.copy(origin);
+      p.userData = {
+        vel: new THREE.Vector3(rand(-1, 1), rand(0.6, 1.6), rand(-1, 1)).normalize().multiplyScalar(rand(6, 14)),
+        rot: new THREE.Vector3(rand(-8, 8), rand(-8, 8), rand(-8, 8)),
+        life: rand(1.2, 2.2)
+      };
+      scene.add(p);
+      confetti.push(p);
+    }
+  }
+  document.getElementById('btnConfetti').addEventListener('click', popConfetti);
+
+  // ---------- scroll -> ride progress (with smoothing) ----------
+  var target = 0, progress = 0;
+  var progressBar = document.getElementById('progress');
+  function readScroll() {
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    target = max > 0 ? window.scrollY / max : 0;
+  }
+  window.addEventListener('scroll', readScroll, { passive: true });
+  readScroll();
+
+  // ---------- drag / tilt (mouse or touch) — does not fight page scroll ----------
+  var tiltX = 0, tiltY = 0, tiltTX = 0, tiltTY = 0;
+  window.addEventListener('mousemove', function (e) {
+    tiltTX = (e.clientX / window.innerWidth - 0.5) * 2;
+    tiltTY = (e.clientY / window.innerHeight - 0.5) * 2;
+  }, { passive: true });
+  window.addEventListener('touchmove', function (e) {
+    if (e.touches.length) {
+      tiltTX = (e.touches[0].clientX / window.innerWidth - 0.5) * 2;
+      tiltTY = (e.touches[0].clientY / window.innerHeight - 0.5) * 2;
+    }
+  }, { passive: true });
+  // phones: also react to device tilt when available (no permission prompt path)
+  if (isTouch && window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission !== 'function') {
+    window.addEventListener('deviceorientation', function (e) {
+      if (e.gamma !== null) tiltTX = Math.max(-1, Math.min(1, e.gamma / 30));
+      if (e.beta !== null) tiltTY = Math.max(-1, Math.min(1, (e.beta - 45) / 30));
+    });
+  }
+
+  // ---------- caption reveal ----------
+  var captions = document.querySelectorAll('.caption');
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        en.target.classList.toggle('show', en.isIntersecting);
+      });
+    }, { threshold: 0.35 });
+    captions.forEach(function (c) { io.observe(c); });
+  } else {
+    captions.forEach(function (c) { c.classList.add('show'); });
+  }
+
+  // ---------- resize ----------
+  window.addEventListener('resize', function () {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    readScroll();
+  });
+
+  // ---------- animate ----------
+  var clock = new THREE.Clock();
+  var bgA = new THREE.Color(0x05010f), bgB = new THREE.Color(0x1a0533),
+      bgC = new THREE.Color(0x001a2e), bgNow = new THREE.Color();
+
+  function animate() {
+    requestAnimationFrame(animate);
+    var dt = Math.min(clock.getDelta(), 0.05);
+    var t = clock.elapsedTime;
+
+    // smooth the scroll + tilt
+    progress += (target - progress) * Math.min(1, dt * 5);
+    tiltX += (tiltTX - tiltX) * Math.min(1, dt * 4);
+    tiltY += (tiltTY - tiltY) * Math.min(1, dt * 4);
+    progressBar.style.width = (target * 100).toFixed(2) + '%';
+
+    // camera flies down the ride, weaving gently, tilted by pointer/gyro
+    var z = -progress * RIDE_LEN;
+    camera.position.set(
+      Math.sin(progress * Math.PI * 3) * 3 + tiltX * 2.4,
+      Math.cos(progress * Math.PI * 2) * 1.6 - tiltY * 2.0,
+      z + 14
+    );
+    camera.lookAt(tiltX * 3, -tiltY * 2.4, z - 12);
+
+    // lights ride along
+    key.position.set(camera.position.x + 6, camera.position.y + 4, z - 4);
+    fill.position.set(camera.position.x - 6, camera.position.y - 3, z - 10);
+
+    // background color shifts through the ride
+    var ph = progress * 2;
+    if (ph < 1) bgNow.copy(bgA).lerp(bgB, ph);
+    else bgNow.copy(bgB).lerp(bgC, ph - 1);
+    scene.background = bgNow;
+    scene.fog.color.copy(bgNow);
+
+    // zone 0: crystals bob + spin
+    for (var i = 0; i < crystals.length; i++) {
+      var cm = crystals[i], cu = cm.userData;
+      cm.rotation.x += cu.spin * dt;
+      cm.rotation.y += cu.spin * 0.7 * dt;
+      cm.position.y = cu.baseY + Math.sin(t * cu.spin + cu.phase) * cu.amp;
+    }
+
+    // zone 1: rings spin
+    for (var r = 0; r < rings.length; r++) {
+      rings[r].rotation.z += rings[r].userData.spin * dt;
+    }
+
+    // zone 2: blob morph (cheap noise via layered sines)
+    var pos = blob.geometry.attributes.position;
+    for (var v = 0; v < pos.count; v++) {
+      var ox = blobBase[v * 3], oy = blobBase[v * 3 + 1], oz = blobBase[v * 3 + 2];
+      var n = 1
+        + 0.16 * Math.sin(ox * 0.9 + t * 1.6)
+        + 0.13 * Math.sin(oy * 1.3 + t * 1.1)
+        + 0.11 * Math.sin(oz * 1.1 + t * 2.0);
+      pos.array[v * 3] = ox * n;
+      pos.array[v * 3 + 1] = oy * n;
+      pos.array[v * 3 + 2] = oz * n;
+    }
+    pos.needsUpdate = true;
+    blob.geometry.computeVertexNormals();
+    blob.rotation.y += dt * 0.25;
+    blob.material.color.setHSL((t * 0.045) % 1, 0.85, 0.6);
+
+    for (var o = 0; o < orbiters.length; o++) {
+      var om = orbiters[o], ou = om.userData;
+      var oa = t * ou.speed + ou.phase;
+      om.position.set(
+        blob.position.x + Math.cos(oa) * ou.rad,
+        blob.position.y + Math.sin(oa * 1.3) * ou.rad * 0.4 + ou.tilt * 3,
+        blob.position.z + Math.sin(oa) * ou.rad
+      );
+    }
+
+    // zone 3: galaxy slowly rotates
+    galaxy.rotation.y += dt * 0.12;
+
+    // zone 4: planet + moons
+    planetGroup.rotation.y += dt * 0.1;
+    planet.rotation.y += dt * 0.3;
+    pring.rotation.z += dt * 0.15;
+    for (var mn = 0; mn < moons.length; mn++) {
+      var moon = moons[mn], mu = moon.userData;
+      var ma = t * mu.speed + mu.phase;
+      moon.position.set(
+        Math.cos(ma) * mu.rad,
+        Math.sin(ma) * mu.rad * mu.tilt,
+        Math.sin(ma) * mu.rad
+      );
+    }
+
+    // zone 5: finale shapes spin
+    for (var f = 0; f < finaleShapes.length; f++) {
+      var fm = finaleShapes[f], fu = fm.userData;
+      fm.rotation.x += fu.spin.x * dt;
+      fm.rotation.y += fu.spin.y * dt;
+      fm.rotation.z += fu.spin.z * dt;
+    }
+
+    // confetti physics
+    for (var j = confetti.length - 1; j >= 0; j--) {
+      var p = confetti[j], pu = p.userData;
+      pu.vel.y -= dt * 10;
+      p.position.addScaledVector(pu.vel, dt);
+      p.rotation.x += pu.rot.x * dt;
+      p.rotation.y += pu.rot.y * dt;
+      pu.life -= dt;
+      if (pu.life <= 0) {
+        scene.remove(p); p.geometry.dispose(); p.material.dispose();
+        confetti.splice(j, 1);
+      }
+    }
+
+    renderer.render(scene, camera);
+  }
+  animate();
+})();
+</script>
+</body>
+</html>

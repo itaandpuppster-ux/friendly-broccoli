@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>her walk — neon dreams</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #0b0518;
+    color: #fff;
+    overflow-x: hidden;
+  }
+  #scene { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; }
+
+  #progress {
+    position: fixed; top: 0; left: 0; height: 4px; width: 0%;
+    background: linear-gradient(90deg, #ff2d95, #ffb830, #6ee7ff, #a78bfa);
+    z-index: 50; border-radius: 0 4px 4px 0;
+    box-shadow: 0 0 12px rgba(255, 45, 149, 0.8);
+  }
+
+  #track { position: relative; z-index: 10; pointer-events: none; }
+  .panel {
+    height: 100vh; height: 100svh;
+    display: flex; align-items: flex-start; justify-content: center;
+    padding: max(10vh, 70px) 24px 24px;
+  }
+  .panel:nth-child(even) { justify-content: flex-start; }
+  .panel:nth-child(odd) { justify-content: flex-end; }
+  .panel:first-child, .panel:last-child { justify-content: center; align-items: center; padding-top: 24px; }
+
+  .caption {
+    max-width: min(560px, 88vw);
+    opacity: 0;
+    transform: translateY(60px) scale(0.9) rotate(-2deg);
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    pointer-events: auto;
+  }
+  .caption.show { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+
+  .reel-text {
+    display: inline;
+    font-size: clamp(1.5rem, 6vw, 2.9rem);
+    font-weight: 800; line-height: 1.5; letter-spacing: -0.01em;
+    color: #fff; background: rgba(0, 0, 0, 0.82);
+    box-decoration-break: clone; -webkit-box-decoration-break: clone;
+    padding: 0.12em 0.45em; border-radius: 0.28em;
+  }
+  .reel-text.pink   { background: #ff2d95; color: #fff; }
+  .reel-text.yellow { background: #ffe14d; color: #1a1200; }
+  .reel-text.mint   { background: #7dffb2; color: #00331a; }
+  .reel-text.purple { background: #a78bfa; color: #170a33; }
+  .reel-text.cyan   { background: #6ee7ff; color: #002733; }
+  .reel-text.white  { background: rgba(255,255,255,0.94); color: #14082e; }
+
+  .sub {
+    display: block; margin-top: 14px;
+    font-size: clamp(0.85rem, 3.2vw, 1.05rem); font-weight: 700;
+    color: #fff; text-shadow: 0 2px 14px rgba(0,0,0,0.7);
+  }
+
+  .hero { text-align: center; }
+  .hero h1 {
+    font-size: clamp(2.6rem, 10vw, 6rem);
+    font-weight: 900; letter-spacing: -0.03em; line-height: 1.02;
+    background: linear-gradient(115deg, #ff2d95 0%, #ffb830 30%, #6ee7ff 65%, #a78bfa 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    filter: drop-shadow(0 0 26px rgba(255, 45, 149, 0.55));
+  }
+  .scroll-hint {
+    margin-top: 30px;
+    display: inline-flex; flex-direction: column; align-items: center; gap: 8px;
+    color: #fff; font-weight: 800; font-size: 0.95rem;
+    text-shadow: 0 0 14px rgba(110, 231, 255, 0.9);
+    animation: bob 1.6s ease-in-out infinite;
+  }
+  .scroll-hint .arrow {
+    width: 26px; height: 26px;
+    border-right: 3px solid #6ee7ff; border-bottom: 3px solid #6ee7ff;
+    transform: rotate(45deg); border-radius: 2px;
+    filter: drop-shadow(0 0 8px rgba(110,231,255,0.9));
+  }
+  @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(12px); } }
+
+  .finale { text-align: center; }
+  .btn {
+    pointer-events: auto; cursor: pointer;
+    display: inline-block; margin: 10px 6px 0;
+    border: none; border-radius: 999px; padding: 14px 26px;
+    font-size: 1.05rem; font-weight: 800; font-family: inherit;
+    color: #14082e; background: #fff; text-decoration: none;
+    box-shadow: 0 0 24px rgba(110, 231, 255, 0.55);
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+  }
+  .btn:active { transform: translateY(3px) scale(0.98); }
+  .btn.pink { background: #ff2d95; color: #fff; box-shadow: 0 0 24px rgba(255, 45, 149, 0.7); }
+
+  #device-badge {
+    position: fixed; top: 14px; right: 14px; z-index: 40;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.18); border-radius: 999px;
+    padding: 7px 14px; font-size: 0.8rem; font-weight: 700;
+    color: rgba(255,255,255,0.92); pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<canvas id="scene"></canvas>
+<div id="progress"></div>
+<div id="device-badge">…</div>
+
+<div id="track">
+  <!-- 0: hero / neon street -->
+  <section class="panel">
+    <div class="caption hero">
+      <h1>her walk</h1>
+      <span class="sub">neon dreams &bull; scroll &mdash; she walks &bull; stop &mdash; she stops</span>
+      <div class="scroll-hint"><span>scroll to walk</span><div class="arrow"></div></div>
+    </div>
+  </section>
+
+  <!-- 1: neon alley -->
+  <section class="panel">
+    <div class="caption">
+      <span class="reel-text pink">POV: she owns every neon light in this city 🌃</span>
+      <span class="sub">real glow — every light actually blooms</span>
+    </div>
+  </section>
+
+  <!-- 2: synthwave sunset -->
+  <section class="panel">
+    <div class="caption">
+      <span class="reel-text yellow">walking straight into the synthwave sunset 🌅</span>
+      <span class="sub">keep scrolling — the grid goes forever</span>
+    </div>
+  </section>
+
+  <!-- 3: crystal forest -->
+  <section class="panel">
+    <div class="caption">
+      <span class="reel-text mint">crystal era. unmatched. 💎</span>
+      <span class="sub">drag or tilt your phone to move the camera</span>
+    </div>
+  </section>
+
+  <!-- 4: among the stars -->
+  <section class="panel">
+    <div class="caption">
+      <span class="reel-text cyan">she really walked among the stars ✨</span>
+      <span class="sub">aurora overhead — almost there</span>
+    </div>
+  </section>
+
+  <!-- 5: finale portal -->
+  <section class="panel">
+    <div class="caption finale">
+      <span class="reel-text white">iconic behavior. periodt. 💖</span>
+      <span class="sub">she walked the whole dream — and so did you</span>
+      <div>
+        <button class="btn pink" id="btnConfetti">confetti 🎉</button>
+        <a class="btn" href="ride.html">space ride →</a>
+        <a class="btn" href="3d-playground.html">3D toy →</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script src="vendor/three.min.js"></script>
+<script src="vendor/postprocessing.js"></script>
+<script>
+(function () {
+  // ---------- device detect ----------
+  var isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+  var isSmall = Math.min(window.innerWidth, window.innerHeight) < 620;
+  var isPhone = isTouch && isSmall;
+  document.getElementById('device-badge').textContent =
+    isPhone ? '📱 phone mode' : '🖥️ computer mode';
+
+  // ---------- renderer + cinematic pipeline ----------
+  var canvas = document.getElementById('scene');
+  var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: !isPhone });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, isPhone ? 1.5 : 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.0;
+  renderer.shadowMap.enabled = !isPhone;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+  var scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(0x150a2e, 0.014);
+
+  var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 400);
+
+  var composer = new THREE.EffectComposer(renderer);
+  composer.addPass(new THREE.RenderPass(scene, camera));
+  var bloom = new THREE.UnrealBloomPass(
+    new THREE.Vector2(window.innerWidth, window.innerHeight),
+    isPhone ? 0.5 : 0.65,   // strength
+    0.5,                    // radius
+    0.62                    // threshold
+  );
+  composer.addPass(bloom);
+
+  // ---------- lights ----------
+  scene.add(new THREE.AmbientLight(0x8a7bd8, 0.4));
+  var moon = new THREE.DirectionalLight(0xb0c8ff, 0.5);
+  moon.position.set(-6, 16, 4);
+  if (!isPhone) {
+    moon.castShadow = true;
+    moon.shadow.mapSize.set(1024, 1024);
+    moon.shadow.camera.left = -18; moon.shadow.camera.right = 18;
+    moon.shadow.camera.top = 18; moon.shadow.camera.bottom = -18;
+  }
+  scene.add(moon);
+  var glow = new THREE.PointLight(0xff2d95, 0.55, 18);
+  scene.add(glow);
+  var glow2 = new THREE.PointLight(0x6ee7ff, 0.4, 18);
+  scene.add(glow2);
+
+  function rand(a, b) { return a + Math.random() * (b - a); }
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+  var NEON = [0xff2d95, 0xffb830, 0xffe14d, 0x7dffb2, 0x6ee7ff, 0xa78bfa];
+
+  var ZONES = 6;
+  var ZONE_GAP = 48;
+  var WALK_LEN = ZONE_GAP * (ZONES - 1); // 240
+
+  // ---------- sky dome: dusk gradient that deepens to space ----------
+  var skyUniforms = {
+    top: { value: new THREE.Color(0x2a1052) },
+    mid: { value: new THREE.Color(0xff5e78) },
+    bot: { value: new THREE.Color(0xffb060) },
+    nite: { value: 0.0 } // 0 = dusk, 1 = deep space
+  };
+  var sky = new THREE.Mesh(
+    new THREE.SphereGeometry(280, 24, 24),
+    new THREE.ShaderMaterial({
+      side: THREE.BackSide, depthWrite: false,
+      uniforms: skyUniforms,
+      vertexShader: 'varying vec3 vPos; void main(){ vPos = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
+      fragmentShader: [
+        'varying vec3 vPos; uniform vec3 top; uniform vec3 mid; uniform vec3 bot; uniform float nite;',
+        'void main(){',
+        '  float h = normalize(vPos).y * 0.5 + 0.5;',
+        '  vec3 dusk = h > 0.45 ? mix(mid, top, (h - 0.45) / 0.55) : mix(bot, mid, h / 0.45);',
+        '  vec3 space = mix(vec3(0.05, 0.02, 0.12), vec3(0.01, 0.0, 0.05), h);',
+        '  gl_FragColor = vec4(mix(dusk, space, nite), 1.0);',
+        '}'
+      ].join('\n')
+    })
+  );
+  scene.add(sky);
+
+  // stars fade in as she leaves the city
+  var starCount = isPhone ? 900 : 2200;
+  var starGeo = new THREE.BufferGeometry();
+  var starPos = new Float32Array(starCount * 3);
+  for (var i = 0; i < starCount; i++) {
+    starPos[i * 3] = rand(-140, 140);
+    starPos[i * 3 + 1] = rand(4, 120);
+    starPos[i * 3 + 2] = rand(-WALK_LEN - 160, 60);
+  }
+  starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+  var starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.4, transparent: true, opacity: 0 });
+  scene.add(new THREE.Points(starGeo, starMat));
+
+  // ---------- ground: dark glossy street + glowing edge lines ----------
+  var ground = new THREE.Mesh(
+    new THREE.PlaneGeometry(260, WALK_LEN + 180),
+    new THREE.MeshStandardMaterial({ color: 0x0d0a1e, roughness: 0.32, metalness: 0.75 })
+  );
+  ground.rotation.x = -Math.PI / 2;
+  ground.position.set(0, 0, -WALK_LEN / 2);
+  ground.receiveShadow = !isPhone;
+  scene.add(ground);
+
+  var laneL = new THREE.Mesh(
+    new THREE.BoxGeometry(0.07, 0.07, WALK_LEN + 80),
+    new THREE.MeshBasicMaterial({ color: 0x6ee7ff })
+  );
+  laneL.position.set(-1.9, 0.03, -WALK_LEN / 2);
+  scene.add(laneL);
+  var laneR = laneL.clone();
+  laneR.material = new THREE.MeshBasicMaterial({ color: 0xff2d95 });
+  laneR.position.x = 1.9;
+  scene.add(laneR);
+
+  // ---------- the girl (v2: jointed knees + glowing accents) ----------
+  var girl = new THREE.Group();
+  scene.add(girl);
+
+  var SKIN = 0xffd9b8, HAIR = 0x3b1e6e, DRESS = 0xff2d95;
+  function std(color, extra) {
+    var opts = { color: color, roughness: 0.6, metalness: 0.05 };
+    if (extra) for (var k in extra) opts[k] = extra[k];
+    return new THREE.MeshStandardMaterial(opts);
+  }
+  function shadowed(m) { if (!isPhone) m.castShadow = true; return m; }
+
+  // legs: thigh pivot at hip (y=1.95), calf pivot at knee, glow sneakers
+  function makeLeg(side) {
+    var hip = new THREE.Group();
+    hip.position.set(0.24 * side, 1.95, 0);
+    var thigh = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.13, 0.95, 12), std(SKIN)));
+    thigh.position.y = -0.475;
+    hip.add(thigh);
+    var knee = new THREE.Group();
+    knee.position.y = -0.95;
+    hip.add(knee);
+    var calf = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.1, 0.85, 12), std(SKIN)));
+    calf.position.y = -0.425;
+    knee.add(calf);
+    var shoe = shadowed(new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.16, 0.52), std(0xffffff, { roughness: 0.35 })));
+    shoe.position.set(0, -0.87, -0.1);
+    knee.add(shoe);
+    var sole = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.05, 0.54), new THREE.MeshBasicMaterial({ color: 0x6ee7ff }));
+    sole.position.set(0, -0.96, -0.1);
+    knee.add(sole);
+    return { hip: hip, knee: knee };
+  }
+  var legL = makeLeg(-1), legR = makeLeg(1);
+  girl.add(legL.hip); girl.add(legR.hip);
+
+  // dress with glowing hem + torso
+  var dress = shadowed(new THREE.Mesh(new THREE.ConeGeometry(0.78, 1.45, 22), std(DRESS, { emissive: 0x66103c, roughness: 0.45 })));
+  dress.position.y = 2.05;
+  girl.add(dress);
+  var hem = new THREE.Mesh(new THREE.TorusGeometry(0.76, 0.035, 8, 30), new THREE.MeshBasicMaterial({ color: 0xff7ab6 }));
+  hem.rotation.x = Math.PI / 2;
+  hem.position.y = 1.34;
+  girl.add(hem);
+  var torso = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.37, 0.85, 14), std(DRESS, { emissive: 0x66103c, roughness: 0.45 })));
+  torso.position.y = 2.9;
+  girl.add(torso);
+  var collar = new THREE.Mesh(new THREE.TorusGeometry(0.3, 0.03, 8, 24), new THREE.MeshBasicMaterial({ color: 0x6ee7ff }));
+  collar.rotation.x = Math.PI / 2;
+  collar.position.y = 3.28;
+  girl.add(collar);
+
+  // arms: shoulder pivot + elbow pivot
+  function makeArm(side) {
+    var shoulder = new THREE.Group();
+    shoulder.position.set(0.44 * side, 3.22, 0);
+    var upper = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.08, 0.62, 10), std(SKIN)));
+    upper.position.y = -0.31;
+    shoulder.add(upper);
+    var elbow = new THREE.Group();
+    elbow.position.y = -0.62;
+    shoulder.add(elbow);
+    var fore = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.065, 0.55, 10), std(SKIN)));
+    fore.position.y = -0.275;
+    elbow.add(fore);
+    var hand = shadowed(new THREE.Mesh(new THREE.SphereGeometry(0.1, 10, 10), std(SKIN)));
+    hand.position.y = -0.58;
+    elbow.add(hand);
+    var band = new THREE.Mesh(new THREE.TorusGeometry(0.085, 0.02, 6, 14), new THREE.MeshBasicMaterial({ color: pick([0x6ee7ff, 0xff7ab6, 0xffe14d]) }));
+    band.position.y = -0.45;
+    elbow.add(band);
+    shoulder.rotation.z = -0.14 * side;
+    return { shoulder: shoulder, elbow: elbow };
+  }
+  var armL = makeArm(-1), armR = makeArm(1);
+  girl.add(armL.shoulder); girl.add(armR.shoulder);
+
+  // head + hair + face (she faces -Z)
+  var head = new THREE.Group();
+  head.position.y = 3.8;
+  girl.add(head);
+  head.add(shadowed(new THREE.Mesh(new THREE.SphereGeometry(0.46, 24, 24), std(SKIN))));
+  var hairCap = shadowed(new THREE.Mesh(new THREE.SphereGeometry(0.5, 24, 24, 0, Math.PI * 2, 0, Math.PI * 0.55), std(HAIR, { roughness: 0.4, emissive: 0x1a0b3a })));
+  hairCap.position.set(0, 0.05, 0.02);
+  head.add(hairCap);
+  var hairBack = shadowed(new THREE.Mesh(new THREE.SphereGeometry(0.48, 18, 18), std(HAIR, { roughness: 0.4, emissive: 0x1a0b3a })));
+  hairBack.position.set(0, -0.05, 0.18);
+  hairBack.scale.set(0.95, 1.05, 0.7);
+  head.add(hairBack);
+  // two long side strands
+  var strandGeo = new THREE.CylinderGeometry(0.07, 0.03, 0.9, 8);
+  var strandL = shadowed(new THREE.Mesh(strandGeo, std(HAIR, { roughness: 0.4, emissive: 0x1a0b3a })));
+  strandL.position.set(-0.42, -0.4, 0.05);
+  head.add(strandL);
+  var strandR = strandL.clone();
+  strandR.position.x = 0.42;
+  head.add(strandR);
+  var ponytail = new THREE.Group();
+  ponytail.position.set(0, 0.34, 0.42);
+  var ponyMesh = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.04, 1.15, 10), std(HAIR, { roughness: 0.4, emissive: 0x1a0b3a })));
+  ponyMesh.position.y = -0.575;
+  ponytail.add(ponyMesh);
+  var ponyTip = shadowed(new THREE.Mesh(new THREE.SphereGeometry(0.09, 10, 10), std(HAIR, { emissive: 0x1a0b3a })));
+  ponyTip.position.y = -1.15;
+  ponytail.add(ponyTip);
+  ponytail.rotation.x = 0.5;
+  head.add(ponytail);
+  var scrunchie = new THREE.Mesh(new THREE.TorusGeometry(0.11, 0.035, 8, 16), new THREE.MeshBasicMaterial({ color: 0xffe14d }));
+  scrunchie.rotation.x = Math.PI / 2 - 0.5;
+  scrunchie.position.set(0, 0.34, 0.4);
+  head.add(scrunchie);
+
+  var eyeGeo = new THREE.SphereGeometry(0.055, 8, 8);
+  var eyeMat = new THREE.MeshBasicMaterial({ color: 0x1b0f2e });
+  var eyeL = new THREE.Mesh(eyeGeo, eyeMat), eyeR = new THREE.Mesh(eyeGeo, eyeMat);
+  eyeL.position.set(-0.17, 0.03, -0.42);
+  eyeR.position.set(0.17, 0.03, -0.42);
+  head.add(eyeL); head.add(eyeR);
+  var blushMat = new THREE.MeshBasicMaterial({ color: 0xff9ec4 });
+  var blushGeo = new THREE.SphereGeometry(0.06, 8, 8);
+  var blushL = new THREE.Mesh(blushGeo, blushMat), blushR = new THREE.Mesh(blushGeo, blushMat);
+  blushL.position.set(-0.28, -0.12, -0.36); blushL.scale.set(1.2, 0.7, 0.6);
+  blushR.position.set(0.28, -0.12, -0.36); blushR.scale.set(1.2, 0.7, 0.6);
+  head.add(blushL); head.add(blushR);
+
+  // ---------- zone 0-1: neon city ----------
+  function neonMat(color) { return new THREE.MeshBasicMaterial({ color: color }); }
+
+  var buildings = [];
+  var bCount = isPhone ? 26 : 44;
+  for (var bi = 0; bi < bCount; bi++) {
+    var side = Math.random() < 0.5 ? -1 : 1;
+    var bh = rand(4, 14), bw = rand(1.6, 3.4), bd = rand(1.6, 3.4);
+    var bx = side * rand(4.5, 20);
+    var bz = rand(10, -ZONE_GAP * 1.8);
+    var bld = new THREE.Mesh(
+      new THREE.BoxGeometry(bw, bh, bd),
+      std(0x120c26, { roughness: 0.7, metalness: 0.2 })
+    );
+    bld.position.set(bx, bh / 2, bz);
+    scene.add(bld);
+    // glowing roof edge
+    var edge = new THREE.Mesh(new THREE.BoxGeometry(bw + 0.06, 0.08, bd + 0.06), neonMat(pick(NEON)));
+    edge.position.set(bx, bh + 0.04, bz);
+    scene.add(edge);
+    // a neon sign on some buildings
+    if (Math.random() < 0.6) {
+      var sw = rand(0.5, 1.4), sh = rand(0.8, 2.2);
+      var sign = new THREE.Mesh(new THREE.PlaneGeometry(sw, sh), neonMat(pick(NEON)));
+      sign.position.set(bx + (bw / 2 + 0.02) * (bx > 0 ? -1 : 1), rand(1.5, bh - 1), bz);
+      sign.rotation.y = bx > 0 ? -Math.PI / 2 : Math.PI / 2;
+      scene.add(sign);
+      buildings.push({ sign: sign, phase: rand(0, 6.28), speed: rand(2, 7) });
+    }
+  }
+  // street lamps: glowing orbs on poles
+  for (var lp = 0; lp < (isPhone ? 8 : 14); lp++) {
+    var lside = lp % 2 === 0 ? -1 : 1;
+    var lz = -lp * 14 + 4;
+    var pole = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 3.4, 6), std(0x221a3e));
+    pole.position.set(lside * 2.8, 1.7, lz);
+    scene.add(pole);
+    var orb = new THREE.Mesh(new THREE.SphereGeometry(0.16, 10, 10), neonMat(lp % 2 ? 0xff2d95 : 0x6ee7ff));
+    orb.position.set(lside * 2.8, 3.5, lz);
+    scene.add(orb);
+  }
+  // floating neon rings over the alley
+  var alleyRings = [];
+  for (var ar = 0; ar < 6; ar++) {
+    var ring = new THREE.Mesh(new THREE.TorusGeometry(rand(2.6, 3.6), 0.07, 8, 40), neonMat(pick(NEON)));
+    ring.position.set(0, 3.6, -ZONE_GAP - 14 + ar * 6);
+    scene.add(ring);
+    alleyRings.push(ring);
+  }
+
+  // ---------- zone 2: synthwave sun + grid + mountains ----------
+  var sunUniforms = { c1: { value: new THREE.Color(0xffe14d) }, c2: { value: new THREE.Color(0xff2d95) }, fade: { value: 1.0 } };
+  var synthSun = new THREE.Mesh(
+    new THREE.CircleGeometry(15, 48),
+    new THREE.ShaderMaterial({
+      uniforms: sunUniforms, transparent: true, depthWrite: false,
+      vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
+      fragmentShader: [
+        'varying vec2 vUv; uniform vec3 c1; uniform vec3 c2; uniform float fade;',
+        'void main(){',
+        '  vec2 p = vUv * 2.0 - 1.0;',
+        '  if (length(p) > 1.0) discard;',
+        '  float stripes = step(0.0, sin(p.y * 22.0)) * step(p.y, -0.05);',
+        '  if (stripes > 0.5 && p.y < -0.05) discard;',
+        '  vec3 c = mix(c2, c1, vUv.y);',
+        '  gl_FragColor = vec4(c * 1.05, fade);',
+        '}'
+      ].join('\n')
+    })
+  );
+  synthSun.position.set(0, 10, -ZONE_GAP * 2 - 125);
+  scene.add(synthSun);
+
+  var grid = new THREE.GridHelper(220, 56, 0xff2d95, 0xff2d95);
+  grid.material.transparent = true;
+  grid.material.opacity = 0.55;
+  grid.position.set(0, 0.02, -ZONE_GAP * 2 - 20);
+  scene.add(grid);
+
+  for (var mt = 0; mt < (isPhone ? 10 : 16); mt++) {
+    var mside = Math.random() < 0.5 ? -1 : 1;
+    var mh = rand(6, 16);
+    var mtn = new THREE.Mesh(
+      new THREE.ConeGeometry(rand(4, 9), mh, 4),
+      std(0x0e0822, { roughness: 0.8, emissive: 0x2a0b4e, emissiveIntensity: 0.5 })
+    );
+    mtn.position.set(mside * rand(18, 60), mh / 2 - 0.2, -ZONE_GAP * 2 + rand(-70, 10));
+    mtn.rotation.y = rand(0, 1);
+    scene.add(mtn);
+  }
+
+  // ---------- zone 3: crystal forest ----------
+  var crystals = [];
+  for (var cr = 0; cr < (isPhone ? 16 : 30); cr++) {
+    var cside = Math.random() < 0.5 ? -1 : 1;
+    var ch = rand(0.8, 3.4);
+    var cry = new THREE.Mesh(
+      new THREE.ConeGeometry(rand(0.25, 0.7), ch, 5),
+      std(pick(NEON), { emissive: pick(NEON), emissiveIntensity: 0.45, roughness: 0.2, metalness: 0.1 })
+    );
+    cry.position.set(cside * rand(2.8, 16), ch / 2, -ZONE_GAP * 3 + rand(-22, 22));
+    cry.rotation.y = rand(0, 3);
+    scene.add(cry);
+    crystals.push({ obj: cry, phase: rand(0, 6.28), speed: rand(0.6, 1.6), baseI: 0.45 });
+  }
+  // floating glow orbs between the crystals
+  var orbs = [];
+  for (var ob = 0; ob < (isPhone ? 12 : 22); ob++) {
+    var orb2 = new THREE.Mesh(new THREE.SphereGeometry(rand(0.08, 0.2), 8, 8), neonMat(pick(NEON)));
+    orb2.position.set(rand(-10, 10), rand(0.5, 5), -ZONE_GAP * 3 + rand(-24, 24));
+    scene.add(orb2);
+    orbs.push({ obj: orb2, baseY: orb2.position.y, speed: rand(0.4, 1.2), phase: rand(0, 6.28) });
+  }
+
+  // ---------- zone 4: aurora ribbons ----------
+  var auroras = [];
+  for (var au = 0; au < 3; au++) {
+    var auGeo = new THREE.PlaneGeometry(60, 9, 42, 1);
+    var auMat = new THREE.ShaderMaterial({
+      transparent: true, depthWrite: false, side: THREE.DoubleSide,
+      blending: THREE.AdditiveBlending,
+      uniforms: {
+        t: { value: 0 },
+        col: { value: new THREE.Color(pick([0x7dffb2, 0x6ee7ff, 0xa78bfa])) },
+        seed: { value: rand(0, 10) }
+      },
+      vertexShader: [
+        'uniform float t; uniform float seed; varying vec2 vUv;',
+        'void main(){',
+        '  vUv = uv;',
+        '  vec3 p = position;',
+        '  p.y += sin(p.x * 0.24 + t * 0.7 + seed) * 2.2;',
+        '  p.z += cos(p.x * 0.18 + t * 0.5 + seed) * 1.6;',
+        '  gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);',
+        '}'
+      ].join('\n'),
+      fragmentShader: [
+        'uniform vec3 col; varying vec2 vUv;',
+        'void main(){',
+        '  float a = sin(vUv.y * 3.14159) * 0.5;',
+        '  gl_FragColor = vec4(col * 1.4, a * (0.5 + 0.5 * sin(vUv.x * 12.0)));',
+        '}'
+      ].join('\n')
+    });
+    var ribbon = new THREE.Mesh(auGeo, auMat);
+    ribbon.position.set(rand(-8, 8), 13 + au * 3.5, -ZONE_GAP * 4 + rand(-16, 8));
+    ribbon.rotation.x = 0.4;
+    scene.add(ribbon);
+    auroras.push(ribbon);
+  }
+
+  // ---------- zone 5: portal finale ----------
+  var portal = new THREE.Mesh(new THREE.TorusGeometry(5, 0.28, 14, 56), neonMat(0xff2d95));
+  portal.position.set(0, 5.2, -ZONE_GAP * 5 - 6);
+  scene.add(portal);
+  var portal2 = new THREE.Mesh(new THREE.TorusGeometry(5.8, 0.12, 10, 56), neonMat(0x6ee7ff));
+  portal2.position.copy(portal.position);
+  scene.add(portal2);
+  var finaleShapes = [];
+  var GEOS = [
+    function () { return new THREE.BoxGeometry(0.7, 0.7, 0.7); },
+    function () { return new THREE.TorusKnotGeometry(0.35, 0.13, 40, 8); },
+    function () { return new THREE.IcosahedronGeometry(0.55); },
+    function () { return new THREE.OctahedronGeometry(0.6); }
+  ];
+  var finaleN = isPhone ? 12 : 20;
+  for (var fi = 0; fi < finaleN; fi++) {
+    var fa = (fi / (finaleN - 1)) * Math.PI * 2;
+    var fm = new THREE.Mesh(pick(GEOS)(), std(pick(NEON), { emissive: pick(NEON), emissiveIntensity: 0.7, roughness: 0.3 }));
+    fm.userData = {
+      ang: fa, rad: rand(6.5, 8.5),
+      spin: new THREE.Vector3(rand(-1, 1), rand(-1, 1), rand(-1, 1)),
+      speed: rand(0.15, 0.4)
+    };
+    scene.add(fm);
+    finaleShapes.push(fm);
+  }
+
+  // confetti
+  var confetti = [];
+  function popConfetti() {
+    for (var i = 0; i < (isPhone ? 60 : 120); i++) {
+      var p = new THREE.Mesh(
+        new THREE.BoxGeometry(0.14, 0.14, 0.03),
+        new THREE.MeshBasicMaterial({ color: pick(NEON) })
+      );
+      p.position.set(girl.position.x, 5, girl.position.z - 2);
+      p.userData = {
+        vel: new THREE.Vector3(rand(-1, 1), rand(0.6, 1.6), rand(-1, 1)).normalize().multiplyScalar(rand(5, 12)),
+        rot: new THREE.Vector3(rand(-8, 8), rand(-8, 8), rand(-8, 8)),
+        life: rand(1.2, 2.2)
+      };
+      scene.add(p);
+      confetti.push(p);
+    }
+  }
+  document.getElementById('btnConfetti').addEventListener('click', popConfetti);
+
+  // ---------- scroll -> walk ----------
+  var target = 0, progress = 0;
+  var progressBar = document.getElementById('progress');
+  function readScroll() {
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    target = max > 0 ? window.scrollY / max : 0;
+  }
+  window.addEventListener('scroll', readScroll, { passive: true });
+  readScroll();
+
+  var tiltX = 0, tiltY = 0, tiltTX = 0, tiltTY = 0;
+  window.addEventListener('mousemove', function (e) {
+    tiltTX = (e.clientX / window.innerWidth - 0.5) * 2;
+    tiltTY = (e.clientY / window.innerHeight - 0.5) * 2;
+  }, { passive: true });
+  window.addEventListener('touchmove', function (e) {
+    if (e.touches.length) {
+      tiltTX = (e.touches[0].clientX / window.innerWidth - 0.5) * 2;
+      tiltTY = (e.touches[0].clientY / window.innerHeight - 0.5) * 2;
+    }
+  }, { passive: true });
+  if (isTouch && window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission !== 'function') {
+    window.addEventListener('deviceorientation', function (e) {
+      if (e.gamma !== null) tiltTX = Math.max(-1, Math.min(1, e.gamma / 30));
+      if (e.beta !== null) tiltTY = Math.max(-1, Math.min(1, (e.beta - 45) / 30));
+    });
+  }
+
+  var captions = document.querySelectorAll('.caption');
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { en.target.classList.toggle('show', en.isIntersecting); });
+    }, { threshold: 0.35 });
+    captions.forEach(function (c) { io.observe(c); });
+  } else {
+    captions.forEach(function (c) { c.classList.add('show'); });
+  }
+
+  window.addEventListener('resize', function () {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    composer.setSize(window.innerWidth, window.innerHeight);
+    readScroll();
+  });
+
+  // ---------- animate ----------
+  var clock = new THREE.Clock();
+  var speedSm = 0, blinkT = 0;
+
+  function animate() {
+    requestAnimationFrame(animate);
+    var dt = Math.min(clock.getDelta(), 0.05);
+    var t = clock.elapsedTime;
+
+    var prev = progress;
+    progress += (target - progress) * Math.min(1, dt * 5);
+    var speed = dt > 0 ? (progress - prev) * WALK_LEN / dt : 0;
+    speedSm += (Math.abs(speed) - speedSm) * Math.min(1, dt * 6);
+    tiltX += (tiltTX - tiltX) * Math.min(1, dt * 4);
+    tiltY += (tiltTY - tiltY) * Math.min(1, dt * 4);
+    progressBar.style.width = (target * 100).toFixed(2) + '%';
+
+    // sky deepens to space over the journey; stars fade in
+    skyUniforms.nite.value = Math.min(1, Math.max(0, (progress - 0.3) / 0.5));
+    starMat.opacity = Math.min(1, Math.max(0, (progress - 0.25) / 0.4));
+    sky.position.z = -progress * WALK_LEN;
+
+    // ---- walk cycle with knees ----
+    var dist = progress * WALK_LEN;
+    girl.position.z = -dist;
+    var wp = dist * 2.4;
+    var amp = Math.min(1, speedSm / 6);
+    var swing = Math.sin(wp) * 0.58 * amp;
+    legL.hip.rotation.x = swing;
+    legR.hip.rotation.x = -swing;
+    legL.knee.rotation.x = Math.max(0, Math.sin(wp + 1.9)) * 0.85 * amp;
+    legR.knee.rotation.x = Math.max(0, Math.sin(wp + 1.9 + Math.PI)) * 0.85 * amp;
+    armL.shoulder.rotation.x = -swing * 0.85;
+    armR.shoulder.rotation.x = swing * 0.85;
+    armL.elbow.rotation.x = -0.35 - Math.max(0, -Math.sin(wp)) * 0.45 * amp;
+    armR.elbow.rotation.x = -0.35 - Math.max(0, Math.sin(wp)) * 0.45 * amp;
+    girl.position.y = Math.abs(Math.cos(wp)) * 0.13 * amp;
+    girl.rotation.x = -0.06 * amp;
+    girl.rotation.z = Math.sin(wp) * 0.03 * amp;
+    torso.scale.x = 1 + Math.sin(t * 2.2) * 0.02;
+    head.rotation.z = Math.sin(t * 0.8) * 0.05;
+    head.rotation.y = Math.sin(t * 0.5) * 0.08 + tiltX * 0.2;
+    ponytail.rotation.x = 0.5 + Math.sin(t * 3 + 1) * 0.08 + amp * 0.4;
+    ponytail.rotation.z = Math.sin(wp) * 0.14 * amp + Math.sin(t * 1.7) * 0.04;
+    strandL.rotation.x = Math.sin(t * 2.1) * 0.06 + amp * 0.15;
+    strandR.rotation.x = Math.sin(t * 2.1 + 1) * 0.06 + amp * 0.15;
+    dress.rotation.y = Math.sin(wp) * 0.06 * amp;
+    blinkT += dt;
+    var blink = blinkT % 3 > 2.86 ? 0.12 : 1;
+    eyeL.scale.y = blink; eyeR.scale.y = blink;
+
+    // her personal glow rides along (pink + cyan = cinematic rim light)
+    glow.position.set(girl.position.x - 2.5, 3.4, girl.position.z + 2.5);
+    glow2.position.set(girl.position.x + 2.8, 2.6, girl.position.z - 3);
+
+    // ---- camera ----
+    var cz = girl.position.z;
+    var weave = Math.sin(progress * Math.PI * 2) * 1.6;
+    camera.position.set(
+      4.4 + weave + tiltX * 2.2,
+      3.1 - tiltY * 1.6,
+      cz + 7.6
+    );
+    camera.lookAt(girl.position.x + tiltX * 1.5, 2.4, cz - 3);
+
+    // ---- scenery life ----
+    for (var b2 = 0; b2 < buildings.length; b2++) {
+      var bs = buildings[b2]; // neon signs flicker
+      bs.sign.material.color.offsetHSL(0, 0, 0);
+      bs.sign.visible = Math.sin(t * bs.speed + bs.phase) > -0.92;
+    }
+    for (var ar2 = 0; ar2 < alleyRings.length; ar2++) {
+      alleyRings[ar2].rotation.z += dt * (0.3 + ar2 * 0.12);
+    }
+    synthSun.position.y = 10 + Math.sin(t * 0.4) * 0.6;
+    sunUniforms.fade.value = 1 - Math.min(1, Math.max(0, (progress - 0.48) / 0.14));
+    synthSun.visible = sunUniforms.fade.value > 0.01;
+    for (var cr2 = 0; cr2 < crystals.length; cr2++) {
+      var cy = crystals[cr2];
+      cy.obj.material.emissiveIntensity = cy.baseI + Math.sin(t * cy.speed + cy.phase) * 0.35;
+    }
+    for (var ob2 = 0; ob2 < orbs.length; ob2++) {
+      var oo = orbs[ob2];
+      oo.obj.position.y = oo.baseY + Math.sin(t * oo.speed + oo.phase) * 0.6;
+    }
+    for (var au2 = 0; au2 < auroras.length; au2++) {
+      auroras[au2].material.uniforms.t.value = t;
+    }
+    portal.rotation.z += dt * 0.4;
+    portal2.rotation.z -= dt * 0.25;
+    var pulse = 1 + Math.sin(t * 2.4) * 0.05;
+    portal.scale.set(pulse, pulse, 1);
+    for (var f2 = 0; f2 < finaleShapes.length; f2++) {
+      var fs = finaleShapes[f2], fu = fs.userData;
+      fu.ang += fu.speed * dt;
+      fs.position.set(
+        portal.position.x + Math.cos(fu.ang) * fu.rad,
+        portal.position.y + Math.sin(fu.ang) * fu.rad * 0.8,
+        portal.position.z + Math.sin(fu.ang * 2) * 1.2
+      );
+      fs.rotation.x += fu.spin.x * dt;
+      fs.rotation.y += fu.spin.y * dt;
+    }
+
+    for (var j = confetti.length - 1; j >= 0; j--) {
+      var p = confetti[j], pu = p.userData;
+      pu.vel.y -= dt * 10;
+      p.position.addScaledVector(pu.vel, dt);
+      p.rotation.x += pu.rot.x * dt;
+      p.rotation.y += pu.rot.y * dt;
+      pu.life -= dt;
+      if (pu.life <= 0) {
+        scene.remove(p); p.geometry.dispose(); p.material.dispose();
+        confetti.splice(j, 1);
+      }
+    }
+
+    composer.render();
+  }
+  animate();
+})();
+</script>
+</body>
+</html>
