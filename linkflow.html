@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LinkFlow — One link for everything you share</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0b0e1a;
+    --surface: rgba(255, 255, 255, 0.05);
+    --border: rgba(255, 255, 255, 0.1);
+    --text: #f4f6ff;
+    --muted: #9aa3c0;
+    --accent: #6c7bff;
+    --accent-2: #45e0c0;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Ambient background glow */
+  .glow {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(600px 400px at 15% 10%, rgba(108, 123, 255, 0.22), transparent 70%),
+      radial-gradient(700px 500px at 85% 90%, rgba(69, 224, 192, 0.14), transparent 70%);
+  }
+
+  header {
+    position: relative; z-index: 2;
+    max-width: 1120px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 24px;
+  }
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    font-weight: 800; font-size: 1.2rem; letter-spacing: -0.01em;
+    text-decoration: none; color: var(--text);
+  }
+  .logo-mark {
+    width: 32px; height: 32px; border-radius: 9px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    display: grid; place-items: center;
+    font-size: 1rem; color: #fff;
+  }
+  nav { display: flex; align-items: center; gap: 26px; }
+  nav a {
+    color: var(--muted); text-decoration: none; font-size: 0.95rem; font-weight: 500;
+    transition: color 0.15s ease;
+  }
+  nav a:hover { color: var(--text); }
+  .nav-cta {
+    padding: 9px 18px; border-radius: 999px;
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--text) !important;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .nav-cta:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
+  @media (max-width: 640px) { nav a:not(.nav-cta) { display: none; } }
+
+  .hero {
+    position: relative; z-index: 1;
+    max-width: 1120px; margin: 0 auto;
+    padding: clamp(48px, 9vh, 96px) 24px 80px;
+    display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: clamp(32px, 6vw, 72px); align-items: center;
+  }
+  @media (max-width: 860px) {
+    .hero { grid-template-columns: 1fr; text-align: center; }
+    .hero-copy { display: flex; flex-direction: column; align-items: center; }
+  }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 14px; border-radius: 999px;
+    background: var(--surface); border: 1px solid var(--border);
+    font-size: 0.82rem; font-weight: 600; color: var(--muted);
+  }
+  .badge .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--accent-2);
+    box-shadow: 0 0 10px var(--accent-2);
+  }
+
+  h1 {
+    margin-top: 20px;
+    font-size: clamp(2.4rem, 5.5vw, 4rem);
+    font-weight: 800; letter-spacing: -0.03em; line-height: 1.08;
+  }
+  h1 .gradient {
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .subtitle {
+    margin-top: 20px; max-width: 480px;
+    font-size: clamp(1rem, 2vw, 1.15rem); line-height: 1.6; color: var(--muted);
+  }
+
+  .cta-row {
+    margin-top: 32px;
+    display: flex; gap: 14px; flex-wrap: wrap;
+  }
+  @media (max-width: 860px) { .cta-row { justify-content: center; } }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 28px; border-radius: 999px;
+    font-size: 1rem; font-weight: 700; font-family: inherit;
+    text-decoration: none; cursor: pointer; border: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .btn-primary {
+    color: #fff;
+    background: linear-gradient(135deg, var(--accent), #8b5cf6);
+    box-shadow: 0 8px 30px rgba(108, 123, 255, 0.35);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(108, 123, 255, 0.45); }
+  .btn-ghost {
+    color: var(--text);
+    background: var(--surface); border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { transform: translateY(-2px); background: rgba(255,255,255,0.09); }
+
+  .stats {
+    margin-top: 44px;
+    display: flex; gap: clamp(24px, 4vw, 48px); flex-wrap: wrap;
+  }
+  @media (max-width: 860px) { .stats { justify-content: center; } }
+  .stat .num { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; }
+  .stat .label { margin-top: 2px; font-size: 0.85rem; color: var(--muted); }
+
+  /* Phone-style link card mockup */
+  .hero-visual { display: flex; justify-content: center; }
+  .card {
+    width: min(340px, 100%);
+    border-radius: 24px;
+    background: linear-gradient(160deg, rgba(255,255,255,0.09), rgba(255,255,255,0.03));
+    border: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+    padding: 28px 24px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+    animation: float 6s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+  @media (prefers-reduced-motion: reduce) { .card { animation: none; } }
+  .avatar {
+    width: 64px; height: 64px; margin: 0 auto; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    display: grid; place-items: center;
+    font-size: 1.5rem; font-weight: 800; color: #fff;
+  }
+  .card-name { margin-top: 14px; text-align: center; font-weight: 700; font-size: 1.1rem; }
+  .card-bio { margin-top: 4px; text-align: center; font-size: 0.85rem; color: var(--muted); }
+  .links { margin-top: 22px; display: flex; flex-direction: column; gap: 12px; }
+  .link-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 13px 16px; border-radius: 14px;
+    background: var(--surface); border: 1px solid var(--border);
+    font-size: 0.92rem; font-weight: 600; color: var(--text);
+    text-decoration: none;
+    transition: background 0.15s ease, transform 0.15s ease;
+  }
+  .link-item:hover { background: rgba(255,255,255,0.1); transform: translateX(4px); }
+  .link-icon {
+    width: 30px; height: 30px; border-radius: 9px; flex-shrink: 0;
+    display: grid; place-items: center; font-size: 0.9rem;
+  }
+  .li-1 { background: rgba(108, 123, 255, 0.25); }
+  .li-2 { background: rgba(69, 224, 192, 0.2); }
+  .li-3 { background: rgba(255, 122, 182, 0.2); }
+  .li-4 { background: rgba(255, 205, 77, 0.2); }
+</style>
+</head>
+<body>
+  <div class="glow" aria-hidden="true"></div>
+
+  <header>
+    <a class="logo" href="#">
+      <span class="logo-mark">&#128279;</span>
+      LinkFlow
+    </a>
+    <nav>
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#about">About</a>
+      <a class="nav-cta" href="#signup">Sign in</a>
+    </nav>
+  </header>
+
+  <main class="hero">
+    <div class="hero-copy">
+      <span class="badge"><span class="dot"></span> Now with real-time click analytics</span>
+      <h1>One link for <span class="gradient">everything</span> you share</h1>
+      <p class="subtitle">
+        LinkFlow turns your bio into a beautiful, trackable hub. Collect all your
+        content, socials, and products behind a single link — and watch it flow.
+      </p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#signup">Claim your link &rarr;</a>
+        <a class="btn btn-ghost" href="#demo">See a live demo</a>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="num">1.2M+</div><div class="label">Links created</div></div>
+        <div class="stat"><div class="num">98%</div><div class="label">Uptime, always</div></div>
+        <div class="stat"><div class="num">4.9&#9733;</div><div class="label">Creator rating</div></div>
+      </div>
+    </div>
+
+    <div class="hero-visual" aria-hidden="true">
+      <div class="card">
+        <div class="avatar">EE</div>
+        <div class="card-name">@evan</div>
+        <div class="card-bio">Maker &middot; Streamer &middot; Coffee enthusiast</div>
+        <div class="links">
+          <span class="link-item"><span class="link-icon li-1">&#127916;</span> Latest video drop</span>
+          <span class="link-item"><span class="link-icon li-2">&#127911;</span> Podcast — new episode</span>
+          <span class="link-item"><span class="link-icon li-3">&#128722;</span> Merch store</span>
+          <span class="link-item"><span class="link-icon li-4">&#9993;&#65039;</span> Weekly newsletter</span>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
