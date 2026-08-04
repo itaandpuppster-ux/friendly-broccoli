@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PromptMotion — Premium AI Website Prompts</title>
+<style>
+  :root {
+    --bg: #07070d;
+    --bg-2: #0c0c16;
+    --card: rgba(255,255,255,0.04);
+    --card-border: rgba(255,255,255,0.09);
+    --text: #f2f2f8;
+    --muted: #9a9ab0;
+    --violet: #8b5cf6;
+    --cyan: #22d3ee;
+    --pink: #f472b6;
+    --lime: #a3e635;
+    --amber: #fbbf24;
+    --radius: 18px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: rgba(139,92,246,0.4); }
+
+  /* ---------- aurora background ---------- */
+  .aurora {
+    position: fixed; inset: -20%;
+    z-index: 0; pointer-events: none;
+    filter: blur(70px) saturate(140%);
+    opacity: 0.55;
+  }
+  .aurora span {
+    position: absolute; border-radius: 50%;
+    mix-blend-mode: screen;
+  }
+  .aurora span:nth-child(1) {
+    width: 55vw; height: 55vw; left: -10%; top: -10%;
+    background: radial-gradient(circle, #6d28d9 0%, transparent 65%);
+    animation: drift1 26s ease-in-out infinite alternate;
+  }
+  .aurora span:nth-child(2) {
+    width: 45vw; height: 45vw; right: -8%; top: 5%;
+    background: radial-gradient(circle, #0e7490 0%, transparent 65%);
+    animation: drift2 32s ease-in-out infinite alternate;
+  }
+  .aurora span:nth-child(3) {
+    width: 50vw; height: 50vw; left: 20%; bottom: -20%;
+    background: radial-gradient(circle, #9d174d 0%, transparent 65%);
+    animation: drift3 38s ease-in-out infinite alternate;
+  }
+  @keyframes drift1 { to { transform: translate(18vw, 12vh) scale(1.15); } }
+  @keyframes drift2 { to { transform: translate(-14vw, 18vh) scale(0.9); } }
+  @keyframes drift3 { to { transform: translate(-10vw, -14vh) scale(1.2); } }
+
+  /* faint grid overlay */
+  .grid-overlay {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 90% 70% at 50% 0%, black 40%, transparent 100%);
+  }
+
+  main { position: relative; z-index: 1; }
+
+  /* ---------- nav ---------- */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 10;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px clamp(20px, 5vw, 56px);
+    backdrop-filter: blur(14px);
+    background: rgba(7,7,13,0.55);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .logo {
+    font-weight: 800; font-size: 1.15rem; letter-spacing: -0.02em;
+    display: flex; align-items: center; gap: 9px; text-decoration: none; color: var(--text);
+  }
+  .logo-dot {
+    width: 22px; height: 22px; border-radius: 7px;
+    background: conic-gradient(from 180deg, var(--violet), var(--cyan), var(--pink), var(--violet));
+    animation: spin-hue 6s linear infinite;
+  }
+  @keyframes spin-hue { to { filter: hue-rotate(360deg); } }
+  .nav-links { display: flex; gap: 26px; align-items: center; }
+  .nav-links a {
+    color: var(--muted); text-decoration: none; font-size: 0.92rem; font-weight: 600;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta {
+    padding: 9px 18px; border-radius: 999px; font-weight: 700; font-size: 0.9rem;
+    color: #0b0416 !important;
+    background: linear-gradient(120deg, var(--cyan), var(--violet));
+    box-shadow: 0 0 24px rgba(139,92,246,0.45);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 0 36px rgba(139,92,246,0.7); }
+  @media (max-width: 640px) { .nav-links a:not(.nav-cta) { display: none; } }
+
+  /* ---------- hero ---------- */
+  .hero {
+    min-height: 100svh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 120px 20px 80px;
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 7px 16px; border-radius: 999px;
+    border: 1px solid rgba(139,92,246,0.4);
+    background: rgba(139,92,246,0.1);
+    color: #c4b5fd; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.04em;
+    margin-bottom: 28px;
+    animation: badge-glow 3s ease-in-out infinite;
+  }
+  @keyframes badge-glow {
+    0%, 100% { box-shadow: 0 0 0 rgba(139,92,246,0); }
+    50% { box-shadow: 0 0 22px rgba(139,92,246,0.45); }
+  }
+  .badge .pulse {
+    width: 7px; height: 7px; border-radius: 50%; background: var(--lime);
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.7); opacity: 0.4; }
+  }
+  h1 {
+    font-size: clamp(2.6rem, 7.5vw, 5.4rem);
+    font-weight: 800; letter-spacing: -0.035em; line-height: 1.04;
+    max-width: 14ch;
+  }
+  .shimmer {
+    background: linear-gradient(110deg, var(--violet) 20%, var(--cyan) 40%, var(--pink) 60%, var(--violet) 80%);
+    background-size: 250% auto;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: shimmer 5s linear infinite;
+  }
+  @keyframes shimmer { to { background-position: 250% center; } }
+  .hero-sub {
+    margin-top: 24px; color: var(--muted);
+    font-size: clamp(1rem, 2.4vw, 1.25rem); line-height: 1.6; max-width: 56ch;
+  }
+  .hero-sub strong { color: var(--text); font-weight: 600; }
+  .hero-ctas { margin-top: 40px; display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 15px 30px; border-radius: 999px; border: none; cursor: pointer;
+    font-size: 1rem; font-weight: 700; font-family: inherit;
+    text-decoration: none; transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .btn-primary {
+    color: #0b0416;
+    background: linear-gradient(120deg, var(--cyan), var(--violet) 60%, var(--pink));
+    background-size: 180% auto;
+    box-shadow: 0 8px 32px rgba(139,92,246,0.45);
+    animation: btn-pan 4s ease-in-out infinite alternate;
+  }
+  @keyframes btn-pan { to { background-position: 100% center; } }
+  .btn-primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 14px 44px rgba(139,92,246,0.65); }
+  .btn-ghost {
+    color: var(--text); background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.14);
+  }
+  .btn-ghost:hover { transform: translateY(-3px); background: rgba(255,255,255,0.1); }
+
+  /* typing line */
+  .typing-line {
+    margin-top: 56px; font-family: "Cascadia Code", "Fira Code", monospace;
+    font-size: clamp(0.8rem, 2vw, 0.95rem); color: var(--muted);
+    background: rgba(255,255,255,0.04); border: 1px solid var(--card-border);
+    padding: 14px 22px; border-radius: 12px;
+    display: inline-flex; align-items: center; gap: 10px; max-width: 92vw;
+  }
+  .typing-line .prompt-sign { color: var(--lime); }
+  #typed { color: var(--text); white-space: nowrap; overflow: hidden; }
+  .caret {
+    display: inline-block; width: 9px; height: 1.1em; background: var(--cyan);
+    animation: blink 0.9s steps(1) infinite; border-radius: 2px;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* marquee */
+  .marquee-wrap {
+    margin-top: 70px; width: 100%; overflow: hidden;
+    mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
+  }
+  .marquee { display: flex; gap: 44px; width: max-content; animation: marquee 26s linear infinite; }
+  .marquee span {
+    color: var(--muted); font-weight: 700; font-size: 0.95rem; letter-spacing: 0.12em;
+    text-transform: uppercase; white-space: nowrap;
+  }
+  .marquee span em { color: var(--violet); font-style: normal; }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+
+  /* ---------- sections ---------- */
+  section { padding: 90px clamp(20px, 5vw, 56px); max-width: 1200px; margin: 0 auto; }
+  .section-head { text-align: center; margin-bottom: 56px; }
+  .kicker {
+    color: var(--cyan); font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+    font-size: 0.8rem;
+  }
+  .section-head h2 {
+    margin-top: 12px; font-size: clamp(1.8rem, 4.5vw, 2.8rem);
+    font-weight: 800; letter-spacing: -0.03em;
+  }
+  .section-head p { margin-top: 14px; color: var(--muted); font-size: 1.05rem; max-width: 60ch; margin-inline: auto; }
+
+  /* scroll reveal */
+  .reveal { opacity: 0; transform: translateY(34px); transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1); }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* ---------- prompt cards ---------- */
+  .prompt-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 26px; }
+  .prompt-card {
+    background: var(--card); border: 1px solid var(--card-border);
+    border-radius: var(--radius); overflow: hidden;
+    display: flex; flex-direction: column;
+    transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), border-color 0.35s, box-shadow 0.35s;
+    backdrop-filter: blur(8px);
+  }
+  .prompt-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(139,92,246,0.5);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5), 0 0 40px rgba(139,92,246,0.12);
+  }
+  .preview {
+    height: 190px; position: relative; overflow: hidden;
+    border-bottom: 1px solid var(--card-border);
+    display: flex; align-items: center; justify-content: center;
+    background: var(--bg-2);
+  }
+  .card-body { padding: 22px; display: flex; flex-direction: column; gap: 14px; flex: 1; }
+  .card-title-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .card-body h3 { font-size: 1.12rem; font-weight: 700; letter-spacing: -0.01em; }
+  .tags { display: flex; gap: 7px; flex-wrap: wrap; }
+  .tag {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em;
+    padding: 4px 10px; border-radius: 999px;
+    background: rgba(34,211,238,0.1); color: #67e8f9; border: 1px solid rgba(34,211,238,0.25);
+  }
+  .tag.v { background: rgba(139,92,246,0.12); color: #c4b5fd; border-color: rgba(139,92,246,0.3); }
+  .tag.p { background: rgba(244,114,182,0.1); color: #f9a8d4; border-color: rgba(244,114,182,0.28); }
+  .card-desc { color: var(--muted); font-size: 0.92rem; line-height: 1.55; }
+  details.prompt-box { border: 1px solid var(--card-border); border-radius: 12px; overflow: hidden; }
+  details.prompt-box summary {
+    cursor: pointer; list-style: none; padding: 11px 16px;
+    font-size: 0.85rem; font-weight: 700; color: var(--cyan);
+    display: flex; align-items: center; gap: 8px; user-select: none;
+    transition: background 0.2s;
+  }
+  details.prompt-box summary:hover { background: rgba(255,255,255,0.04); }
+  details.prompt-box summary::-webkit-details-marker { display: none; }
+  details.prompt-box summary::before { content: "▸"; transition: transform 0.25s; }
+  details.prompt-box[open] summary::before { transform: rotate(90deg); }
+  .prompt-text {
+    font-family: "Cascadia Code", "Fira Code", monospace;
+    font-size: 0.8rem; line-height: 1.65; color: #cfcfe4;
+    padding: 4px 16px 16px; white-space: pre-wrap; max-height: 260px; overflow-y: auto;
+  }
+  .prompt-text::-webkit-scrollbar { width: 6px; }
+  .prompt-text::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+  .copy-btn {
+    margin-top: auto;
+    display: flex; align-items: center; justify-content: center; gap: 9px;
+    padding: 12px 18px; border-radius: 12px; border: 1px solid rgba(139,92,246,0.45);
+    background: rgba(139,92,246,0.14); color: #ddd0ff;
+    font-family: inherit; font-size: 0.93rem; font-weight: 700; cursor: pointer;
+    transition: background 0.2s, transform 0.15s, border-color 0.2s;
+  }
+  .copy-btn:hover { background: rgba(139,92,246,0.28); transform: translateY(-1px); }
+  .copy-btn:active { transform: translateY(1px) scale(0.99); }
+  .copy-btn.copied { background: rgba(163,230,53,0.16); border-color: rgba(163,230,53,0.5); color: #d9f99d; }
+
+  /* ---------- live previews ---------- */
+  /* 1. aurora hero */
+  .pv-aurora { position: absolute; inset: 0; filter: blur(26px) saturate(150%); }
+  .pv-aurora i { position: absolute; border-radius: 50%; mix-blend-mode: screen; }
+  .pv-aurora i:nth-child(1) { width: 70%; height: 90%; left: -12%; top: -25%; background: radial-gradient(circle, #7c3aed, transparent 65%); animation: drift1 9s ease-in-out infinite alternate; }
+  .pv-aurora i:nth-child(2) { width: 65%; height: 85%; right: -10%; top: 0; background: radial-gradient(circle, #0891b2, transparent 65%); animation: drift2 11s ease-in-out infinite alternate; }
+  .pv-aurora i:nth-child(3) { width: 60%; height: 80%; left: 25%; bottom: -30%; background: radial-gradient(circle, #be185d, transparent 65%); animation: drift3 10s ease-in-out infinite alternate; }
+  .pv-label { position: relative; z-index: 1; font-weight: 800; font-size: 1.3rem; letter-spacing: -0.02em; text-shadow: 0 2px 20px rgba(0,0,0,0.5); }
+
+  /* 2. particle field */
+  .pv-particles { position: absolute; inset: 0; }
+  .pv-particles b {
+    position: absolute; bottom: -8px; border-radius: 50%;
+    background: var(--cyan); opacity: 0.7;
+    animation: float-up linear infinite;
+  }
+  @keyframes float-up {
+    from { transform: translateY(0) translateX(0); opacity: 0; }
+    10% { opacity: 0.8; }
+    90% { opacity: 0.6; }
+    to { transform: translateY(-210px) translateX(var(--sway, 14px)); opacity: 0; }
+  }
+
+  /* 3. 3D tilt cards */
+  .pv-tilt-stage { perspective: 600px; display: flex; gap: 14px; }
+  .pv-tilt-card {
+    width: 74px; height: 100px; border-radius: 12px;
+    background: linear-gradient(155deg, rgba(255,255,255,0.14), rgba(255,255,255,0.03));
+    border: 1px solid rgba(255,255,255,0.2);
+    animation: tilt-sway 4s ease-in-out infinite;
+    box-shadow: 0 16px 32px rgba(0,0,0,0.45);
+  }
+  .pv-tilt-card:nth-child(2) { animation-delay: -1.3s; background: linear-gradient(155deg, rgba(139,92,246,0.35), rgba(139,92,246,0.06)); border-color: rgba(139,92,246,0.4); }
+  .pv-tilt-card:nth-child(3) { animation-delay: -2.6s; background: linear-gradient(155deg, rgba(34,211,238,0.3), rgba(34,211,238,0.05)); border-color: rgba(34,211,238,0.35); }
+  @keyframes tilt-sway {
+    0%, 100% { transform: rotateY(-16deg) rotateX(7deg) translateY(0); }
+    50% { transform: rotateY(16deg) rotateX(-7deg) translateY(-10px); }
+  }
+
+  /* 4. gradient text + counter */
+  .pv-stat { text-align: center; }
+  .pv-stat .num {
+    font-size: 2.6rem; font-weight: 800; letter-spacing: -0.03em;
+    background: linear-gradient(110deg, var(--pink), var(--amber), var(--pink));
+    background-size: 220% auto;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: shimmer 3.6s linear infinite;
+  }
+  .pv-stat .lbl { color: var(--muted); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; margin-top: 4px; }
+  .pv-ring {
+    position: absolute; width: 150px; height: 150px; border-radius: 50%;
+    border: 1px dashed rgba(244,114,182,0.35);
+    animation: rotate 14s linear infinite;
+  }
+  .pv-ring.r2 { width: 190px; height: 190px; animation-duration: 22s; animation-direction: reverse; border-color: rgba(251,191,36,0.25); }
+  @keyframes rotate { to { transform: rotate(360deg); } }
+
+  /* 5. marquee preview */
+  .pv-marquee-stage { width: 100%; display: flex; flex-direction: column; gap: 16px; overflow: hidden; }
+  .pv-marquee { display: flex; gap: 12px; width: max-content; animation: marquee 9s linear infinite; }
+  .pv-marquee.rev { animation-direction: reverse; animation-duration: 12s; }
+  .pv-chip {
+    padding: 9px 20px; border-radius: 999px; white-space: nowrap;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+    font-size: 0.8rem; font-weight: 700; color: var(--muted);
+  }
+  .pv-chip.hl { color: #67e8f9; border-color: rgba(34,211,238,0.35); background: rgba(34,211,238,0.08); }
+
+  /* 6. spotlight card */
+  .pv-spot {
+    width: 200px; height: 120px; border-radius: 14px; position: relative; overflow: hidden;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.14);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; color: var(--muted); font-size: 0.85rem;
+  }
+  .pv-spot::before {
+    content: ""; position: absolute; width: 130px; height: 130px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(163,230,53,0.5), transparent 70%);
+    animation: spot-move 5s ease-in-out infinite alternate;
+    top: -40px; left: -30px;
+  }
+  @keyframes spot-move { to { transform: translate(140px, 70px); } }
+
+  /* ---------- 3D motion lab ---------- */
+  .lab-banner {
+    position: relative; border-radius: var(--radius); overflow: hidden;
+    border: 1px solid var(--card-border); background: var(--bg-2);
+    height: clamp(260px, 40vw, 420px); margin-bottom: 40px;
+  }
+  .lab-banner canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .lab-banner .lab-caption {
+    position: absolute; left: 22px; bottom: 18px; z-index: 2;
+    display: flex; align-items: center; gap: 10px;
+    font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); text-shadow: 0 2px 12px rgba(0,0,0,0.8);
+  }
+  .lab-caption .pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); animation: pulse 1.6s ease-in-out infinite; }
+  .copy-all-row { display: flex; justify-content: center; margin-top: 40px; }
+  .copy-all {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 15px 34px; border-radius: 999px; border: 1px solid rgba(244,114,182,0.5);
+    background: rgba(244,114,182,0.12); color: #f9a8d4;
+    font-family: inherit; font-size: 1rem; font-weight: 800; cursor: pointer;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  }
+  .copy-all:hover { background: rgba(244,114,182,0.24); transform: translateY(-2px); box-shadow: 0 0 34px rgba(244,114,182,0.3); }
+  .copy-all.copied { background: rgba(163,230,53,0.16); border-color: rgba(163,230,53,0.5); color: #d9f99d; }
+  .img-prompt-label {
+    font-size: 0.7rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--amber); margin: 10px 16px 0;
+  }
+  .preview canvas.webgl { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+  /* CSS spinning cube preview */
+  .pv-cube-stage { perspective: 700px; }
+  .pv-cube { width: 90px; height: 90px; position: relative; transform-style: preserve-3d; animation: cube-spin 9s linear infinite; }
+  @keyframes cube-spin { from { transform: rotateX(-18deg) rotateY(0); } to { transform: rotateX(-18deg) rotateY(360deg); } }
+  .pv-cube i {
+    position: absolute; inset: 0; border-radius: 10px;
+    background: rgba(139,92,246,0.14); border: 1px solid rgba(139,92,246,0.55);
+    box-shadow: inset 0 0 26px rgba(139,92,246,0.35);
+  }
+  .pv-cube i:nth-child(1) { transform: rotateY(0deg) translateZ(45px); }
+  .pv-cube i:nth-child(2) { transform: rotateY(90deg) translateZ(45px); border-color: rgba(34,211,238,0.55); background: rgba(34,211,238,0.1); box-shadow: inset 0 0 26px rgba(34,211,238,0.3); }
+  .pv-cube i:nth-child(3) { transform: rotateY(180deg) translateZ(45px); }
+  .pv-cube i:nth-child(4) { transform: rotateY(270deg) translateZ(45px); border-color: rgba(34,211,238,0.55); background: rgba(34,211,238,0.1); box-shadow: inset 0 0 26px rgba(34,211,238,0.3); }
+  .pv-cube i:nth-child(5) { transform: rotateX(90deg) translateZ(45px); border-color: rgba(244,114,182,0.55); background: rgba(244,114,182,0.1); }
+  .pv-cube i:nth-child(6) { transform: rotateX(-90deg) translateZ(45px); border-color: rgba(244,114,182,0.55); background: rgba(244,114,182,0.1); }
+
+  /* CSS 3D carousel ring preview */
+  .pv-ring3d-stage { perspective: 800px; }
+  .pv-ring3d { width: 70px; height: 96px; position: relative; transform-style: preserve-3d; animation: ring3d-spin 14s linear infinite; }
+  @keyframes ring3d-spin { from { transform: rotateX(-6deg) rotateY(0); } to { transform: rotateX(-6deg) rotateY(-360deg); } }
+  .pv-ring3d i {
+    position: absolute; inset: 0; border-radius: 10px;
+    background: linear-gradient(160deg, rgba(255,255,255,0.16), rgba(255,255,255,0.03));
+    border: 1px solid rgba(255,255,255,0.25);
+    backface-visibility: hidden;
+  }
+  /* 8 panels around the ring, set via inline style --a */
+  .pv-ring3d i { transform: rotateY(var(--a)) translateZ(120px); }
+
+  /* CSS flip card preview */
+  .pv-flip-stage { perspective: 700px; }
+  .pv-flip { width: 120px; height: 140px; position: relative; transform-style: preserve-3d; animation: flip-loop 5s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+  @keyframes flip-loop {
+    0%, 35% { transform: rotateY(0); }
+    50%, 85% { transform: rotateY(180deg); }
+    100% { transform: rotateY(360deg); }
+  }
+  .pv-flip i {
+    position: absolute; inset: 0; border-radius: 14px; backface-visibility: hidden;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.9rem;
+  }
+  .pv-flip i:nth-child(1) {
+    background: linear-gradient(160deg, rgba(139,92,246,0.3), rgba(139,92,246,0.05));
+    border: 1px solid rgba(139,92,246,0.5);
+  }
+  .pv-flip i:nth-child(2) {
+    background: linear-gradient(160deg, rgba(34,211,238,0.28), rgba(34,211,238,0.05));
+    border: 1px solid rgba(34,211,238,0.5);
+    transform: rotateY(180deg);
+  }
+
+  /* ---------- steps ---------- */
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; }
+  .step {
+    background: var(--card); border: 1px solid var(--card-border); border-radius: var(--radius);
+    padding: 30px 26px; position: relative; overflow: hidden;
+    transition: transform 0.3s, border-color 0.3s;
+  }
+  .step:hover { transform: translateY(-6px); border-color: rgba(34,211,238,0.4); }
+  .step-num {
+    font-size: 2.4rem; font-weight: 800;
+    background: linear-gradient(120deg, var(--cyan), var(--violet));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .step h3 { margin-top: 10px; font-size: 1.15rem; }
+  .step p { margin-top: 10px; color: var(--muted); font-size: 0.95rem; line-height: 1.6; }
+
+  /* ---------- footer ---------- */
+  footer {
+    border-top: 1px solid rgba(255,255,255,0.07);
+    padding: 44px clamp(20px, 5vw, 56px);
+    display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+    color: var(--muted); font-size: 0.9rem; position: relative; z-index: 1;
+  }
+
+  /* toast */
+  #toast {
+    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px);
+    background: rgba(163,230,53,0.14); border: 1px solid rgba(163,230,53,0.5);
+    color: #d9f99d; font-weight: 700; font-size: 0.92rem;
+    padding: 13px 26px; border-radius: 999px; z-index: 50;
+    backdrop-filter: blur(10px);
+    transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.2), opacity 0.3s;
+    opacity: 0; pointer-events: none;
+  }
+  #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="aurora"><span></span><span></span><span></span></div>
+<div class="grid-overlay"></div>
+
+<nav>
+  <a class="logo" href="#"><span class="logo-dot"></span>PromptMotion</a>
+  <div class="nav-links">
+    <a href="#prompts">Prompts</a>
+    <a href="#lab3d">3D Lab</a>
+    <a href="#how">How it works</a>
+    <a class="nav-cta" href="#prompts">Browse library</a>
+  </div>
+</nav>
+
+<main>
+  <!-- ================= HERO ================= -->
+  <header class="hero">
+    <div class="badge"><span class="pulse"></span> FREE PROMPT LIBRARY · COPY &amp; PASTE READY</div>
+    <h1>Build <span class="shimmer">stunning motion</span> websites with one prompt</h1>
+    <p class="hero-sub">
+      A curated library of <strong>animated website prompts</strong> for Lovable, Bolt, Cursor,
+      v0 and Claude. Pick a style, hit <strong>copy</strong>, paste it into your AI builder —
+      and ship a beautiful, fully animated site in minutes.
+    </p>
+    <div class="hero-ctas">
+      <a class="btn btn-primary" href="#prompts">⚡ Explore prompts</a>
+      <a class="btn btn-ghost" href="#how">How it works</a>
+    </div>
+    <div class="typing-line">
+      <span class="prompt-sign">❯</span>
+      <span id="typed"></span>
+      <span class="caret"></span>
+    </div>
+    <div class="marquee-wrap">
+      <div class="marquee" id="marquee">
+        <span>Aurora Heroes <em>✦</em></span>
+        <span>Particle Fields <em>✦</em></span>
+        <span>3D Tilt Cards <em>✦</em></span>
+        <span>Gradient Shimmer <em>✦</em></span>
+        <span>Infinite Marquees <em>✦</em></span>
+        <span>Spotlight Cards <em>✦</em></span>
+        <span>Scroll Reveals <em>✦</em></span>
+        <span>Glassmorphism <em>✦</em></span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= PROMPTS ================= -->
+  <section id="prompts">
+    <div class="section-head reveal">
+      <div class="kicker">The Library</div>
+      <h2>Copy a prompt. Watch it come alive.</h2>
+      <p>Every card shows a <strong>live preview</strong> of the animation the prompt produces. Expand to read the full prompt, or just hit copy.</p>
+    </div>
+
+    <div class="prompt-grid">
+
+      <!-- 1. Aurora hero -->
+      <article class="prompt-card reveal">
+        <div class="preview">
+          <div class="pv-aurora"><i></i><i></i><i></i></div>
+          <div class="pv-label">Aurora Hero</div>
+        </div>
+        <div class="card-body">
+          <div class="card-title-row"><h3>Aurora Gradient Hero</h3></div>
+          <div class="tags"><span class="tag v">Lovable</span><span class="tag">Bolt</span><span class="tag p">Claude</span></div>
+          <p class="card-desc">A dark hero section with drifting, blurred aurora blobs, shimmering gradient headline and glowing CTA buttons.</p>
+          <details class="prompt-box">
+            <summary>View full prompt</summary>
+            <div class="prompt-text">Create a dark, premium landing page hero section with an animated aurora background.
+
+Design requirements:
+- Background: near-black (#07070d) with 3 large, heavily blurred radial-gradient blobs (violet #7c3aed, teal #0891b2, magenta #be185d) that slowly drift and scale on infinite alternating loops (20–35s each), using mix-blend-mode: screen and blur(70px).
+- Add a faint 56px grid overlay masked with a radial gradient so it fades toward the edges.
+- Headline: huge (clamp 2.6rem–5.4rem), font-weight 800, tight letter-spacing. Highlight 2–3 key words with an animated gradient shimmer (violet → cyan → pink) using background-clip: text and a background-position keyframe loop.
+- Above the headline: a small pill badge with a pulsing green dot and a soft glowing box-shadow loop.
+- Subheadline in muted gray (#9a9ab0), max-width 56ch, line-height 1.6.
+- Two CTA buttons: a pill-shaped primary with an animated panning gradient and violet glow shadow that lifts on hover, and a ghost secondary with a subtle glass background.
+- Fully responsive, add prefers-reduced-motion support that disables all animation.
+- Keep everything in a single self-contained HTML/CSS file with no external libraries.</div>
+          </details>
+          <button class="copy-btn">📋 Copy prompt</button>
+        </div>
+      </article>
+
+      <!-- 2. Particle field -->
+      <article class="prompt-card reveal">
+        <div class="preview">
+          <div class="pv-particles" id="particles"></div>
+          <div class="pv-label">Particles</div>
+        </div>
+        <div class="card-body">
+          <div class="card-title-row"><h3>Floating Particle Field</h3></div>
+          <div class="tags"><span class="tag v">Lovable</span><span class="tag">Cursor</span><span class="tag p">v0</span></div>
+          <p class="card-desc">Glowing cyan particles that drift upward behind your content — perfect for SaaS and AI product pages.</p>
+          <details class="prompt-box">
+            <summary>View full prompt</summary>
+            <div class="prompt-text">Add an animated floating particle background to my landing page hero.
+
+Requirements:
+- Generate 30–40 small circular particles (2–6px) in cyan (#22d3ee) with slight opacity variation, positioned randomly across the width of the hero.
+- Each particle floats from the bottom to the top of the section on an infinite linear loop, with randomized duration (6–16s), randomized delay, and a small horizontal sway using a CSS custom property.
+- Particles fade in near the bottom and fade out near the top (opacity keyframes at 10% and 90%).
+- Render them with plain DOM elements + CSS keyframes created by a small vanilla JS loop — no canvas, no libraries.
+- The particle layer must sit behind the hero content (z-index) and be pointer-events: none so it never blocks clicks.
+- Pause or remove particles when prefers-reduced-motion is set.
+- Keep the code self-contained and easy to paste into an existing page.</div>
+          </details>
+          <button class="copy-btn">📋 Copy prompt</button>
+        </div>
+      </article>
+
+      <!-- 3. 3D tilt cards -->
+      <article class="prompt-card reveal">
+        <div class="preview">
+          <div class="pv-tilt-stage">
+            <div class="pv-tilt-card"></div>
+            <div class="pv-tilt-card"></div>
+            <div class="pv-tilt-card"></div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-title-row"><h3>3D Tilt Glass Cards</h3></div>
+          <div class="tags"><span class="tag v">Lovable</span><span class="tag">Bolt</span><span class="tag p">Claude</span></div>
+          <p class="card-desc">Glassmorphic feature cards that tilt in 3D toward the cursor, with idle sway animation and deep drop shadows.</p>
+          <details class="prompt-box">
+            <summary>View full prompt</summary>
+            <div class="prompt-text">Build a features section with interactive 3D tilt glass cards.
+
+Requirements:
+- A responsive grid (auto-fit, minmax 280px) of glassmorphism cards: translucent white gradient background (rgba white 0.14 → 0.03), 1px translucent border, 16px radius, backdrop-filter blur, and a deep drop shadow (0 16px 32px rgba(0,0,0,0.45)).
+- Wrap the grid in a perspective: 800px container. On mousemove, each card tilts toward the cursor with rotateX/rotateY up to ±12°, computed in vanilla JS from the cursor position relative to the card center; on mouseleave it eases back to flat with a 0.4s transition.
+- When idle (no hover), cards gently sway on a 4s ease-in-out infinite loop with staggered animation-delay so they move out of phase.
+- Add a subtle moving specular highlight: a radial-gradient overlay that follows the cursor via CSS custom properties (--mx, --my).
+- Each card: an emoji or SVG icon, a bold title, and 2 lines of muted description text.
+- Disable tilt and sway under prefers-reduced-motion. No libraries — plain HTML/CSS/JS.</div>
+          </details>
+          <button class="copy-btn">📋 Copy prompt</button>
+        </div>
+      </article>
+
+      <!-- 4. Animated stats -->
+      <article class="prompt-card reveal">
+        <div class="preview">
+          <div class="pv-ring"></div>
+          <div class="pv-ring r2"></div>
+          <div class="pv-stat">
+            <div class="num" id="statNum">12,480</div>
+            <div class="lbl">Sites launched</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-title-row"><h3>Count-Up Stats + Orbit Rings</h3></div>
+          <div class="tags"><span class="tag v">Lovable</span><span class="tag">v0</span><span class="tag p">Cursor</span></div>
+          <p class="card-desc">Gradient-shimmer numbers that count up when scrolled into view, framed by slowly rotating dashed orbit rings.</p>
+          <details class="prompt-box">
+            <summary>View full prompt</summary>
+            <div class="prompt-text">Create an animated statistics section for a dark landing page.
+
+Requirements:
+- A row of 3–4 big stat numbers (2.6rem+, font-weight 800) with an animated gradient shimmer fill (pink #f472b6 → amber #fbbf24) using background-clip: text and a looping background-position keyframe.
+- Each number counts up from 0 to its target value over ~1.6s with an ease-out curve, triggered the first time it enters the viewport (IntersectionObserver + requestAnimationFrame). Format thousands with commas.
+- Under each number, a small uppercase label with wide letter-spacing in muted gray.
+- Behind the stats, add 2 concentric dashed circle "orbit rings" that rotate infinitely in opposite directions (14s and 22s) at low opacity.
+- Numbers must render their final value immediately (no count-up) under prefers-reduced-motion.
+- Self-contained HTML/CSS/JS, no libraries, responsive down to mobile.</div>
+          </details>
+          <button class="copy-btn">📋 Copy prompt</button>
+        </div>
+      </article>
+
+      <!-- 5. Marquee -->
+      <article class="prompt-card reveal">
+        <div class="preview">
+          <div class="pv-marquee-stage">
+            <div class="pv-marquee">
+              <span class="pv-chip">React</span><span class="pv-chip hl">Next.js</span><span class="pv-chip">Tailwind</span><span class="pv-chip hl">Framer</span><span class="pv-chip">Vite</span>
+              <span class="pv-chip">React</span><span class="pv-chip hl">Next.js</span><span class="pv-chip">Tailwind</span><span class="pv-chip hl">Framer</span><span class="pv-chip">Vite</span>
+            </div>
+            <div class="pv-marquee rev">
+              <span class="pv-chip hl">Stripe</span><span class="pv-chip">Supabase</span><span class="pv-chip hl">Vercel</span><span class="pv-chip">Figma</span><span class="pv-chip hl">Linear</span>
+              <span class="pv-chip hl">Stripe</span><span class="pv-chip">Supabase</span><span class="pv-chip hl">Vercel</span><span class="pv-chip">Figma</span><span class="pv-chip hl">Linear</span>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-title-row"><h3>Infinite Logo Marquee</h3></div>
+          <div class="tags"><span class="tag v">Lovable</span><span class="tag">Bolt</span><span class="tag p">Claude</span></div>
+          <p class="card-desc">Two seamless marquee rows scrolling in opposite directions with edge fade — the classic "trusted by" strip.</p>
+          <details class="prompt-box">
+            <summary>View full prompt</summary>
+            <div class="prompt-text">Build an infinite scrolling logo/tag marquee section ("trusted by" strip).
+
+Requirements:
+- Two full-width rows of pill-shaped chips (or logos), the first scrolling left and the second scrolling right, both on infinite linear loops (20–30s).
+- Make the loop seamless: duplicate the row content once inside a width: max-content flex track and animate translateX from 0 to -50%.
+- Fade the strip edges with a CSS mask-image: linear-gradient so chips dissolve in/out at the sides instead of hard-clipping.
+- Chips: dark glass style — subtle translucent background, 1px translucent border, 999px radius, muted text; highlight every other chip with an accent color (cyan #22d3ee).
+- Pause the animation on hover so users can read the items.
+- Freeze the marquee entirely under prefers-reduced-motion.
+- Plain HTML/CSS only (a tiny JS duplication helper is allowed), responsive, no libraries.</div>
+          </details>
+          <button class="copy-btn">📋 Copy prompt</button>
+        </div>
+      </article>
+
+      <!-- 6. Spotlight -->
+      <article class="prompt-card reveal">
+        <div class="preview">
+          <div class="pv-spot">Hover spotlight</div>
+        </div>
+        <div class="card-body">
+          <div class="card-title-row"><h3>Spotlight Border Cards</h3></div>
+          <div class="tags"><span class="tag v">Lovable</span><span class="tag">Cursor</span><span class="tag p">v0</span></div>
+          <p class="card-desc">Pricing or feature cards where a soft radial glow chases the cursor across the card and lights up its border.</p>
+          <details class="prompt-box">
+            <summary>View full prompt</summary>
+            <div class="prompt-text">Create "spotlight" hover cards for a pricing or features grid on a dark site.
+
+Requirements:
+- Cards: dark glass panels (rgba white 0.05 background, 1px rgba white 0.14 border, 14px radius, overflow hidden).
+- Spotlight effect: a ~300px radial-gradient glow (accent lime #a3e635 or violet #8b5cf6, fading to transparent at 70%) positioned inside each card at the cursor location, tracked on mousemove via CSS custom properties (--x, --y) set in vanilla JS; ease it out on mouseleave.
+- Border glow: overlay a second gradient layer clipped to a 1px border (using a ::before with padding: 1px and mask: linear-gradient composite, or background-origin trick) so the border itself brightens near the cursor.
+- When no cursor is present (touch devices), run a slow automatic diagonal sweep of the spotlight on a 5s alternate loop so cards still feel alive.
+- Content per card: plan name, large price, 4 feature lines with check icons, and a CTA button.
+- Respect prefers-reduced-motion (static soft glow, no sweep). No libraries.</div>
+          </details>
+          <button class="copy-btn">📋 Copy prompt</button>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ================= 3D MOTION LAB ================= -->
+  <section id="lab3d">
+    <div class="section-head reveal">
+      <div class="kicker">3D Motion Lab</div>
+      <h2>Real-time 3D, one prompt away</h2>
+      <p>Live <strong>WebGL and CSS 3D</strong> previews rendered right here in your browser. Every prompt also includes a matching <strong>AI image-generator prompt</strong> (Midjourney / DALL·E / Canva) for the artwork.</p>
+    </div>
+
+    <div class="lab-banner reveal">
+      <canvas id="labCanvas"></canvas>
+      <div class="lab-caption"><span class="pulse"></span> Live 3D — rendered in your browser with WebGL</div>
+    </div>
+
+    <div class="prompt-grid">
+
+      <!-- 3D-1: WebGL neon shapes -->
+      <article class="prompt-card reveal">
+        <div class="preview"><canvas class="webgl" id="shapesCanvas"></canvas></div>
+        <div class="card-body">
+          <div class="card-title-row"><h3>Neon 3D Shape Field (WebGL)</h3></div>
+          <div class="tags"><span class="tag v">Three.js</span><span class="tag">Lovable</span><span class="tag p">Claude</span></div>
+          <p class="card-desc">Floating glossy 3D shapes lit by violet, cyan and pink point lights, slowly tumbling behind your hero content.</p>
+          <details class="prompt-box">
+            <summary>View full prompt</summary>
+            <div class="prompt-text">Add a real-time 3D animated background to my hero section using Three.js (load r128 from a CDN).
+
+Requirements:
+- Full-bleed WebGLRenderer canvas behind the hero content (position absolute, z-index below text, pointer-events none, alpha: true so the page background shows through).
+- Scene: 10–14 floating shapes — icosahedrons, torus and spheres — with MeshStandardMaterial (metalness 0.7, roughness 0.25) in near-black base color.
+- Lighting: three colored point lights — violet #8b5cf6, cyan #22d3ee, pink #f472b6 — orbiting the scene slowly on different axes, plus a dim ambient light, so the shapes pick up neon reflections.
+- Animation loop: each shape tumbles on its own random rotation speeds and bobs up/down on a sine wave with a per-shape phase offset; the camera drifts slightly toward the mouse position (parallax, eased with lerp).
+- Handle window resize (update camera aspect + renderer size). Cap pixel ratio at 2.
+- If WebGL is unavailable or prefers-reduced-motion is set, skip the canvas entirely and fall back to a static CSS gradient.
+
+AI IMAGE PROMPT (for Midjourney / DALL·E / Canva — use for a matching static hero image or og:image):
+"Futuristic abstract 3D render: glossy chrome and iridescent glass shapes — floating torus, sphere and cube — with neon violet, cyan and pink rim lighting on a near-black background, soft depth of field, high-end 3D motion design aesthetic, 16:9, no text"</div>
+          </details>
+          <button class="copy-btn">📋 Copy prompt</button>
+        </div>
+      </article>
+
+      <!-- 3D-2: CSS spinning cube -->
+      <article class="prompt-card reveal">
+        <div class="preview">
+          <div class="pv-cube-stage"><div class="pv-cube"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+        </div>
+        <div class="card-body">
+          <div class="card-title-row"><h3>Holographic CSS Cube</h3></div>
+          <div class="tags"><span class="tag v">Pure CSS</span><span class="tag">Bolt</span><span class="tag p">v0</span></div>
+          <p class="card-desc">A translucent neon wireframe cube spinning in 3D — zero libraries, pure CSS transforms.</p>
+          <details class="prompt-box">
+            <summary>View full prompt</summary>
+            <div class="prompt-text">Create a holographic 3D spinning cube with pure CSS (no libraries, no canvas).
+
+Requirements:
+- A cube built from 6 absolutely-positioned faces inside a transform-style: preserve-3d container, each face rotated into place with rotateX/rotateY + translateZ(half the cube size).
+- Faces: translucent neon glass — rgba violet/cyan/pink backgrounds at ~0.1 opacity, 1px glowing borders, inset box-shadow glow, 10px border-radius.
+- The cube sits inside a perspective: 700px stage and rotates forever: rotateY 0→360° over 9s, linear, with a constant rotateX(-18°) tilt.
+- On hover, pause the spin (animation-play-state: paused) and scale up 1.06 with a smooth transition.
+- Add a soft elliptical shadow beneath the cube that subtly pulses in sync.
+- Make the cube size a CSS variable (--size) so it scales responsively with clamp().
+- Freeze rotation under prefers-reduced-motion.
+
+AI IMAGE PROMPT (for Midjourney / DALL·E / Canva):
+"Translucent holographic neon cube floating in dark space, glowing violet and cyan wireframe edges, glassmorphism, volumetric light, dark futuristic background, minimal 3D render, square, no text"</div>
+          </details>
+          <button class="copy-btn">📋 Copy prompt</button>
+        </div>
+      </article>
+
+      <!-- 3D-3: CSS carousel ring -->
+      <article class="prompt-card reveal">
+        <div class="preview">
+          <div class="pv-ring3d-stage">
+            <div class="pv-ring3d">
+              <i style="--a: 0deg"></i><i style="--a: 45deg"></i><i style="--a: 90deg"></i><i style="--a: 135deg"></i>
+              <i style="--a: 180deg"></i><i style="--a: 225deg"></i><i style="--a: 270deg"></i><i style="--a: 315deg"></i>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-title-row"><h3>3D Carousel Ring</h3></div>
+          <div class="tags"><span class="tag v">Pure CSS</span><span class="tag">Lovable</span><span class="tag p">Cursor</span></div>
+          <p class="card-desc">Cards orbiting on an infinite 3D ring — a showcase carousel for screenshots, covers or testimonials.</p>
+          <details class="prompt-box">
+            <summary>View full prompt</summary>
+            <div class="prompt-text">Build an infinite 3D rotating carousel ring for showcasing images or cards.
+
+Requirements:
+- 8 glass cards arranged in a circle: each card is absolutely positioned in a preserve-3d container and placed with transform: rotateY(index × 45deg) translateZ(radius). Compute radius so cards don't overlap: radius ≈ (cardWidth / 2) / tan(π / 8) (or just set a CSS variable).
+- The whole ring rotates continuously: rotateY 0→-360° over ~25s, linear, infinite, inside a perspective: 900px stage with a slight rotateX(-6°) tilt.
+- Cards: glassmorphism (translucent gradient, 1px light border, backdrop-filter blur, 12px radius) with backface-visibility: hidden so only front-facing cards show.
+- Pause the rotation on hover; on card click, smoothly rotate the ring so that card faces front (JS reads the index and animates the rotation with a transition).
+- Dim and slightly blur cards on the far side using a JS loop or CSS custom property based on rotation, to fake depth of field.
+- Responsive: shrink card size and radius with clamp()/media queries. Freeze under prefers-reduced-motion.
+
+AI IMAGE PROMPT (for Midjourney / DALL·E / Canva):
+"3D carousel of glowing glass cards orbiting in a circle, dark scene with cyan and violet neon reflections, depth of field, futuristic UI concept art, wide shot, no text"</div>
+          </details>
+          <button class="copy-btn">📋 Copy prompt</button>
+        </div>
+      </article>
+
+      <!-- 3D-4: CSS flip card -->
+      <article class="prompt-card reveal">
+        <div class="preview">
+          <div class="pv-flip-stage"><div class="pv-flip"><i>🚀</i><i>✨</i></div></div>
+        </div>
+        <div class="card-body">
+          <div class="card-title-row"><h3>3D Flip Reveal Cards</h3></div>
+          <div class="tags"><span class="tag v">Pure CSS</span><span class="tag">Bolt</span><span class="tag p">Claude</span></div>
+          <p class="card-desc">Feature cards that flip 180° in 3D to reveal details on the back — on hover or on an auto-loop.</p>
+          <details class="prompt-box">
+            <summary>View full prompt</summary>
+            <div class="prompt-text">Create 3D flip-reveal cards for a features or team section.
+
+Requirements:
+- Each card has a front face (icon + title) and a back face (description + link), both absolutely positioned with backface-visibility: hidden inside a preserve-3d wrapper; the back face is pre-rotated rotateY(180deg).
+- The wrapper sits in a perspective: 700px stage. On hover/focus-visible it flips to rotateY(180deg) with a 0.7s cubic-bezier(0.4, 0, 0.2, 1) transition; make it keyboard-accessible (tabindex, :focus-within).
+- Front: dark violet glass gradient with a glowing border; back: cyan glass gradient. Both 14px radius with a deep drop shadow that shifts during the flip.
+- Add a subtle idle float: the whole card bobs 6px up/down on a 4s ease-in-out loop, staggered per card.
+- On touch devices (no hover), flip on tap and flip back on second tap.
+- Under prefers-reduced-motion, swap the flip for a simple cross-fade.
+
+AI IMAGE PROMPT (for Midjourney / DALL·E / Canva):
+"Two-sided glass card mid-flip in 3D space, front glowing violet and back glowing cyan, motion blur on the edges, dark studio background, sleek product-design render, no text"</div>
+          </details>
+          <button class="copy-btn">📋 Copy prompt</button>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="copy-all-row reveal">
+      <button class="copy-all" id="copyAll3d">⚡ Copy ALL 3D prompts</button>
+    </div>
+  </section>
+
+  <!-- ================= HOW ================= -->
+  <section id="how">
+    <div class="section-head reveal">
+      <div class="kicker">How it works</div>
+      <h2>Three steps to a motion site</h2>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-num">01</div>
+        <h3>Pick a style</h3>
+        <p>Browse the library and watch the live previews — every card animates exactly like the section its prompt builds.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">02</div>
+        <h3>Copy the prompt</h3>
+        <p>One click copies the full, detailed prompt — colors, timings, easing curves and accessibility rules included.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">03</div>
+        <h3>Paste &amp; ship</h3>
+        <p>Drop it into Lovable, Bolt, Cursor, v0 or Claude and get a polished, animated section in one generation.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span>PromptMotion — free animated website prompts.</span>
+  <span>Made with CSS keyframes, zero libraries.</span>
+</footer>
+
+<div id="toast">✓ Prompt copied to clipboard</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+  // ---------- 3D Motion Lab (WebGL) ----------
+  (function () {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced || typeof THREE === 'undefined') return;
+
+    const PALETTE = [0x8b5cf6, 0x22d3ee, 0xf472b6];
+
+    function makeScene(canvas, opts) {
+      let renderer;
+      try {
+        renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+      } catch (e) { return; }
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
+      camera.position.z = opts.camZ;
+
+      scene.add(new THREE.AmbientLight(0xffffff, 0.15));
+      const lights = PALETTE.map((c, i) => {
+        const l = new THREE.PointLight(c, 1.6, 60);
+        l.userData.phase = (i / 3) * Math.PI * 2;
+        scene.add(l);
+        return l;
+      });
+
+      const geos = [
+        new THREE.IcosahedronGeometry(1, 0),
+        new THREE.TorusGeometry(0.8, 0.32, 24, 48),
+        new THREE.SphereGeometry(0.75, 32, 32),
+        new THREE.TorusKnotGeometry(0.65, 0.24, 100, 16),
+      ];
+      const shapes = [];
+      for (let i = 0; i < opts.count; i++) {
+        const mat = new THREE.MeshStandardMaterial({ color: 0x14141f, metalness: 0.7, roughness: 0.25 });
+        const m = new THREE.Mesh(geos[i % geos.length], mat);
+        const spread = opts.spread;
+        m.position.set((Math.random() - 0.5) * spread * 2, (Math.random() - 0.5) * spread, (Math.random() - 0.5) * spread * 0.6);
+        m.scale.setScalar(opts.scale * (0.6 + Math.random() * 0.8));
+        m.userData = {
+          rx: (Math.random() - 0.5) * 0.014, ry: (Math.random() - 0.5) * 0.014,
+          phase: Math.random() * Math.PI * 2, baseY: m.position.y,
+        };
+        scene.add(m);
+        shapes.push(m);
+      }
+
+      function resize() {
+        const w = canvas.clientWidth, h = canvas.clientHeight;
+        if (canvas.width !== w || canvas.height !== h) {
+          renderer.setSize(w, h, false);
+          camera.aspect = w / h;
+          camera.updateProjectionMatrix();
+        }
+      }
+      window.addEventListener('resize', resize);
+
+      let visible = false;
+      new IntersectionObserver((en) => { visible = en[0].isIntersecting; }, { threshold: 0.05 }).observe(canvas);
+
+      let t = 0;
+      (function loop() {
+        requestAnimationFrame(loop);
+        if (!visible) return;
+        resize();
+        t += 0.01;
+        shapes.forEach((m) => {
+          m.rotation.x += m.userData.rx;
+          m.rotation.y += m.userData.ry;
+          m.position.y = m.userData.baseY + Math.sin(t * 1.4 + m.userData.phase) * 0.35;
+        });
+        lights.forEach((l, i) => {
+          const a = t * (0.5 + i * 0.18) + l.userData.phase;
+          l.position.set(Math.cos(a) * 8, Math.sin(a * 1.3) * 5, 4 + Math.sin(a) * 3);
+        });
+        renderer.render(scene, camera);
+      })();
+    }
+
+    const banner = document.getElementById('labCanvas');
+    if (banner) makeScene(banner, { count: 14, spread: 7, scale: 1.05, camZ: 9 });
+    const cardCanvas = document.getElementById('shapesCanvas');
+    if (cardCanvas) makeScene(cardCanvas, { count: 7, spread: 3.2, scale: 0.6, camZ: 6 });
+  })();
+</script>
+<script>
+  // typing effect
+  const phrases = [
+    'a dark SaaS hero with drifting aurora gradients…',
+    'glassmorphic 3D tilt cards for my features grid…',
+    'an infinite logo marquee with edge fade…',
+    'count-up stats with gradient shimmer numbers…',
+  ];
+  const typed = document.getElementById('typed');
+  let pi = 0, ci = 0, deleting = false;
+  function tick() {
+    const phrase = phrases[pi];
+    typed.textContent = phrase.slice(0, ci);
+    let delay = deleting ? 22 : 46;
+    if (!deleting && ci === phrase.length) { deleting = true; delay = 1900; }
+    else if (deleting && ci === 0) { deleting = false; pi = (pi + 1) % phrases.length; delay = 350; }
+    else ci += deleting ? -1 : 1;
+    setTimeout(tick, delay);
+  }
+  tick();
+
+  // particle preview
+  const field = document.getElementById('particles');
+  for (let i = 0; i < 26; i++) {
+    const p = document.createElement('b');
+    const size = 2 + Math.random() * 4;
+    p.style.width = p.style.height = size + 'px';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.setProperty('--sway', (Math.random() * 40 - 20) + 'px');
+    p.style.animationDuration = (4 + Math.random() * 7) + 's';
+    p.style.animationDelay = (-Math.random() * 10) + 's';
+    if (Math.random() > 0.6) p.style.background = '#8b5cf6';
+    field.appendChild(p);
+  }
+
+  // stat count-up loop
+  const statNum = document.getElementById('statNum');
+  const target = 12480;
+  function countUp() {
+    const start = performance.now(), dur = 1600;
+    (function frame(now) {
+      const t = Math.min((now - start) / dur, 1);
+      const eased = 1 - Math.pow(1 - t, 3);
+      statNum.textContent = Math.round(target * eased).toLocaleString('en-US');
+      if (t < 1) requestAnimationFrame(frame);
+      else setTimeout(countUp, 3500);
+    })(performance.now());
+  }
+  countUp();
+
+  // scroll reveal
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        e.target.style.transitionDelay = (e.target.dataset.idx % 3) * 90 + 'ms';
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach((el, i) => { el.dataset.idx = i; io.observe(el); });
+
+  // copy buttons
+  const toast = document.getElementById('toast');
+  let toastTimer;
+  document.querySelectorAll('.prompt-card').forEach((card) => {
+    const btn = card.querySelector('.copy-btn');
+    const text = card.querySelector('.prompt-text').textContent.trim();
+    btn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+      }
+      btn.classList.add('copied');
+      btn.textContent = '✓ Copied!';
+      setTimeout(() => { btn.classList.remove('copied'); btn.textContent = '📋 Copy prompt'; }, 1800);
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 2000);
+    });
+  });
+
+  // copy ALL 3D prompts
+  const copyAllBtn = document.getElementById('copyAll3d');
+  copyAllBtn.addEventListener('click', async () => {
+    const all = [...document.querySelectorAll('#lab3d .prompt-card')]
+      .map((card) => {
+        const title = card.querySelector('h3').textContent;
+        const text = card.querySelector('.prompt-text').textContent.trim();
+        return `━━━ ${title} ━━━\n\n${text}`;
+      })
+      .join('\n\n\n');
+    try {
+      await navigator.clipboard.writeText(all);
+    } catch {
+      const ta = document.createElement('textarea');
+      ta.value = all;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      ta.remove();
+    }
+    copyAllBtn.classList.add('copied');
+    copyAllBtn.textContent = '✓ All 4 3D prompts copied!';
+    setTimeout(() => { copyAllBtn.classList.remove('copied'); copyAllBtn.textContent = '⚡ Copy ALL 3D prompts'; }, 2200);
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 2000);
+  });
+</script>
+</body>
+</html>
